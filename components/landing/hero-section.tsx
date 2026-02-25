@@ -1,19 +1,19 @@
 import {
-  ArrowRight,
-  DownloadSimple,
-  Lightning,
-  Shield,
-  Skull,
-  Users,
-} from "@phosphor-icons/react/dist/ssr"
+  IconArrowRight,
+  IconDownload,
+  IconBolt,
+  IconShield,
+  IconSkull,
+  IconUsers,
+} from "@tabler/icons-react"
 
 import { Button } from "@/components/ui/button"
 
 const STATS = [
-  { icon: Users, label: "Online Now", value: "2,847" },
-  { icon: Lightning, label: "EXP Rate", value: "50×" },
-  { icon: Skull, label: "PvP Kills Today", value: "48k+" },
-  { icon: Shield, label: "Guilds Active", value: "138" },
+  { icon: IconUsers, label: "Online Now", value: "2,847" },
+  { icon: IconBolt, label: "EXP Rate", value: "50×" },
+  { icon: IconSkull, label: "PvP Kills Today", value: "48k+" },
+  { icon: IconShield, label: "Guilds Active", value: "138" },
 ]
 
 export function HeroSection() {
@@ -109,7 +109,7 @@ export function HeroSection() {
               size="lg"
               className="h-12 gap-2 px-7 text-sm font-bold uppercase tracking-wider"
             >
-              <DownloadSimple size={18} data-icon="inline-start" weight="bold" />
+              <IconDownload size={18} data-icon="inline-start" />
               Download &amp; Play Free
             </Button>
             <Button
@@ -118,7 +118,7 @@ export function HeroSection() {
               className="h-12 gap-2 border-[var(--color-cod-gray-700)] px-7 text-sm font-bold uppercase tracking-wider hover:border-primary/40 hover:bg-primary/5"
             >
               Patch Notes
-              <ArrowRight size={16} data-icon="inline-end" />
+              <IconArrowRight size={16} data-icon="inline-end" />
             </Button>
           </div>
 
@@ -128,7 +128,6 @@ export function HeroSection() {
               <div key={label} className="flex items-center gap-3">
                 <Icon
                   size={20}
-                  weight="duotone"
                   className="text-primary opacity-70"
                 />
                 <div>

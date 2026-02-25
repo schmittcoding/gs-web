@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { SidebarIcon } from "@phosphor-icons/react";
+import { IconLayoutSidebar } from "@tabler/icons-react";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -137,7 +137,7 @@ function SidebarProvider({
           } as React.CSSProperties
         }
         className={cn(
-          "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full",
+          "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex w-full",
           className,
         )}
         {...props}
@@ -270,7 +270,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <SidebarIcon />
+      <IconLayoutSidebar />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
@@ -358,7 +358,7 @@ function SidebarSeparator({
     <Separator
       data-slot="sidebar-separator"
       data-sidebar="separator"
-      className={cn("bg-sidebar-border mx-2 w-auto", className)}
+      className={cn("bg-sidebar-border w-auto", className)}
       {...props}
     />
   );

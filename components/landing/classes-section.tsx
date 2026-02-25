@@ -1,11 +1,11 @@
-import { Atom, Crosshair, Sword, Waves } from "@phosphor-icons/react/dist/ssr"
+import { IconAtom, IconCrosshair, IconSword, IconWaveSine } from "@tabler/icons-react"
 
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 const CLASSES = [
   {
-    icon: Sword,
+    icon: IconSword,
     name: "Swordsman",
     school: "Sacred Gate",
     roles: ["Melee", "Tank", "DPS"],
@@ -17,7 +17,7 @@ const CLASSES = [
     weapons: ["Great Sword", "Battle Axe", "Dual Blades"],
   },
   {
-    icon: Crosshair,
+    icon: IconCrosshair,
     name: "Archer",
     school: "Mystic Peak",
     roles: ["Ranged", "DPS", "Agility"],
@@ -29,7 +29,7 @@ const CLASSES = [
     weapons: ["Long Bow", "Cross Bow", "Dual Arrow"],
   },
   {
-    icon: Waves,
+    icon: IconWaveSine,
     name: "Shaman",
     school: "Sacred Gate",
     roles: ["Support", "Healer", "Buffer"],
@@ -41,7 +41,7 @@ const CLASSES = [
     weapons: ["Staff", "Wand", "Sacred Book"],
   },
   {
-    icon: Atom,
+    icon: IconAtom,
     name: "Scientist",
     school: "Phoenix",
     roles: ["Summoner", "Tech", "Hybrid"],
@@ -94,7 +94,6 @@ export function ClassesSection() {
               <div className={cn("relative flex h-28 items-center justify-center bg-gradient-to-b", color)}>
                 <Icon
                   size={52}
-                  weight="duotone"
                   className={cn("transition-transform duration-300 group-hover:scale-110", accentClass)}
                 />
                 {/* Top-right corner accent */}

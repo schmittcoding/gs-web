@@ -1,4 +1,4 @@
-import { ArrowRight, Clock } from "@phosphor-icons/react/dist/ssr"
+import { IconArrowRight, IconClock } from "@tabler/icons-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -59,7 +59,7 @@ export function NewsSection() {
             className="w-fit gap-1.5 border-[var(--color-cod-gray-700)] text-xs uppercase tracking-widest hover:border-primary/40"
           >
             All News
-            <ArrowRight size={14} data-icon="inline-end" />
+            <IconArrowRight size={14} data-icon="inline-end" />
           </Button>
         </div>
 
@@ -86,7 +86,7 @@ export function NewsSection() {
                   {category}
                 </Badge>
                 <span className="flex items-center gap-1.5 text-[10px] text-[var(--color-cod-gray-600)]">
-                  <Clock size={11} />
+                  <IconClock size={11} />
                   {date}
                 </span>
               </div>
@@ -104,7 +104,7 @@ export function NewsSection() {
               {/* Read more */}
               <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-cod-gray-600)] transition-colors group-hover:text-primary">
                 Read More
-                <ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
+                <IconArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
               </div>
             </article>
           ))}

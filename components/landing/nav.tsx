@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { DownloadSimple, List, Sword, X } from "@phosphor-icons/react"
+import { IconDownload, IconMenu2, IconSword, IconX } from "@tabler/icons-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -24,7 +24,7 @@ export function LandingNav() {
           {/* Logo */}
           <a href="#" className="flex select-none items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded border border-primary/30 bg-primary/10">
-              <Sword size={16} weight="fill" className="text-primary" />
+              <IconSword size={16} className="text-primary" />
             </div>
             <span className="font-black text-lg tracking-widest uppercase">
               <span className="text-primary">RAN</span>
@@ -51,7 +51,7 @@ export function LandingNav() {
               Sign In
             </Button>
             <Button size="sm">
-              <DownloadSimple data-icon="inline-start" weight="bold" />
+              <IconDownload data-icon="inline-start" />
               Download
             </Button>
           </div>
@@ -62,7 +62,7 @@ export function LandingNav() {
             onClick={() => setOpen((v) => !v)}
             aria-label="Toggle navigation"
           >
-            {open ? <X size={22} /> : <List size={22} />}
+            {open ? <IconX size={22} /> : <IconMenu2 size={22} />}
           </button>
         </nav>
       </div>
@@ -90,7 +90,7 @@ export function LandingNav() {
               Sign In
             </Button>
             <Button size="sm">
-              <DownloadSimple data-icon="inline-start" weight="bold" />
+              <IconDownload data-icon="inline-start" />
               Download Free
             </Button>
           </div>

@@ -1,10 +1,10 @@
 import {
-  DiscordLogo,
-  DownloadSimple,
-  FacebookLogo,
-  Sword,
-  YoutubeLogo,
-} from "@phosphor-icons/react/dist/ssr"
+  IconBrandDiscord,
+  IconDownload,
+  IconBrandFacebook,
+  IconSword,
+  IconBrandYoutube,
+} from "@tabler/icons-react"
 
 import { Button } from "@/components/ui/button"
 
@@ -15,9 +15,9 @@ const FOOTER_LINKS = {
 }
 
 const SOCIAL = [
-  { icon: DiscordLogo, label: "Discord", href: "#" },
-  { icon: FacebookLogo, label: "Facebook", href: "#" },
-  { icon: YoutubeLogo, label: "YouTube", href: "#" },
+  { icon: IconBrandDiscord, label: "Discord", href: "#" },
+  { icon: IconBrandFacebook, label: "Facebook", href: "#" },
+  { icon: IconBrandYoutube, label: "YouTube", href: "#" },
 ]
 
 export function LandingFooter() {
@@ -35,7 +35,7 @@ export function LandingFooter() {
             </p>
           </div>
           <Button size="lg" className="h-11 gap-2 px-8 text-sm font-bold uppercase tracking-wider">
-            <DownloadSimple size={18} data-icon="inline-start" weight="bold" />
+            <IconDownload size={18} data-icon="inline-start" />
             Download Free
           </Button>
         </div>
@@ -48,7 +48,7 @@ export function LandingFooter() {
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded border border-primary/30 bg-primary/10">
-                <Sword size={16} weight="fill" className="text-primary" />
+                <IconSword size={16} className="text-primary" />
               </div>
               <span className="font-black text-lg tracking-widest uppercase">
                 <span className="text-primary">RAN</span>

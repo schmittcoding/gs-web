@@ -14,7 +14,7 @@
 | Language | TypeScript 5 (strict mode) |
 | Styling | Tailwind CSS v4 (PostCSS), CSS variables (oklch) |
 | Components | shadcn/ui (radix-nova style), Radix UI, Base UI |
-| Icons | Phosphor Icons (`@phosphor-icons/react`) |
+| Icons | Tabler Icons (`@tabler/icons-react`) |
 | Variants | class-variance-authority (CVA) |
 | Class merging | clsx + tailwind-merge via `cn()` in `lib/utils.ts` |
 | Package manager | pnpm |
@@ -75,7 +75,8 @@ Functions: camelCase
 
 ### Icons
 
-- Always use Phosphor Icons
+- Always use Tabler Icons (`@tabler/icons-react`)
+- Import icons with the `Icon` prefix (e.g., `IconDownload`, `IconX`, `IconCheck`)
 - Default size is `size-4` (via CSS)
 - Use `data-icon="inline-start"` or `data-icon="inline-end"` attributes for positioning within buttons/inputs
 
@@ -126,6 +127,6 @@ All design tokens live in `app/globals.css` as CSS custom properties under `:roo
 - Do not use `pages/` directory — this project uses App Router exclusively.
 - Do not hardcode colors — use CSS variables.
 - Do not use default exports for components.
-- Do not install a second icon library — use Phosphor Icons exclusively.
+- Do not install a second icon library — use Tabler Icons exclusively.
 - Do not add `style={{}}` props for layout — use Tailwind utilities.
 - Do not create new utility functions in component files — put them in `lib/`.

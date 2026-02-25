@@ -1,4 +1,4 @@
-import { Flame, ShoppingCart, Sword, Tag } from "@phosphor-icons/react/dist/ssr"
+import { IconFlame, IconShoppingCart, IconSword, IconTag } from "@tabler/icons-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 
 const HOT_ITEMS = [
   {
-    icon: Sword,
+    icon: IconSword,
     name: "Dark Flame Sword",
     type: "Weapon · Grade S",
     originalPrice: 599,
@@ -17,7 +17,7 @@ const HOT_ITEMS = [
     stock: "Limited",
   },
   {
-    icon: Tag,
+    icon: IconTag,
     name: "Sacred Gate Armor Set",
     type: "Armor · Full Set",
     originalPrice: 999,
@@ -28,7 +28,7 @@ const HOT_ITEMS = [
     stock: "48 left",
   },
   {
-    icon: Flame,
+    icon: IconFlame,
     name: "EXP Boost Potion ×30",
     type: "Consumable · Stackable",
     originalPrice: 249,
@@ -39,7 +39,7 @@ const HOT_ITEMS = [
     stock: "Unlimited",
   },
   {
-    icon: Tag,
+    icon: IconTag,
     name: "Phoenix Legendary Wings",
     type: "Cosmetic · Animated",
     originalPrice: 799,
@@ -75,7 +75,7 @@ export function ShopSection() {
             size="sm"
             className="w-fit gap-1.5 border-[var(--color-cod-gray-700)] text-xs uppercase tracking-widest hover:border-primary/40"
           >
-            <ShoppingCart size={14} data-icon="inline-start" />
+            <IconShoppingCart size={14} data-icon="inline-start" />
             Browse Item Mall
           </Button>
         </div>
@@ -106,7 +106,6 @@ export function ShopSection() {
 
                 <Icon
                   size={56}
-                  weight="duotone"
                   className={cn(
                     "transition-transform duration-300 group-hover:scale-110",
                     iconClass
@@ -138,7 +137,7 @@ export function ShopSection() {
                     className="opacity-0 transition-opacity group-hover:opacity-100"
                     aria-label={`Add ${name} to cart`}
                   >
-                    <ShoppingCart />
+                    <IconShoppingCart />
                   </Button>
                 </div>
               </div>
@@ -148,13 +147,13 @@ export function ShopSection() {
 
         {/* Urgency banner */}
         <div className="mt-6 flex items-center justify-center gap-3 rounded-lg border border-primary/20 bg-primary/5 py-4 px-6 text-center">
-          <Flame size={16} className="text-primary" weight="fill" />
+          <IconFlame size={16} className="text-primary" />
           <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-cod-gray-400)]">
             Flash sale ends in{" "}
             <span className="ran-flicker font-black text-primary">47:32:08</span>
             {" "}— don&apos;t miss out
           </p>
-          <Flame size={16} className="text-primary" weight="fill" />
+          <IconFlame size={16} className="text-primary" />
         </div>
       </div>
     </section>

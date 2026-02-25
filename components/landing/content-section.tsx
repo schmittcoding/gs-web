@@ -1,40 +1,40 @@
-import type { Icon } from "@phosphor-icons/react"
+import type { Icon } from "@tabler/icons-react"
 import {
-  ArrowRight,
-  CastleTurret,
-  Crown,
-  FireSimple,
-  Scroll,
-  Skull,
-  Sword,
-  Target,
-  TreePalm,
-  Trophy,
-} from "@phosphor-icons/react/dist/ssr"
+  IconArrowRight,
+  IconBuildingCastle,
+  IconCrown,
+  IconFlame,
+  IconNews,
+  IconSkull,
+  IconSword,
+  IconTarget,
+  IconTree,
+  IconTrophy,
+} from "@tabler/icons-react"
 
 import { Button } from "@/components/ui/button"
 
 const PVP_CONTENT = [
   {
-    icon: Sword,
+    icon: IconSword,
     title: "Campus War",
     description:
       "The defining battle of RanGS. Every weekend, all three schools clash in a massive server-wide war for campus supremacy.",
   },
   {
-    icon: Trophy,
+    icon: IconTrophy,
     title: "Arena Tournament",
     description:
       "Weekly ranked 1v1 and team-based arena brackets. Climb the ladder and claim exclusive rank titles and gear.",
   },
   {
-    icon: Skull,
+    icon: IconSkull,
     title: "PK System",
     description:
       "Open-world player killing in designated zones. Hunt your enemies or become the hunted — no safe havens.",
   },
   {
-    icon: CastleTurret,
+    icon: IconBuildingCastle,
     title: "Siege Warfare",
     description:
       "Guild alliances fight to claim and defend fortress territories. Control territory, control resources.",
@@ -43,25 +43,25 @@ const PVP_CONTENT = [
 
 const PVE_CONTENT = [
   {
-    icon: FireSimple,
+    icon: IconFlame,
     title: "Field Bosses",
     description:
       "Massive world bosses that spawn across campuses. Coordinate your guild for rare drops and legendary weapons.",
   },
   {
-    icon: Target,
+    icon: IconTarget,
     title: "Dungeon Raids",
     description:
       "Squad-based instanced dungeons with multi-phase bosses, trap mechanics, and high-tier reward pools.",
   },
   {
-    icon: Scroll,
+    icon: IconNews,
     title: "Quest Chains",
     description:
       "Story-driven quest arcs with faction-specific lore, unlocking exclusive skills and cosmetic rewards.",
   },
   {
-    icon: TreePalm,
+    icon: IconTree,
     title: "Event Instances",
     description:
       "Limited-time seasonal instances with exclusive drops. Miss the season, miss the gear — permanently.",
@@ -78,7 +78,7 @@ function ContentList({
       {items.map(({ icon: Icon, title, description }) => (
         <li key={title} className="flex gap-4">
           <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded border border-[var(--color-cod-gray-800)] bg-[var(--color-cod-gray-900)]">
-            <Icon size={18} weight="duotone" className="text-primary" />
+            <Icon size={18} className="text-primary" />
           </div>
           <div>
             <h4 className="mb-0.5 font-bold text-sm uppercase tracking-wider text-foreground">
@@ -129,7 +129,7 @@ export function ContentSection() {
                   Player vs Player
                 </h3>
               </div>
-              <Crown size={32} weight="duotone" className="text-[var(--color-cod-gray-700)]" />
+              <IconCrown size={32} className="text-[var(--color-cod-gray-700)]" />
             </div>
             <ContentList items={PVP_CONTENT} />
             <div className="mt-8 border-t border-[var(--color-cod-gray-800)] pt-6">
@@ -139,7 +139,7 @@ export function ContentSection() {
                 className="gap-1.5 border-[var(--color-cod-gray-700)] text-xs uppercase tracking-widest hover:border-destructive/40 hover:text-destructive"
               >
                 View PvP Rankings
-                <ArrowRight size={14} data-icon="inline-end" />
+                <IconArrowRight size={14} data-icon="inline-end" />
               </Button>
             </div>
           </div>
@@ -158,7 +158,7 @@ export function ContentSection() {
                   Player vs Environment
                 </h3>
               </div>
-              <FireSimple size={32} weight="duotone" className="text-[var(--color-cod-gray-700)]" />
+              <IconFlame size={32} className="text-[var(--color-cod-gray-700)]" />
             </div>
             <ContentList items={PVE_CONTENT} />
             <div className="mt-8 border-t border-[var(--color-cod-gray-800)] pt-6">
@@ -168,7 +168,7 @@ export function ContentSection() {
                 className="gap-1.5 border-[var(--color-cod-gray-700)] text-xs uppercase tracking-widest hover:border-primary/40 hover:text-primary"
               >
                 View Dungeon Guides
-                <ArrowRight size={14} data-icon="inline-end" />
+                <IconArrowRight size={14} data-icon="inline-end" />
               </Button>
             </div>
           </div>

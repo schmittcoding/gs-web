@@ -1,47 +1,47 @@
 import {
-  Calendar,
-  Headset,
-  Lightning,
-  Shield,
-  Sword,
-  Trophy,
-} from "@phosphor-icons/react/dist/ssr"
+  IconCalendar,
+  IconHeadset,
+  IconBolt,
+  IconShield,
+  IconSword,
+  IconTrophy,
+} from "@tabler/icons-react"
 
 import { cn } from "@/lib/utils"
 
 const FEATURES = [
   {
-    icon: Lightning,
+    icon: IconBolt,
     title: "50× EXP & DROP",
     description:
       "High rates tuned for fast progression without sacrificing the grind culture that defines Ran Online.",
   },
   {
-    icon: Sword,
+    icon: IconSword,
     title: "Custom Weapons",
     description:
       "Exclusive gear, weapon skins, and set bonuses crafted specifically for RanGS — unavailable anywhere else.",
   },
   {
-    icon: Trophy,
+    icon: IconTrophy,
     title: "Campus War",
     description:
       "Weekend-wide Campus Wars where every faction fights for dominance across all three schools.",
   },
   {
-    icon: Calendar,
+    icon: IconCalendar,
     title: "Regular Events",
     description:
       "Monthly content updates, seasonal events, and GM-hosted activities keeping the world alive.",
   },
   {
-    icon: Shield,
+    icon: IconShield,
     title: "Anti-Cheat",
     description:
       "Zero tolerance enforcement. Real-time monitoring ensures every kill and drop is earned, not exploited.",
   },
   {
-    icon: Headset,
+    icon: IconHeadset,
     title: "Active GM Team",
     description:
       "Dedicated support staff online daily. Bug reports acted on within 24 hours. Community-first culture.",
@@ -81,7 +81,7 @@ export function FeaturesSection() {
               <div className="absolute right-0 top-0 h-px w-0 bg-primary transition-all duration-300 group-hover:w-full" />
 
               <div className="flex h-10 w-10 items-center justify-center rounded border border-[var(--color-cod-gray-800)] bg-primary/10 transition-colors group-hover:border-primary/40 group-hover:bg-primary/15">
-                <Icon size={20} weight="duotone" className="text-primary" />
+                <Icon size={20} className="text-primary" />
               </div>
               <div>
                 <h3 className="mb-1.5 font-bold text-sm uppercase tracking-widest text-foreground">
