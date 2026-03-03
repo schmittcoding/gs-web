@@ -40,7 +40,6 @@ function createIcon(
         // stroke = 2,
         color = "currentColor",
         className,
-        children: _children,
         ...props
       },
       ref,

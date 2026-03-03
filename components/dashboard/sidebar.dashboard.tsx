@@ -1,14 +1,14 @@
-import {
-  IconAffiliateFilled,
-  IconDownload,
-  IconExchangeFilled,
-  IconLayoutDashboardFilled,
-  IconLogout2,
-  IconSettingsFilled,
-  IconTagsFilled,
-} from "@tabler/icons-react";
+"use client";
+
+import { IconLogout2, IconSettingsFilled } from "@tabler/icons-react";
 import { Fragment } from "react/jsx-runtime";
-import { IconRankings, IconUser } from "../icons";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "../ui/sheet";
 import {
   Sidebar,
   SidebarContent,
@@ -19,71 +19,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  useSidebar,
 } from "../ui/sidebar";
+import { sidebarMenu } from "./sidebar/constants.sidebar";
+import SidebarItem from "./sidebar/item.sidebar";
 
-const menu = {
-  main: [
-    {
-      id: "dashboard",
-      icon: IconLayoutDashboardFilled,
-      path: "/dashboard",
-    },
-    {
-      id: "item-shop",
-      icon: IconTagsFilled,
-      path: "/item-shop",
-    },
-    {
-      id: "rankings",
-      icon: IconRankings,
-      path: "/rankings",
-    },
-  ],
-  game: [
-    {
-      id: "referral",
-      icon: IconAffiliateFilled,
-      path: "/referral",
-    },
-    {
-      id: "downloads",
-      icon: IconDownload,
-      path: "/downloads",
-    },
-  ],
-  account: [
-    {
-      id: "transactions",
-      icon: IconExchangeFilled,
-      path: "/transactions",
-    },
-    {
-      id: "profile",
-      icon: IconUser,
-      path: "/profiles",
-    },
-  ],
-};
-
-export default function DashboardSidebar() {
+function SidebarMenuContent() {
   return (
-    <Sidebar
-      className="h-[calc(100svh-105px)] w-18 relative border-none px-2 py-4"
-      collapsible="none"
-      variant="inset"
-    >
+    <>
       <SidebarContent>
-        {Object.entries(menu).map(([group, menuItems], i, a) => (
+        {Object.entries(sidebarMenu).map(([group, menuItems], i, a) => (
           <Fragment key={group}>
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-2">
                   {menuItems.map((item) => (
-                    <SidebarMenuItem key={item.id}>
-                      <SidebarMenuButton className="justify-center [&_svg]:size-8 py-5 text-gray-500 not-data-active:hover:text-gray-400 hover:bg-transparent data-active:text-foreground data-active:bg-transparent fill-gray-400">
-                        <item.icon />
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
+                    <SidebarItem key={item.id} {...item} />
                   ))}
                 </SidebarMenu>
               </SidebarGroupContent>
@@ -111,6 +62,43 @@ export default function DashboardSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarFooter>
-    </Sidebar>
+    </>
+  );
+}
+
+function MobileSidebar() {
+  const { openMobile, setOpenMobile } = useSidebar();
+
+  return (
+    <Sheet open={openMobile} onOpenChange={setOpenMobile}>
+      <SheetContent
+        side="left"
+        className="bg-sidebar text-sidebar-foreground w-18 p-0 [&>button]:hidden"
+        showCloseButton={false}
+      >
+        <SheetHeader className="sr-only">
+          <SheetTitle>Navigation</SheetTitle>
+          <SheetDescription>Main navigation menu</SheetDescription>
+        </SheetHeader>
+        <div className="flex h-full w-full flex-col px-2 py-4">
+          <SidebarMenuContent />
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+export default function DashboardSidebar() {
+  return (
+    <>
+      <MobileSidebar />
+      <Sidebar
+        className="relative h-full px-2 py-4 border-none w-18 hidden md:flex"
+        collapsible="none"
+        variant="inset"
+      >
+        <SidebarMenuContent />
+      </Sidebar>
+    </>
   );
 }

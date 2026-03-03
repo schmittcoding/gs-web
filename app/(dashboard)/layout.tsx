@@ -1,16 +1,32 @@
 import DashboardHeader from "@/components/dashboard/header.dashboard";
 import DashboardSidebar from "@/components/dashboard/sidebar.dashboard";
+import { SessionProvider } from "@/components/providers/session.provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { getSession } from "@/lib/auth/session.auth";
+import { AUTH_CONFIG } from "@/lib/constants";
+import { redirect } from "next/navigation";
 import { PropsWithChildren } from "react";
 
-export default function Layout({ children }: PropsWithChildren) {
+export default async function Layout({ children }: PropsWithChildren) {
+  const session = await getSession();
+
+  if (!session) {
+    redirect(AUTH_CONFIG.loginPath);
+  }
+
   return (
-    <div className="relative grid grid-rows-[105px_calc(100svh-105px)]">
-      <DashboardHeader />
-      <SidebarProvider className="h-full">
-        <DashboardSidebar />
-        <SidebarInset>{children}</SidebarInset>
+    <SessionProvider expiresAt={session.expires_at} user={session.user}>
+      <SidebarProvider>
+        <div className="relative grid h-svh w-full grid-rows-[var(--header-size)_1fr]">
+          <DashboardHeader user={session.user} />
+          <div className="flex min-h-0">
+            <DashboardSidebar />
+            <SidebarInset className="overflow-hidden">
+              {children}
+            </SidebarInset>
+          </div>
+        </div>
       </SidebarProvider>
-    </div>
+    </SessionProvider>
   );
 }

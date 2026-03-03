@@ -1,18 +1,13 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Noto_Sans } from "next/font/google";
+import localFont from "next/font/local";
+import { Suspense } from "react";
 import "./globals.css";
 
-const notoSans = Noto_Sans({ variable: "--font-sans" });
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const oxanium = localFont({
+  src: "./fonts/Oxanium.ttf",
+  style: "normal",
+  variable: "--font-oxanium",
 });
 
 export const metadata: Metadata = {
@@ -26,11 +21,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={notoSans.variable}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <TooltipProvider>{children}</TooltipProvider>
+    <html lang="en" className={oxanium.variable}>
+      <body className={`${oxanium.variable} overflow-hidden antialiased`}>
+        <Suspense>
+          <TooltipProvider>{children}</TooltipProvider>
+        </Suspense>
       </body>
     </html>
   );
