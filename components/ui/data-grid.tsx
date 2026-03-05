@@ -50,6 +50,7 @@ type DataGridProps<T> = {
   pagination?: DataGridPagination;
   emptyMessage?: string;
   className?: string;
+  onRowClick?: (row: T) => void;
 };
 
 function DataGrid<T>({
@@ -62,11 +63,12 @@ function DataGrid<T>({
   pagination,
   emptyMessage = "No data found",
   className,
+  onRowClick,
 }: DataGridProps<T>) {
   return (
-    <Card className={cn("p-0 pb-0 shape-main", className)}>
+    <Card className={cn("p-0 pb-0 shape-main h-full max-w-full", className)}>
       {title && (
-        <CardHeader className="px-4 py-3 bg-gray-800 shape-main">
+        <CardHeader className="px-4 py-3 bg-gray-800 shape-main shrink-0">
           <CardTitle className="flex items-center gap-2 text-sm">
             {icon}
             {title}
@@ -74,7 +76,7 @@ function DataGrid<T>({
         </CardHeader>
       )}
 
-      <CardContent className="p-0">
+      <CardContent className="p-0 min-h-0 flex-1 overflow-hidden">
         {loading && data.length === 0 ? (
           <div className="flex items-center justify-center py-12">
             <IconLoader2 className="size-5 animate-spin text-muted-foreground" />
@@ -84,7 +86,7 @@ function DataGrid<T>({
             <p>{emptyMessage}</p>
           </div>
         ) : (
-          <div className="relative">
+          <div className="relative h-full">
             {loading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-card/60">
                 <IconLoader2 className="size-5 animate-spin text-muted-foreground" />
@@ -102,7 +104,11 @@ function DataGrid<T>({
               </TableHeader>
               <TableBody>
                 {data.map((row) => (
-                  <TableRow key={rowKey(row)}>
+                  <TableRow
+                    key={rowKey(row)}
+                    onClick={onRowClick ? () => onRowClick(row) : undefined}
+                    className={onRowClick ? "cursor-pointer" : undefined}
+                  >
                     {columns.map((col) => (
                       <TableCell key={col.key} className={col.cellClassName}>
                         {col.render(row)}
@@ -117,7 +123,7 @@ function DataGrid<T>({
       </CardContent>
 
       {pagination && pagination.totalPages > 0 && (
-        <CardFooter className="justify-between py-2 bg-gray-800 border-none rounded-none">
+        <CardFooter className="justify-between py-2 bg-gray-800 border-none rounded-none shrink-0">
           <p className="text-xs text-muted-foreground tabular-nums">
             Page {pagination.page} of {pagination.totalPages}
           </p>

@@ -5,12 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { requireSession } from "@/lib/auth/session.auth";
 
 import { UserProfile } from "@/types/profile";
-import {
-  IconDeviceGamepad2,
-  IconReceipt,
-  IconShoppingCart,
-  IconTrophy,
-} from "@tabler/icons-react";
+import { IconDeviceGamepad2, IconReceipt } from "@tabler/icons-react";
+import { getProfile } from "./actions";
 
 // function ProfileUserCard() {
 //   const { user } = useSession();
@@ -134,21 +130,25 @@ import {
 // }
 
 export default async function ProfilePage() {
-  const session = await requireSession();
-  //   const profile = await getProfile();
+  const [session, profile] = await Promise.all([
+    requireSession(),
+    getProfile(),
+  ]);
 
   return (
-    <main className="h-full p-4 lg:overflow-hidden md:py-4">
+    <main className="h-full p-4 overflow-auto lg:overflow-hidden md:py-4">
       <div className="grid h-full gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         {/* Left column - User details */}
         <aside className="lg:overflow-y-auto">
-          <ProfileDetails user={session.user as UserProfile} />
+          <ProfileDetails
+            user={profile.data || (session.user as UserProfile)}
+          />
         </aside>
 
         {/* Right column - Tabs content */}
-        <section className="min-w-0 min-h-0">
+        <section className="min-w-0 lg:min-h-0 lg:overflow-hidden">
           <Tabs
-            className="h-full gap-4 grid grid-rows-[auto_1fr] overflow-hidden"
+            className="gap-4 lg:h-full lg:grid lg:grid-rows-[auto_1fr] lg:overflow-hidden"
             defaultValue="overview"
           >
             <TabsList
@@ -163,21 +163,21 @@ export default async function ProfilePage() {
                 <IconReceipt className="size-3.5" />
                 Transactions
               </TabsTrigger>
-              <TabsTrigger value="item-shop" className="gap-1.5">
+              {/* <TabsTrigger value="item-shop" className="gap-1.5">
                 <IconShoppingCart className="size-3.5" />
                 Item Shop
-              </TabsTrigger>
-              <TabsTrigger value="achievements" className="gap-1.5">
-                <IconTrophy className="size-3.5" />
-                Achievements
-              </TabsTrigger>
+              </TabsTrigger> */}
             </TabsList>
 
-            <section className="h-full min-h-0 pb-4 lg:overflow-auto">
+            <section className="pb-4 lg:pb-0 lg:h-full lg:min-h-0 lg:overflow-auto">
               <TabsContent value="overview">
                 <ProfileOverviewTab />
               </TabsContent>
-              <TabsContent value="transactions">
+              <TabsContent
+                value="transactions"
+                forceMount
+                className="data-[state=inactive]:hidden"
+              >
                 <ProfileTransactionsTab />
               </TabsContent>
             </section>

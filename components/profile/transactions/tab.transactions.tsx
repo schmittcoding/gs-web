@@ -1,13 +1,21 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 
 import { getTransactions } from "@/app/(dashboard)/profile/actions";
 import Coin from "@/components/common/coin";
 import { DataGrid, type DataGridColumn } from "@/components/ui/data-grid";
 import { formatCurrency, formatDate } from "@/lib/formatters";
+import { copyText } from "@/lib/utils";
 import { type Transaction } from "@/types/transaction";
 import { IconReceipt } from "@tabler/icons-react";
+import { sileo } from "sileo";
 import { TRANSACTION_TYPE_MAP } from "./constants.transactions";
 import TransactionStatusBadge from "./status-badge.transactions";
 
@@ -108,6 +116,16 @@ export function ProfileTransactionsTab() {
     fetchPage(1);
   }, [fetchPage]);
 
+  const handleRowClick = useCallback((row: Transaction) => {
+    copyText(row.transaction_id).then(() => {
+      sileo.info({
+        title: "Transaction ID copied to clipboard.",
+        description:
+          "Paste it in the Discord server when doing a follow-up on this transaction.",
+      });
+    });
+  }, []);
+
   return (
     <DataGrid
       columns={columns}
@@ -123,6 +141,7 @@ export function ProfileTransactionsTab() {
         onPageChange: fetchPage,
         disabled: isPending,
       }}
+      onRowClick={handleRowClick}
     />
   );
 }

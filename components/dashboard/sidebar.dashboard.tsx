@@ -93,7 +93,7 @@ export default function DashboardSidebar() {
     <>
       <MobileSidebar />
       <Sidebar
-        className="relative h-full px-2 py-4 border-none w-18 hidden md:flex"
+        className="relative h-full px-2 py-4 border-none w-18 hidden md:flex bg-transparent"
         collapsible="none"
         variant="inset"
       >

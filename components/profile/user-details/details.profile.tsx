@@ -1,7 +1,9 @@
 import Coin from "@/components/common/coin";
 import GameButton from "@/components/common/game.button";
+import { ChangePasswordDialog } from "@/components/profile/user-details/change-password/change-password.dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { formatDate } from "@/lib/formatters";
 import { UserProfile } from "@/types/profile";
 import { IconKey, IconLock, IconMail } from "@tabler/icons-react";
 
@@ -44,14 +46,14 @@ export default function ProfileDetails({ user }: ProfileDetailsProps) {
           </span>{" "}
           <span className="text-muted-foreground">/</span> {user.user_role}
         </p>
-        <div className="grid grid-cols-2 gap-2 lg:gap-1 lg:grid-cols-1">
-          <p className="text-sm">
-            <span className="text-muted-foreground">Date Created:</span>{" "}
-          </p>
-          <p className="text-sm">
-            <span className="text-muted-foreground">Last Updated:</span>{" "}
-          </p>
-        </div>
+        <p className="text-sm">
+          <span className="text-muted-foreground">Date Created:</span>{" "}
+          {formatDate(user.created_at!)}
+        </p>
+        <p className="text-sm">
+          <span className="text-muted-foreground">Last Updated:</span>{" "}
+          {formatDate(user.last_updated!)}
+        </p>
       </section>
       <Separator />
       <section className="grid grid-cols-2 gap-2 lg:grid-cols-1">
@@ -60,10 +62,12 @@ export default function ProfileDetails({ user }: ProfileDetailsProps) {
       </section>
       <Separator />
       <section className="grid grid-cols-3 gap-2 lg:grid-cols-1">
-        <GameButton className="w-full" size="sm" variant="secondary">
-          <IconLock />
-          Change Password
-        </GameButton>
+        <ChangePasswordDialog>
+          <GameButton className="w-full" size="sm" variant="secondary">
+            <IconLock />
+            Change Password
+          </GameButton>
+        </ChangePasswordDialog>
         <GameButton className="w-full" size="sm" variant="secondary">
           <IconKey />
           Change Pincode

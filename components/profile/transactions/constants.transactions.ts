@@ -5,10 +5,10 @@ export const TRANSACTION_TYPE_MAP: Record<
     currency: string;
   }
 > = {
-  0: { label: "GCash", currency: "PHP" },
-  1: { label: "PayPal", currency: "PHP" },
-  2: { label: "Wise", currency: "PHP" },
-  3: { label: "PayMongo", currency: "PHP" },
+  1: { label: "GCash", currency: "PHP" },
+  2: { label: "PayPal", currency: "USD" },
+  3: { label: "Wise", currency: "USD" },
+  4: { label: "PayMongo", currency: "PHP" },
 };
 
 export const TRANSACTION_STATUS_MAP: Record<

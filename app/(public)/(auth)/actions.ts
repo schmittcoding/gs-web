@@ -46,15 +46,11 @@ export async function loginAction(
 
   const parsed = loginSchema.safeParse(raw);
 
-  console.log({ parsed });
-
   if (!parsed.success) {
     return { error: z.flattenError(parsed.error).fieldErrors };
   }
 
   const result = await apiLogin(parsed.data);
-
-  console.log({ result });
 
   if (!result.success || !result.setCookieHeader) {
     return { error: result.error ?? "Login failed. Please try again" };

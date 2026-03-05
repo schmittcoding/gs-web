@@ -2,6 +2,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Suspense } from "react";
+import { Toaster } from "sileo";
 import "./globals.css";
 
 const oxanium = localFont({
@@ -24,6 +25,15 @@ export default function RootLayout({
     <html lang="en" className={oxanium.variable}>
       <body className={`${oxanium.variable} overflow-hidden antialiased`}>
         <Suspense>
+          <Toaster
+            position="top-center"
+            options={{
+              fill: "var(--color-cod-gray-900)",
+              styles: {
+                description: "text-muted-foreground",
+              },
+            }}
+          />
           <TooltipProvider>{children}</TooltipProvider>
         </Suspense>
       </body>
