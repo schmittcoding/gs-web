@@ -1,4 +1,5 @@
 import ProfileOverviewTab from "@/components/profile/overview/tab.overview";
+import { ProfileTransactionsTab } from "@/components/profile/transactions/tab.transactions";
 import ProfileDetails from "@/components/profile/user-details/details.profile";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { requireSession } from "@/lib/auth/session.auth";
@@ -137,21 +138,23 @@ export default async function ProfilePage() {
   //   const profile = await getProfile();
 
   return (
-    <main className="h-full p-4 overflow-hidden md:py-4">
+    <main className="h-full p-4 lg:overflow-hidden md:py-4">
       <div className="grid h-full gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         {/* Left column - User details */}
-        <aside className="overflow-y-auto">
+        <aside className="lg:overflow-y-auto">
           <ProfileDetails user={session.user as UserProfile} />
-          {/* <ProfileUserCard /> */}
         </aside>
 
         {/* Right column - Tabs content */}
-        <section className="min-h-0 min-w-0">
+        <section className="min-w-0 min-h-0">
           <Tabs
             className="h-full gap-4 grid grid-rows-[auto_1fr] overflow-hidden"
             defaultValue="overview"
           >
-            <TabsList variant="line" className="justify-start w-full shrink-0 overflow-x-auto">
+            <TabsList
+              variant="line"
+              className="justify-start w-full overflow-x-auto shrink-0"
+            >
               <TabsTrigger value="overview" className="gap-1.5">
                 <IconDeviceGamepad2 className="size-3.5" />
                 Overview
@@ -170,15 +173,15 @@ export default async function ProfilePage() {
               </TabsTrigger>
             </TabsList>
 
-            <section className="min-h-0 pb-4 overflow-auto">
+            <section className="h-full min-h-0 pb-4 lg:overflow-auto">
               <TabsContent value="overview">
                 <ProfileOverviewTab />
               </TabsContent>
+              <TabsContent value="transactions">
+                <ProfileTransactionsTab />
+              </TabsContent>
             </section>
-            {/* <TabsContent value="transactions">
-              <TransactionHistoryTab />
-            </TabsContent>
-            <TabsContent value="item-shop">
+            {/* <TabsContent value="item-shop">
               <ItemShopHistoryTab />
             </TabsContent>
             <TabsContent value="achievements">

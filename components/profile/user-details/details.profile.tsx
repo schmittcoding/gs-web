@@ -44,20 +44,22 @@ export default function ProfileDetails({ user }: ProfileDetailsProps) {
           </span>{" "}
           <span className="text-muted-foreground">/</span> {user.user_role}
         </p>
-        <p className="text-sm">
-          <span className="text-muted-foreground">Date Created:</span>{" "}
-        </p>
-        <p className="text-sm">
-          <span className="text-muted-foreground">Last Updated:</span>{" "}
-        </p>
+        <div className="grid grid-cols-2 gap-2 lg:gap-1 lg:grid-cols-1">
+          <p className="text-sm">
+            <span className="text-muted-foreground">Date Created:</span>{" "}
+          </p>
+          <p className="text-sm">
+            <span className="text-muted-foreground">Last Updated:</span>{" "}
+          </p>
+        </div>
       </section>
       <Separator />
-      <section className="space-y-2">
+      <section className="grid grid-cols-2 gap-2 lg:grid-cols-1">
         <Coin size="lg" value={user.web_points} />
         <Coin variant="mcoin" size="lg" value={user.mileage_points} />
       </section>
       <Separator />
-      <section className="space-y-2">
+      <section className="grid grid-cols-3 gap-2 lg:grid-cols-1">
         <GameButton className="w-full" size="sm" variant="secondary">
           <IconLock />
           Change Password
