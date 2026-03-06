@@ -1,6 +1,6 @@
 "use client";
 
-import { changePincode } from "@/app/(dashboard)/profile/actions";
+import { changeEmail } from "@/app/(dashboard)/profile/actions";
 import GameButton from "@/components/common/game.button";
 import {
   Dialog,
@@ -11,17 +11,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import FormInput from "@/components/ui/form/input.form";
 import { FormPasswordInput } from "@/components/ui/form/password-input.form";
-import { IconKey, IconLock, IconLockOpen } from "@tabler/icons-react";
+import { IconLock, IconMail } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useState } from "react";
 import { sileo } from "sileo";
 
-type ChangePinDialogProps = {
+type ChangeEmailDialogProps = {
   children: React.ReactNode;
 };
 
-export function ChangePinDialog({ children }: ChangePinDialogProps) {
+export function ChangeEmailDialog({ children }: ChangeEmailDialogProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [state, action, pending] = useActionState(
@@ -29,11 +30,11 @@ export function ChangePinDialog({ children }: ChangePinDialogProps) {
       _prev: { error?: string; success?: boolean },
       formData: FormData,
     ) => {
-      const result = await changePincode(_prev, formData);
+      const result = await changeEmail(_prev, formData);
       if (result.success) {
         setOpen(false);
         sileo.success({
-          title: "Account pincode updated successfully.",
+          title: "Account email address updated successfully.",
         });
         router.refresh();
       }
@@ -50,38 +51,29 @@ export function ChangePinDialog({ children }: ChangePinDialogProps) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Change Account Pin</DialogTitle>
+          <DialogTitle>Change Email Address</DialogTitle>
           <DialogDescription>
-            Enter your current account pin and set a new one.
+            Please verify the details below before proceeding.
           </DialogDescription>
         </DialogHeader>
         <form action={action}>
           <div className="px-4 pb-4 space-y-3">
-            <FormPasswordInput
-              label="Old Pincode"
-              id="old_pincode"
-              name="old_pincode"
-              startIcon={IconLockOpen}
-              placeholder="Enter current pincode"
-              error={fieldErrors?.oldPincode?.[0]}
+            <FormInput
+              label="Email Address"
+              id="email_address"
+              name="email_address"
+              startIcon={IconMail}
+              placeholder="Enter new email address"
+              error={fieldErrors?.emailAddress?.[0]}
             />
             <FormPasswordInput
-              label="New Pincode"
-              id="new_pincode"
-              name="new_pincode"
+              label="Account PIN"
+              id="account_pin"
+              name="account_pin"
               startIcon={IconLock}
-              placeholder="Enter new pincode"
+              placeholder="Enter account PIN"
               maxLength={6}
-              error={fieldErrors?.newPincode?.[0]}
-            />
-            <FormPasswordInput
-              label="Confirm Pincode"
-              id="confirm_pincode"
-              name="confirm_pincode"
-              startIcon={IconKey}
-              placeholder="Confirm pincode"
-              maxLength={6}
-              error={fieldErrors?.confirmPincode?.[0]}
+              error={fieldErrors?.accountPin?.[0]}
             />
             {globalError && (
               <div
@@ -99,7 +91,7 @@ export function ChangePinDialog({ children }: ChangePinDialogProps) {
               className="w-full sm:w-auto"
               loading={pending}
             >
-              Update Pincode
+              Update Email Address
             </GameButton>
           </DialogFooter>
         </form>

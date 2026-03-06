@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { FormPasswordInput } from "@/components/ui/form/password-input.form";
 import { IconKey, IconLock, IconLockOpen } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import { useActionState, useState } from "react";
 import { sileo } from "sileo";
 
@@ -21,6 +22,7 @@ type ChangePasswordDialogProps = {
 };
 
 export function ChangePasswordDialog({ children }: ChangePasswordDialogProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [state, action, pending] = useActionState(
     async (
@@ -33,6 +35,7 @@ export function ChangePasswordDialog({ children }: ChangePasswordDialogProps) {
         sileo.success({
           title: "Password updated successfully.",
         });
+        router.refresh();
       }
       return result;
     },
@@ -56,6 +59,7 @@ export function ChangePasswordDialog({ children }: ChangePasswordDialogProps) {
           <div className="px-4 pb-4 space-y-3">
             <FormPasswordInput
               label="Old Password"
+              id="old_password"
               name="old_password"
               startIcon={IconLockOpen}
               placeholder="Enter current password"
@@ -63,6 +67,7 @@ export function ChangePasswordDialog({ children }: ChangePasswordDialogProps) {
             />
             <FormPasswordInput
               label="New Password"
+              id="new_password"
               name="new_password"
               startIcon={IconLock}
               placeholder="Enter new password"
@@ -72,6 +77,7 @@ export function ChangePasswordDialog({ children }: ChangePasswordDialogProps) {
             />
             <FormPasswordInput
               label="Account PIN"
+              id="account_pin"
               name="account_pin"
               startIcon={IconKey}
               placeholder="Enter account PIN"

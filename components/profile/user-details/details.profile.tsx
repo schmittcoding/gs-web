@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { formatDate } from "@/lib/formatters";
 import { UserProfile } from "@/types/profile";
 import { IconKey, IconLock, IconMail } from "@tabler/icons-react";
+import { ChangeEmailDialog } from "./change-email/change-email.dialog";
 import { ChangePinDialog } from "./change-pin/change-pin.dialog";
 
 type ProfileDetailsProps = {
@@ -75,10 +76,12 @@ export default function ProfileDetails({ user }: ProfileDetailsProps) {
             Change Pincode
           </GameButton>
         </ChangePinDialog>
-        <GameButton className="w-full" size="sm" variant="secondary">
-          <IconMail />
-          Change Email
-        </GameButton>
+        <ChangeEmailDialog>
+          <GameButton className="w-full" size="sm" variant="secondary">
+            <IconMail />
+            Change Email
+          </GameButton>
+        </ChangeEmailDialog>
       </section>
     </div>
   );

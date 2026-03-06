@@ -1,6 +1,10 @@
 "use server";
 
 import {
+  changeEmailSchema,
+  ChangeEmailState,
+} from "@/components/profile/user-details/change-email/change-email.schema";
+import {
   changePasswordSchema,
   ChangePasswordState,
 } from "@/components/profile/user-details/change-password/change-password.schema";
@@ -120,6 +124,44 @@ export async function changePincode(
     return {
       success: false,
       error: error?.error ?? "Failed to change account pincode.",
+    };
+  }
+
+  return { success: true };
+}
+
+export async function changeEmail(
+  _prevState: ChangeEmailState,
+  formData: FormData,
+) {
+  const raw = {
+    accountPin: formData.get("account_pin"),
+    emailAddress: formData.get("email_address"),
+  };
+
+  const parsed = changeEmailSchema.safeParse(raw);
+
+  if (!parsed.success) {
+    return { success: false, error: z.flattenError(parsed.error).fieldErrors };
+  }
+
+  const res = await fetcherPrivate("/v1/auth/change-email", {
+    method: "POST",
+    body: JSON.stringify({
+      email: raw.emailAddress,
+      pincode: raw.accountPin,
+    }),
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      redirect(AUTH_CONFIG.loginPath);
+    }
+
+    const error = await res.json().catch(() => null);
+    return {
+      success: false,
+      error: error?.error ?? "Failed to change email address.",
     };
   }
 
