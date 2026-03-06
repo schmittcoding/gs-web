@@ -16,12 +16,11 @@ export function SessionProvider({
   user,
   children,
 }: PropsWithChildren<Omit<SessionContextProps, "isAdmin">>) {
-  console.log({ user });
   const value = useMemo<SessionContextProps>(
     () => ({
       user,
       expiresAt,
-      isAdmin: user.role === "admin",
+      isAdmin: user.user_role.toLowerCase() === "admin",
     }),
     [user, expiresAt],
   );

@@ -59,8 +59,6 @@ export async function loginAction(
   const cookieStore = await cookies();
   const parsedCookie = parseSetCookie(result.setCookieHeader);
 
-  console.log({ parsedCookie });
-
   if (parsedCookie) {
     cookieStore.set(AUTH_CONFIG.cookieName, parsedCookie.value, {
       httpOnly: true,

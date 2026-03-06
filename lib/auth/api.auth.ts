@@ -96,8 +96,6 @@ export async function login(
       cache: "no-store",
     });
 
-    console.log({ response });
-
     const setCookieHeader = response.headers.get("set-cookie");
 
     if (!response.ok) {

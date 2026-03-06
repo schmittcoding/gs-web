@@ -1,7 +1,9 @@
 "use client";
 
+import { logoutAction } from "@/app/(dashboard)/profile/actions";
 import { IconLogout2, IconSettingsFilled } from "@tabler/icons-react";
-import { Fragment } from "react/jsx-runtime";
+import { useRouter } from "next/navigation";
+import { Fragment, useCallback, useTransition } from "react";
 import {
   Sheet,
   SheetContent,
@@ -25,6 +27,14 @@ import { sidebarMenu } from "./sidebar/constants.sidebar";
 import SidebarItem from "./sidebar/item.sidebar";
 
 function SidebarMenuContent() {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const handleLogout = useCallback(() => {
+    router.push("/login");
+    startTransition(() => logoutAction());
+  }, [router]);
+
   return (
     <>
       <SidebarContent>
@@ -54,7 +64,11 @@ function SidebarMenuContent() {
               </SidebarMenuItem>
               <SidebarSeparator className="my-2" />
               <SidebarMenuItem>
-                <SidebarMenuButton className="justify-center [&_svg]:size-8 py-5 text-gray-500 not-data-active:hover:text-gray-400 hover:bg-transparent data-active:text-foreground data-active:bg-transparent fill-gray-400">
+                <SidebarMenuButton
+                  onClick={handleLogout}
+                  disabled={isPending}
+                  className="justify-center [&_svg]:size-8 py-5 text-gray-500 not-data-active:hover:text-gray-400 hover:bg-transparent data-active:text-foreground data-active:bg-transparent fill-gray-400"
+                >
                   <IconLogout2 />
                 </SidebarMenuButton>
               </SidebarMenuItem>

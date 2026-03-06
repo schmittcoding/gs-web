@@ -12,10 +12,14 @@ import {
   changePincodeSchema,
   ChangePincodeState,
 } from "@/components/profile/user-details/change-pin/change-pin.schema";
+import { logout as apiLogout } from "@/lib/auth/api.auth";
+import { hashToken } from "@/lib/auth/utils.auth";
 import { AUTH_CONFIG } from "@/lib/constants";
 import { fetcherPrivate } from "@/lib/fetcher";
 import { UserProfile } from "@/types/profile";
 import { TransactionsResponse } from "@/types/transaction";
+import { revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import z from "zod";
 
@@ -166,6 +170,18 @@ export async function changeEmail(
   }
 
   return { success: true };
+}
+
+export async function logoutAction() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(AUTH_CONFIG.cookieName)?.value;
+  cookieStore.delete(AUTH_CONFIG.cookieName);
+
+  if (token) {
+    const tokenHash = await hashToken(token);
+    await apiLogout();
+    revalidateTag(`session:${tokenHash}`, {});
+  }
 }
 
 export async function resetPin() {
