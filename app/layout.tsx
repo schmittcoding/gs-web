@@ -28,9 +28,9 @@ export default function RootLayout({
           <Toaster
             position="top-center"
             options={{
-              fill: "var(--color-cod-gray-900)",
+              fill: "var(--color-cod-gray-800)",
               styles: {
-                description: "text-muted-foreground",
+                description: "text-muted",
               },
             }}
           />

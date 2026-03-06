@@ -5,9 +5,10 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { formatDate } from "@/lib/formatters";
 import { UserProfile } from "@/types/profile";
-import { IconKey, IconLock, IconMail } from "@tabler/icons-react";
+import { IconKey, IconLock, IconMail, IconRefresh } from "@tabler/icons-react";
 import { ChangeEmailDialog } from "./change-email/change-email.dialog";
 import { ChangePinDialog } from "./change-pin/change-pin.dialog";
+import { ResetPinDialog } from "./reset-pin/reset-pin.dialog";
 
 type ProfileDetailsProps = {
   user: UserProfile;
@@ -63,7 +64,7 @@ export default function ProfileDetails({ user }: ProfileDetailsProps) {
         <Coin variant="mcoin" size="lg" value={user.mileage_points} />
       </section>
       <Separator />
-      <section className="grid grid-cols-3 gap-2 lg:grid-cols-1">
+      <section className="grid grid-cols-2 gap-4 lg:gap-2 lg:grid-cols-1">
         <ChangePasswordDialog>
           <GameButton className="w-full" size="sm" variant="secondary">
             <IconLock />
@@ -82,6 +83,12 @@ export default function ProfileDetails({ user }: ProfileDetailsProps) {
             Change Email
           </GameButton>
         </ChangeEmailDialog>
+        <ResetPinDialog>
+          <GameButton className="w-full" size="sm" variant="secondary">
+            <IconRefresh />
+            Reset Account PIN
+          </GameButton>
+        </ResetPinDialog>
       </section>
     </div>
   );

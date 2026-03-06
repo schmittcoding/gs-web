@@ -167,3 +167,23 @@ export async function changeEmail(
 
   return { success: true };
 }
+
+export async function resetPin() {
+  const res = await fetcherPrivate("/v1/auth/reset-pincode", {
+    method: "POST",
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      redirect(AUTH_CONFIG.loginPath);
+    }
+
+    const error = await res.json().catch(() => null);
+    return {
+      success: false,
+      error: error?.error ?? "Failed to change email address.",
+    };
+  }
+
+  return { success: true };
+}
