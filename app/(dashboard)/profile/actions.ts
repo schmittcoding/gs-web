@@ -4,6 +4,10 @@ import {
   changePasswordSchema,
   ChangePasswordState,
 } from "@/components/profile/user-details/change-password/change-password.schema";
+import {
+  changePincodeSchema,
+  ChangePincodeState,
+} from "@/components/profile/user-details/change-pin/change-pin.schema";
 import { AUTH_CONFIG } from "@/lib/constants";
 import { fetcherPrivate } from "@/lib/fetcher";
 import { UserProfile } from "@/types/profile";
@@ -77,6 +81,45 @@ export async function changePassword(
     return {
       success: false,
       error: error?.error ?? "Failed to change password.",
+    };
+  }
+
+  return { success: true };
+}
+
+export async function changePincode(
+  _prevState: ChangePincodeState,
+  formData: FormData,
+) {
+  const raw = {
+    oldPincode: formData.get("old_pincode"),
+    newPincode: formData.get("new_pincode"),
+    confirmPincode: formData.get("confirm_pincode"),
+  };
+
+  const parsed = changePincodeSchema.safeParse(raw);
+
+  if (!parsed.success) {
+    return { success: false, error: z.flattenError(parsed.error).fieldErrors };
+  }
+
+  const res = await fetcherPrivate("/v1/auth/change-pincode", {
+    method: "POST",
+    body: JSON.stringify({
+      old_pincode: raw.oldPincode,
+      new_pincode: raw.newPincode,
+    }),
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      redirect(AUTH_CONFIG.loginPath);
+    }
+
+    const error = await res.json().catch(() => null);
+    return {
+      success: false,
+      error: error?.error ?? "Failed to change account pincode.",
     };
   }
 

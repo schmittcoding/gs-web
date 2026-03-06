@@ -1,4 +1,5 @@
-import z, { ZodFlattenedError } from "zod";
+import { SchemaState } from "@/types/schema";
+import z from "zod";
 
 // Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character
 const passwordValidation = new RegExp(
@@ -18,8 +19,4 @@ export const changePasswordSchema = z.object({
 });
 
 export type ChangePasswordPayload = z.infer<typeof changePasswordSchema>;
-
-export type ChangePasswordState = {
-  error?: string | ZodFlattenedError<ChangePasswordPayload>["fieldErrors"];
-  success?: boolean;
-};
+export type ChangePasswordState = SchemaState<ChangePasswordPayload>;
