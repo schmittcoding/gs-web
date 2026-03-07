@@ -10,7 +10,7 @@ export async function POST() {
   const token = cookieStore.get(AUTH_CONFIG.cookieName)?.value;
 
   if (token) {
-    await apiLogout(token);
+    await apiLogout();
 
     const tokenHash = await hashToken(token);
     revalidateTag(`session:${tokenHash}`, {});
