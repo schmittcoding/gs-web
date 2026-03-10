@@ -11,7 +11,7 @@ export default async function ProfilePage() {
   const [, profile] = await Promise.all([requireSession(), getProfile()]);
 
   return (
-    <main className="h-full p-4 overflow-auto lg:overflow-hidden md:py-4">
+    <main className="h-full p-4 overflow-auto lg:overflow-hidden">
       <div className="grid h-full gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         {/* Left column - User details */}
         <aside className="lg:overflow-y-auto">

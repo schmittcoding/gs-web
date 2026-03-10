@@ -10,9 +10,10 @@ import { useSidebar } from "../ui/sidebar";
 
 type DashboardHeaderProps = {
   user: User;
+  pageHeader: React.ReactNode;
 };
 
-export default function DashboardHeader({ user }: DashboardHeaderProps) {
+export default function DashboardHeader({ user, pageHeader }: DashboardHeaderProps) {
   const { toggleSidebar } = useSidebar();
 
   return (
@@ -28,6 +29,9 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
           <span className="sr-only">Open menu</span>
         </Button>
         <Image src="/logo.png" alt="Ran Online GS" width={150} height={72} />
+        {pageHeader && (
+          <div className="hidden md:block">{pageHeader}</div>
+        )}
       </section>
       <section className="flex items-center gap-4">
         <div className="flex items-center gap-2">

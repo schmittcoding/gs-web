@@ -6,9 +6,14 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { getSession } from "@/lib/auth/session.auth";
 import { AUTH_CONFIG } from "@/lib/constants";
 import { redirect } from "next/navigation";
-import { PropsWithChildren } from "react";
+import { ReactNode } from "react";
 
-export default async function Layout({ children }: PropsWithChildren) {
+type LayoutProps = {
+  children: ReactNode;
+  header: ReactNode;
+};
+
+export default async function Layout({ children, header }: LayoutProps) {
   const session = await getSession();
 
   if (!session) {
@@ -27,7 +32,7 @@ export default async function Layout({ children }: PropsWithChildren) {
             />
             <div className="absolute inset-0 bg-linear-to-t from-background from-10% to-85%" />
           </div>
-          <DashboardHeader user={session.user} />
+          <DashboardHeader user={session.user} pageHeader={header} />
           <div className="flex min-h-0">
             <DashboardSidebar />
             <SidebarInset className="overflow-hidden bg-transparent">

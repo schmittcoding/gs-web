@@ -8,6 +8,7 @@ type CoinVariant = "rcoin" | "mcoin";
 type CoinProps = React.ComponentProps<typeof IconGameCoin> & {
   variant?: CoinVariant;
   value: number;
+  prevValue?: number;
 };
 
 const coinVariants = cva("flex items-center gap-2 text-base", {
@@ -21,6 +22,7 @@ const coinVariants = cva("flex items-center gap-2 text-base", {
 
 export default function Coin({
   className,
+  prevValue,
   size = "sm",
   variant = "rcoin",
   value,
@@ -29,9 +31,21 @@ export default function Coin({
   const Icon = variant === "rcoin" ? IconGameCoin : IconMileageCoin;
 
   return (
-    <p className={cn(coinVariants({ size, className }))}>
-      <Icon title={variant === "rcoin" ? "R-Coin" : "Mileage"} {...props} />
-      <span>{formatCurrency(value)}</span>
+    <p data-slot="coin" className={cn(coinVariants({ size, className }))}>
+      <Icon
+        data-slot="coin-icon"
+        title={variant === "rcoin" ? "R-Coin" : "Mileage"}
+        {...props}
+      />
+      <span data-slot="coin-value">{formatCurrency(value)}</span>
+      {typeof prevValue === "number" && prevValue > 0 && (
+        <span
+          className="text-muted-foreground line-through"
+          data-slot="prev-value"
+        >
+          {formatCurrency(prevValue)}
+        </span>
+      )}
     </p>
   );
 }

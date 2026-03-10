@@ -221,6 +221,41 @@
   corner-shape: square bevel;
 }
 
+.item-shop {
+  background:
+    fixed
+      linear-gradient(
+        var(--background-metallic),
+        var(--background-metallic) 4px,
+        transparent 4px,
+        transparent
+      ),
+    fixed linear-gradient(transparent, var(--background) 70%),
+    fixed
+      repeating-linear-gradient(
+        var(--background-dark),
+        var(--background-dark) 1px,
+        transparent 1px,
+        transparent 40px
+      ),
+    fixed
+      repeating-linear-gradient(
+        to right,
+        var(--background-dark),
+        var(--background-dark) 1px,
+        transparent 1px,
+        transparent 40px
+      );
+}
+
+.item-card > [data-slot="item-content"],
+.cart-item {
+  background:
+    linear-gradient(to top, var(--background), transparent),
+    url("/images/patterns/diagmonds.png"),
+    linear-gradient(to bottom, var(--background), transparent);
+}
+
 @utility fixed-center {
   @apply fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
 }
