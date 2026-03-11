@@ -124,13 +124,13 @@ function DataGrid<T>({
 
       {pagination && pagination.totalPages > 0 && (
         <CardFooter className="justify-between py-2 bg-gray-800 border-none rounded-none shrink-0">
-          <p className="text-xs text-muted-foreground tabular-nums">
+          <p className="text-sm text-muted-foreground tabular-nums">
             Page {pagination.page} of {pagination.totalPages}
           </p>
           <div className="flex items-center gap-1">
             <GameButton
               variant="outline"
-              size="sm"
+              size="icon"
               disabled={pagination.page <= 1 || pagination.disabled}
               onClick={() => pagination.onPageChange(pagination.page - 1)}
             >
@@ -138,7 +138,7 @@ function DataGrid<T>({
             </GameButton>
             <GameButton
               variant="outline"
-              size="sm"
+              size="icon"
               disabled={
                 pagination.page >= pagination.totalPages || pagination.disabled
               }

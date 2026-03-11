@@ -66,25 +66,25 @@ export default function ProfileDetails({ user }: ProfileDetailsProps) {
       <Separator />
       <section className="grid grid-cols-2 gap-4 lg:gap-2 lg:grid-cols-1">
         <ChangePasswordDialog>
-          <GameButton className="w-full" size="sm" variant="secondary">
+          <GameButton className="w-full" variant="secondary">
             <IconLock />
             Change Password
           </GameButton>
         </ChangePasswordDialog>
         <ChangePinDialog>
-          <GameButton className="w-full" size="sm" variant="secondary">
+          <GameButton className="w-full" variant="secondary">
             <IconKey />
             Change Pincode
           </GameButton>
         </ChangePinDialog>
         <ChangeEmailDialog>
-          <GameButton className="w-full" size="sm" variant="secondary">
+          <GameButton className="w-full" variant="secondary">
             <IconMail />
             Change Email
           </GameButton>
         </ChangeEmailDialog>
         <ResetPinDialog>
-          <GameButton className="w-full" size="sm" variant="secondary">
+          <GameButton className="w-full" variant="secondary">
             <IconRefresh />
             Reset Account PIN
           </GameButton>

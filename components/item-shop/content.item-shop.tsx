@@ -4,10 +4,9 @@ import ItemShopFilters, {
   type ItemFilters,
 } from "@/components/item-shop/filters.item-shop";
 import ItemCard from "@/components/item-shop/item-card.item-shop";
-import { Button } from "@/components/ui/button";
 import { IconFilter, IconSearch, IconX } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
-import GameButton from "../common/game.button";
+import { default as GameButton } from "../common/game.button";
 import FormInput from "../ui/form/input.form";
 import { EItemCategory, ShopItem } from "./types.item-shop";
 
@@ -156,7 +155,7 @@ export default function ItemShopContent({ items }: ItemShopContentProps) {
                   <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                     {category}
                   </h2>
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
                     {groupItems.map((item) => (
                       <ItemCard key={item.product_num} item={item} />
                     ))}
@@ -168,7 +167,7 @@ export default function ItemShopContent({ items }: ItemShopContentProps) {
             <div className="flex h-64 flex-col items-center justify-center gap-2 text-muted-foreground">
               <IconSearch className="size-8 opacity-30" />
               <p className="text-sm">No items match your filters</p>
-              <Button
+              <GameButton
                 variant="ghost"
                 size="sm"
                 onClick={() => {
@@ -183,7 +182,7 @@ export default function ItemShopContent({ items }: ItemShopContentProps) {
                 }}
               >
                 Clear all filters
-              </Button>
+              </GameButton>
             </div>
           )}
         </section>
@@ -210,13 +209,13 @@ export default function ItemShopContent({ items }: ItemShopContentProps) {
           <div className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] overflow-y-auto bg-background p-4 shadow-2xl">
             <div className="mb-4 flex items-center justify-between">
               <span className="text-sm font-semibold">Filters</span>
-              <Button
+              <GameButton
                 variant="ghost"
                 size="icon-sm"
                 onClick={() => setMobileFiltersOpen(false)}
               >
                 <IconX />
-              </Button>
+              </GameButton>
             </div>
             <ItemShopFilters
               filters={filters}

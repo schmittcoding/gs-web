@@ -55,7 +55,7 @@ export function ResetPinDialog({ children }: PropsWithChildren) {
           <DialogFooter>
             <GameButton
               type="submit"
-              size="xs"
+              size="sm"
               className="w-full sm:w-auto"
               loading={pending}
             >

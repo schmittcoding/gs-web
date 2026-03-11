@@ -95,7 +95,7 @@ export function ChangePinDialog({ children }: ChangePinDialogProps) {
           <DialogFooter>
             <GameButton
               type="submit"
-              size="xs"
+              size="sm"
               className="w-full sm:w-auto"
               loading={pending}
             >

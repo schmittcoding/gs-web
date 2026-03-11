@@ -13,7 +13,7 @@ export const sidebarMenu: Record<string, MenuItem[]> = {
     {
       id: "dashboard",
       icon: IconLayoutDashboardFilled,
-      path: "/dashboard",
+      path: "/",
     },
     {
       id: "item-shop",

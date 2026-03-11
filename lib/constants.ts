@@ -17,5 +17,5 @@ export const AUTH_CONFIG = {
   loginPath: "/login",
 
   /** Where to redirect after successful login */
-  defaultRedirect: "/dashboard",
+  defaultRedirect: "/",
 } as const;
