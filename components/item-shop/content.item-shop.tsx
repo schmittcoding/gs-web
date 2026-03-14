@@ -1,11 +1,13 @@
 "use client";
 
+import { FilterDialog } from "@/components/item-shop/filter-dialog.item-shop";
 import ItemShopFilters, {
   type ItemFilters,
 } from "@/components/item-shop/filters.item-shop";
 import ItemCard from "@/components/item-shop/item-card.item-shop";
-import { IconFilter, IconSearch, IconX } from "@tabler/icons-react";
+import { IconSearch, IconX } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
+
 import { default as GameButton } from "../common/game.button";
 import FormInput from "../ui/form/input.form";
 import { EItemCategory, ShopItem } from "./types.item-shop";
@@ -16,11 +18,8 @@ type ItemShopContentProps = {
 
 export default function ItemShopContent({ items }: ItemShopContentProps) {
   const [search, setSearch] = useState("");
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filters, setFilters] = useState<ItemFilters>({
     category: EItemCategory.All,
-    priceMin: "",
-    priceMax: "",
     availableOnly: false,
     discountedOnly: false,
   });
@@ -30,7 +29,6 @@ export default function ItemShopContent({ items }: ItemShopContentProps) {
       item_name,
       item_description,
       item_category,
-      item_price,
       item_stock,
       remaining_purchase_limit,
       item_discount,
@@ -48,12 +46,6 @@ export default function ItemShopContent({ items }: ItemShopContentProps) {
       filters.category !== EItemCategory.All &&
       item_category !== filters.category
     ) {
-      return false;
-    }
-
-    const min = filters.priceMin ? Number(filters.priceMin) : 0;
-    const max = filters.priceMax ? Number(filters.priceMax) : Infinity;
-    if (item_price < min || item_price > max) {
       return false;
     }
 
@@ -102,8 +94,6 @@ export default function ItemShopContent({ items }: ItemShopContentProps) {
 
   const activeFilterCount = [
     filters.category !== EItemCategory.All,
-    filters.priceMin !== "",
-    filters.priceMax !== "",
     filters.availableOnly,
     filters.discountedOnly,
   ].filter(Boolean).length;
@@ -132,15 +122,12 @@ export default function ItemShopContent({ items }: ItemShopContentProps) {
 
         <div className="flex items-center gap-2 ml-auto">
           {/* Mobile filter toggle */}
-          <GameButton
-            variant="outline"
-            size="sm"
-            className="lg:hidden"
-            onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-          >
-            <IconFilter />
-            {activeFilterCount > 0 && activeFilterCount}
-          </GameButton>
+          <FilterDialog
+            filters={filters}
+            onFiltersChange={setFilters}
+            availableCategories={availableCategories}
+            activeFilterCount={activeFilterCount}
+          />
         </div>
       </div>
 
@@ -174,8 +161,6 @@ export default function ItemShopContent({ items }: ItemShopContentProps) {
                   setSearch("");
                   setFilters({
                     category: EItemCategory.All,
-                    priceMin: "",
-                    priceMax: "",
                     availableOnly: false,
                     discountedOnly: false,
                   });
@@ -199,32 +184,6 @@ export default function ItemShopContent({ items }: ItemShopContentProps) {
         </div>
       </div>
 
-      {/* Mobile filters overlay */}
-      {mobileFiltersOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div
-            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-            onClick={() => setMobileFiltersOpen(false)}
-          />
-          <div className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] overflow-y-auto bg-background p-4 shadow-2xl">
-            <div className="mb-4 flex items-center justify-between">
-              <span className="text-sm font-semibold">Filters</span>
-              <GameButton
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => setMobileFiltersOpen(false)}
-              >
-                <IconX />
-              </GameButton>
-            </div>
-            <ItemShopFilters
-              filters={filters}
-              onFiltersChange={setFilters}
-              availableCategories={availableCategories}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 }

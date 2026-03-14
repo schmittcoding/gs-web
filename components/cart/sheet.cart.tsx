@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { getEffectiveLimit } from "@/lib/cart/utils.cart";
 import {
   IconMinus,
   IconPlus,
@@ -8,6 +9,7 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import Link from "next/link";
+import { sileo } from "sileo";
 import Coin from "../common/coin";
 import GameButton from "../common/game.button";
 import { useCart } from "../providers/cart.provider";
@@ -37,8 +39,8 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="flex flex-col">
-        <SheetHeader>
+      <SheetContent className="flex flex-col shape-main max-h-[calc(100%-32px)] my-auto mr-4 border border-gray-800 overflow-hidden">
+        <SheetHeader className="shape-main bg-gray-900">
           <SheetTitle>Cart ({totalItems})</SheetTitle>
           <SheetDescription>
             Review your items before checkout.
@@ -56,7 +58,7 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
               {items.map((item) => (
                 <div
                   key={item.product_num}
-                  className="flex items-center gap-3 rounded-lg border border-gray-700 bg-gray-900/30 p-2.5"
+                  className="flex items-center gap-3 shape-main border border-gray-700 bg-gray-900/30 p-2.5"
                 >
                   <div className="relative size-10 shrink-0 rounded bg-gray-800 overflow-hidden">
                     <img
@@ -91,9 +93,21 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
                     <GameButton
                       variant="ghost"
                       size="icon-xs"
-                      onClick={() =>
-                        updateQuantity(item.product_num, item.quantity + 1)
-                      }
+                      onClick={() => {
+                        const updated = updateQuantity(
+                          item.product_num,
+                          item.quantity + 1,
+                        );
+                        if (!updated) {
+                          const limit = getEffectiveLimit(
+                            item.remaining_purchase_limit,
+                            item.item_stock,
+                          );
+                          sileo.warning({
+                            description: `You can only add up to ${limit} of ${item.item_name}.`,
+                          });
+                        }
+                      }}
                     >
                       <IconPlus />
                     </GameButton>
@@ -110,7 +124,7 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
               ))}
             </div>
 
-            <SheetFooter>
+            <SheetFooter className="bg-gray-800">
               <div className="flex items-center justify-between w-full">
                 <span className="text-sm text-muted-foreground">Total</span>
                 <Coin
@@ -122,13 +136,14 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
                 <GameButton variant="ghost" size="sm" onClick={clearCart}>
                   Clear
                 </GameButton>
+
                 <GameButton
+                  asChild
                   size="sm"
                   className="flex-1"
-                  asChild
                   onClick={() => onOpenChange(false)}
                 >
-                  <Link href="/cart">Checkout</Link>
+                  <Link href="/checkout">Proceed to Checkout</Link>
                 </GameButton>
               </div>
             </SheetFooter>

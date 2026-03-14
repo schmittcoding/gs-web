@@ -4,11 +4,13 @@
 import { cn } from "@/lib/utils";
 import { IconShoppingCartPlus } from "@tabler/icons-react";
 import { useState } from "react";
+import { sileo } from "sileo";
 import Coin from "../common/coin";
 import GameButton from "../common/game.button";
 import { useCart } from "../providers/cart.provider";
 import { STATE_LABELS } from "./constants.item-shop";
-import { ItemDetailDialog } from "./detail-dialog.item-shop";
+import ItemDetailDialog from "./details.item-shop";
+import { getEffectiveLimit } from "@/lib/cart/utils.cart";
 import { ShopItem } from "./types.item-shop";
 import { getItemMeta } from "./utils.item-shop";
 
@@ -28,12 +30,26 @@ export default function ItemCard({ item }: ItemCardProps) {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    addItem({
+    const added = addItem({
       product_num: item.product_num,
       item_name: item.item_name,
       item_image: item.item_image,
       final_price: item.final_price,
       item_price: item.item_price,
+      remaining_purchase_limit: item.remaining_purchase_limit,
+      item_stock: item.item_stock,
+    });
+
+    if (!added) {
+      const limit = getEffectiveLimit(item.remaining_purchase_limit, item.item_stock);
+      sileo.warning({
+        description: `You can only add up to ${limit} of ${item.item_name}.`,
+      });
+      return;
+    }
+
+    sileo.success({
+      description: `${item.item_name} has been added to your cart.`,
     });
   };
 
@@ -43,6 +59,7 @@ export default function ItemCard({ item }: ItemCardProps) {
         className={cn(
           "group/item shape-main cursor-pointer",
           "item-card relative rounded-lg aspect-auto md:aspect-square border border-gray-700 overflow-hidden p-px group",
+          "transition-all duration-300 ease-out hover:border-gray-500 hover:shadow-lg hover:shadow-black/30",
           "before:absolute before:-inset-1 before:bg-linear-to-tr before:via-50% before:via-transparent before:shadow-[0_0_0_20px_var(--background)] before:-z-1",
           "after:absolute after:-inset-1 after:bg-linear-to-tr after:via-50% after:via-transparent after:shadow-[0_0_0_20px_var(--background)] after:-z-1 after:blur-xl",
           "data-[variant='basic']:before:from-gray-600 data-[variant='basic']:after:from-gray-600 data-[variant='basic']:before:to-gray-600/50 data-[variant='basic']:after:to-gray-600/50",
@@ -85,7 +102,7 @@ export default function ItemCard({ item }: ItemCardProps) {
         >
           <section className="size-full flex flex-col justify-between">
             <section className="flex-1 flex flex-col gap-8 items-center justify-center pt-8 pb-4">
-              <div className="relative size-18.75 before:absolute before:size-full before:rounded-sm before:-translate-1/2 before:top-1/2 before:left-1/2 before:bg-pattern-concrete before:rotate-45 before:border before:border-gray-800 before:shadow-[inset_4px_4px_8px_var(--background)] [&_img]:scale-60">
+              <div className="relative size-18.75 transition-transform duration-200 ease-out group-hover:-translate-y-1 before:absolute before:size-full before:rounded-sm before:-translate-1/2 before:top-1/2 before:left-1/2 before:bg-pattern-concrete before:rotate-45 before:border before:border-gray-800 before:shadow-[inset_4px_4px_8px_var(--background)] [&_img]:scale-60">
                 <img
                   alt={item.item_name}
                   src={item.item_image}

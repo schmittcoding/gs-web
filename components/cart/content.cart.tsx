@@ -8,6 +8,7 @@ import {
   IconShoppingCart,
   IconTrash,
 } from "@tabler/icons-react";
+import { sileo } from "sileo";
 import Coin from "../common/coin";
 import GameButton from "../common/game.button";
 import { useCart } from "../providers/cart.provider";
@@ -86,9 +87,17 @@ export function CartContent({
               <GameButton
                 variant="ghost"
                 size="icon-xs"
-                onClick={() =>
-                  updateQuantity(item.product_num, item.quantity + 1)
-                }
+                onClick={() => {
+                  const updated = updateQuantity(
+                    item.product_num,
+                    item.quantity + 1,
+                  );
+                  if (!updated) {
+                    sileo.warning({
+                      description: `You can only purchase up to ${item.remaining_purchase_limit} of ${item.item_name}.`,
+                    });
+                  }
+                }}
               >
                 <IconPlus />
               </GameButton>

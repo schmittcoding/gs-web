@@ -2,7 +2,6 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -12,8 +11,6 @@ import { EItemCategory } from "./types.item-shop";
 
 type ItemFilters = {
   category: EItemCategory;
-  priceMin: string;
-  priceMax: string;
   availableOnly: boolean;
   discountedOnly: boolean;
 };
@@ -40,23 +37,19 @@ export default function ItemShopFilters({
   ];
   const hasActiveFilters =
     filters.category !== EItemCategory.All ||
-    filters.priceMin !== "" ||
-    filters.priceMax !== "" ||
     filters.availableOnly ||
     filters.discountedOnly;
 
   function resetFilters() {
     onFiltersChange({
       category: EItemCategory.All,
-      priceMin: "",
-      priceMax: "",
       availableOnly: false,
       discountedOnly: false,
     });
   }
 
   return (
-    <aside className="flex flex-col gap-6 rounded-xl ring-1 ring-foreground/10 bg-card p-5">
+    <aside className="space-y-4 overflow-hidden ring-1 ring-foreground/10 bg-card p-4 shape-main">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -86,7 +79,7 @@ export default function ItemShopFilters({
               key={cat}
               onClick={() => onFiltersChange({ ...filters, category: cat })}
               className={cn(
-                "rounded-lg border px-3 py-1.5 text-xs font-medium transition-all",
+                "border px-3 py-1.5 text-xs font-medium transition-all shape-main",
                 filters.category === cat
                   ? "border-primary/50 bg-primary/15 text-primary"
                   : "border-foreground/10 bg-transparent text-muted-foreground hover:border-foreground/20 hover:text-foreground",
@@ -95,36 +88,6 @@ export default function ItemShopFilters({
               {EItemCategory[cat]}
             </button>
           ))}
-        </div>
-      </div>
-
-      <Separator />
-
-      {/* Price Range */}
-      <div className="flex flex-col gap-3">
-        <Label className="text-xs uppercase tracking-wider text-muted-foreground">
-          Price Range
-        </Label>
-        <div className="flex items-center gap-2">
-          <Input
-            type="number"
-            placeholder="Min"
-            value={filters.priceMin}
-            onChange={(e) =>
-              onFiltersChange({ ...filters, priceMin: e.target.value })
-            }
-            className="text-center"
-          />
-          <span className="text-muted-foreground text-xs shrink-0">to</span>
-          <Input
-            type="number"
-            placeholder="Max"
-            value={filters.priceMax}
-            onChange={(e) =>
-              onFiltersChange({ ...filters, priceMax: e.target.value })
-            }
-            className="text-center"
-          />
         </div>
       </div>
 
@@ -185,8 +148,6 @@ export default function ItemShopFilters({
                 [
                   filters.category !== EItemCategory.All &&
                     EItemCategory[filters.category],
-                  filters.priceMin && `Min: ${filters.priceMin}`,
-                  filters.priceMax && `Max: ${filters.priceMax}`,
                   filters.availableOnly && "In Stock",
                   filters.discountedOnly && "On Sale",
                 ].filter(Boolean).length

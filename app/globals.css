@@ -127,7 +127,7 @@
   --sidebar-border: var(--color-cod-gray-900);
   --sidebar-ring: oklch(0.705 0.015 286.067);
 
-  --header-size: 5.625rem; /* 90px */
+  --header-size: 4.688rem; /* 75px */
   --content-area: calc(100svh - var(--header-size));
 }
 

@@ -8,16 +8,16 @@
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router), React 19 |
-| Language | TypeScript 5 (strict mode) |
-| Styling | Tailwind CSS v4 (PostCSS), CSS variables (oklch) |
-| Components | shadcn/ui (radix-nova style), Radix UI, Base UI |
-| Icons | Tabler Icons (`@tabler/icons-react`) |
-| Variants | class-variance-authority (CVA) |
-| Class merging | clsx + tailwind-merge via `cn()` in `lib/utils.ts` |
-| Package manager | pnpm |
+| Layer           | Technology                                         |
+| --------------- | -------------------------------------------------- |
+| Framework       | Next.js 16 (App Router), React 19                  |
+| Language        | TypeScript 5 (strict mode)                         |
+| Styling         | Tailwind CSS v4 (PostCSS), CSS variables (oklch)   |
+| Components      | shadcn/ui (radix-nova style), Radix UI, Base UI    |
+| Icons           | Tabler Icons (`@tabler/icons-react`)               |
+| Variants        | class-variance-authority (CVA)                     |
+| Class merging   | clsx + tailwind-merge via `cn()` in `lib/utils.ts` |
+| Package manager | pnpm                                               |
 
 ---
 
@@ -45,15 +45,18 @@ gs-web/
 ---
 
 ## Coding Conventions
+
 Functions: camelCase
 
 ### Components
 
 - **Files**: kebab-case (`alert-dialog.tsx`, `component-example.tsx`)
-- **Exports**: PascalCase named exports — no default exports for components
+- **Exports**: PascalCase named exports
 - **Props**: Extend native HTML element props where appropriate:
   ```ts
-  type ButtonProps = React.ComponentProps<"button"> & { variant?: ButtonVariant }
+  type ButtonProps = React.ComponentProps<"button"> & {
+    variant?: ButtonVariant;
+  };
   ```
 - **Compound components**: Use the pattern from `card.tsx` — multiple named exports (`Card`, `CardHeader`, `CardContent`, etc.)
 - **Slot pattern**: Use `data-slot="<name>"` attributes to target child elements in CSS
@@ -87,9 +90,11 @@ Functions: camelCase
 ### Adding a new UI component
 
 1. If it's a shadcn/ui component, use the CLI:
+
    ```bash
    pnpm dlx shadcn@latest add <component-name>
    ```
+
    This respects `components.json` and places files in `components/ui/`.
 
 2. For a custom component, create `components/ui/<name>.tsx`, following the compound-component + CVA pattern from existing files like `button.tsx` or `card.tsx`.

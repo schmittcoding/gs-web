@@ -3,6 +3,13 @@ import { ProfileTransactionsTab } from "@/components/profile/transactions/tab.tr
 import ProfileDetails from "@/components/profile/user-details/details.profile";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { requireSession } from "@/lib/auth/session.auth";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profile",
+  description: "View and manage your Ran Online GS account profile, characters, and transaction history.",
+  robots: { index: false, follow: false },
+};
 
 import { IconDeviceGamepad2, IconReceipt } from "@tabler/icons-react";
 import { getProfile } from "./actions";

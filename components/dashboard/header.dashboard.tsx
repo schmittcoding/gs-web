@@ -37,7 +37,7 @@ export default function DashboardHeader({
           <IconMenu2 />
           <span className="sr-only">Open menu</span>
         </GameButton>
-        <Image src="/logo.png" alt="Ran Online GS" width={150} height={72} />
+        <Image src="/logo.png" alt="Ran Online GS" width={120} height={72} />
         {pageHeader && <div className="hidden md:block">{pageHeader}</div>}
       </section>
       <section className="flex items-center gap-4">

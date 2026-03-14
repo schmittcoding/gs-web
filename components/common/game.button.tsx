@@ -13,6 +13,7 @@ export default function GameButton({
   disabled,
   loading,
   size = "lg",
+  asChild,
   ...props
 }: GameButtonProps) {
   const ref = useRef<HTMLButtonElement>(null);
@@ -26,8 +27,14 @@ export default function GameButton({
 
   return (
     <Button ref={ref} disabled={disabled || loading} size={size} {...props}>
-      {loading && <IconLoader2 className="animate-spin" />}
-      {children}
+      {asChild ? (
+        children
+      ) : (
+        <>
+          {loading && <IconLoader2 className="animate-spin" />}
+          {children}
+        </>
+      )}
     </Button>
   );
 }

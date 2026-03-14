@@ -40,7 +40,7 @@ export default function FormInput({
           id={id}
           name={name}
           className={cn(
-            "h-10 pl-9 bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-600 focus-visible:border-primary",
+            "h-10 pl-9 bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-600 focus-visible:border-primary shape-main",
             !!error && "border-destructive",
           )}
           aria-invalid={!!error}
