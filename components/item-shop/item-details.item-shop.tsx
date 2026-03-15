@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { getEffectiveLimit } from "@/lib/cart/utils.cart";
 import { cn } from "@/lib/utils";
 import { IconShoppingCartPlus } from "@tabler/icons-react";
-import { sileo } from "sileo";
+import { useCallback } from "react";
 import Coin from "../common/coin";
 import GameButton from "../common/game.button";
-import { useCart } from "../providers/cart.provider";
+import ImageGallery from "../common/image/gallery.image";
 import { Badge } from "../ui/badge";
 import {
   Dialog,
@@ -19,63 +18,44 @@ import {
 } from "../ui/dialog";
 import ReadOnlyField from "../ui/input/read-only";
 import { Separator } from "../ui/separator";
-import { PURCHASE_LIMIT_LABELS } from "./constants.item-shop";
+import { PURCHASE_LIMIT_LABELS, STATE_LABELS } from "./constants.item-shop";
+import { useAddToCart } from "./hooks.item-shop";
 import { EItemCategory, ShopItem } from "./types.item-shop";
-import { getItemMeta } from "./utils.item-shop";
+import { getItemMeta, isItemUnavailable } from "./utils.item-shop";
 
-type ItemDetailDialogProps = {
+type ItemDetailsDialogProps = {
   item: ShopItem | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
-export default function ItemDetailDialog({
+function ItemDetailsDialog({
   item,
   open,
   onOpenChange,
-}: ItemDetailDialogProps) {
-  const { addItem } = useCart();
+}: ItemDetailsDialogProps) {
+  const { addToCart } = useAddToCart();
+
+  const handleAddToCart = useCallback(() => {
+    if (!item) return;
+    const added = addToCart(item);
+    if (added) onOpenChange(false);
+  }, [item, addToCart, onOpenChange]);
 
   if (!item) return null;
 
   const { state, tag, variant } = getItemMeta(item);
-
-  const isUnavailable =
-    (typeof item.remaining_purchase_limit === "number" &&
-      item.remaining_purchase_limit === 0) ||
-    item.item_stock <= 0;
-
-  const handleAddToCart = () => {
-    if (isUnavailable) return;
-
-    const added = addItem({
-      product_num: item.product_num,
-      item_name: item.item_name,
-      item_image: item.item_image,
-      final_price: item.final_price,
-      item_price: item.item_price,
-      remaining_purchase_limit: item.remaining_purchase_limit,
-      item_stock: item.item_stock,
-    });
-
-    if (!added) {
-      const limit = getEffectiveLimit(item.remaining_purchase_limit, item.item_stock);
-      sileo.warning({
-        description: `You can only add up to ${limit} of ${item.item_name}.`,
-      });
-      return;
-    }
-
-    onOpenChange(false);
-
-    sileo.success({
-      description: `${item.item_name} has been added to your cart.`,
-    });
-  };
+  const unavailable = isItemUnavailable(item);
+  const galleryUrls = item.item_gallery.map(({ image_url }) => image_url);
+  const hasGallery = galleryUrls.length > 0;
+  const hasDiscount = item.final_price < item.item_price;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md lg:max-w-3xl">
+      <DialogContent
+        data-gallery={hasGallery}
+        className="sm:max-w-lg lg:max-w-3xl group data-gallery:lg:max-w-4xl"
+      >
         <DialogHeader>
           <DialogTitle className="flex-1 truncate">
             {item.item_name}
@@ -84,36 +64,44 @@ export default function ItemDetailDialog({
             {EItemCategory[item.item_category]}
           </DialogDescription>
         </DialogHeader>
-        <section
-          className={cn(
-            "px-4 grid grid-cols-1 gap-4",
-            // "md:grid-cols-[200px_max-content_1fr]"
+        <section className="px-4 flex flex-col gap-4 max-md:flex-col-reverse md:flex-row">
+          {hasGallery && (
+            <>
+              <section className="px-2">
+                <ImageGallery
+                  className="max-md:**:data-[slot='image-gallery-preview']:w-1/2 mx-auto md:w-50 md:shrink-0 group-data-gallery:md:w-62.5"
+                  images={galleryUrls}
+                />
+              </section>
+              <Separator className="max-sm:hidden" orientation="vertical" />
+            </>
           )}
-        >
-          {/* <section className="max-sm:hidden"></section>
-          <Separator className="max-sm:hidden" orientation="vertical" /> */}
-          <section className="space-y-4">
+          <section className="flex-1 space-y-4">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <img
                   alt={item.item_name}
                   src={item.item_image}
+                  width={50}
+                  height={50}
                   className="object-fill size-12.5"
                 />
                 <div>
                   <div className="flex gap-2 items-center">
                     <p className="text-lg font-semibold">{item.item_name}</p>
-                    <Badge
-                      className={cn(
-                        "text-[10px]",
-                        "data-[variant='limited']:bg-primary data-[variant='limited']:text-primary-foreground",
-                        "data-[variant='promo']:bg-destructive data-[variant='promo']:text-white",
-                        "data-[variant='special']:bg-accent data-[variant='special']:text-background",
-                      )}
-                      data-variant={variant}
-                    >
-                      {tag}
-                    </Badge>
+                    {!!tag && (
+                      <Badge
+                        className={cn(
+                          "text-[10px]",
+                          "data-[variant='limited']:bg-primary data-[variant='limited']:text-primary-foreground",
+                          "data-[variant='promo']:bg-destructive data-[variant='promo']:text-white",
+                          "data-[variant='special']:bg-accent data-[variant='special']:text-background",
+                        )}
+                        data-variant={variant}
+                      >
+                        {tag}
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-gray-400/80">
                     {EItemCategory[item.item_category]}
@@ -124,9 +112,7 @@ export default function ItemDetailDialog({
                 className="**:data-[slot='coin-value']:font-semibold **:data-[slot='coin-value']:text-primary"
                 size="lg"
                 value={item.final_price}
-                {...(item.final_price < item.item_price && {
-                  prevValue: item.item_price,
-                })}
+                {...(hasDiscount && { prevValue: item.item_price })}
               />
             </div>
             <Separator />
@@ -167,14 +153,14 @@ export default function ItemDetailDialog({
           </section>
         </section>
         <DialogFooter>
-          {!isUnavailable && !state ? (
-            <GameButton disabled={isUnavailable} onClick={handleAddToCart}>
+          {!unavailable && !state ? (
+            <GameButton onClick={handleAddToCart}>
               <IconShoppingCartPlus />
               Add to cart
             </GameButton>
           ) : (
             <GameButton disabled>
-              {state === "sold" ? "Sold Out" : "Limit Reached"}
+              {state ? STATE_LABELS[state] : "Unavailable"}
             </GameButton>
           )}
         </DialogFooter>
@@ -182,3 +168,5 @@ export default function ItemDetailDialog({
     </Dialog>
   );
 }
+
+export { ItemDetailsDialog };

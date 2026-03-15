@@ -4,7 +4,7 @@ import { FilterDialog } from "@/components/item-shop/filter-dialog.item-shop";
 import ItemShopFilters, {
   type ItemFilters,
 } from "@/components/item-shop/filters.item-shop";
-import ItemCard from "@/components/item-shop/item-card.item-shop";
+import { ItemCard } from "@/components/item-shop/item-card.item-shop";
 import { IconSearch, IconX } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 

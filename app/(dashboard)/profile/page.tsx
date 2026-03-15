@@ -1,6 +1,7 @@
 import ProfileOverviewTab from "@/components/profile/overview/tab.overview";
 import { ProfileTransactionsTab } from "@/components/profile/transactions/tab.transactions";
 import ProfileDetails from "@/components/profile/user-details/details.profile";
+import { SessionSync } from "@/components/providers/session-sync.provider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { requireSession } from "@/lib/auth/session.auth";
 import type { Metadata } from "next";
@@ -22,6 +23,7 @@ export default async function ProfilePage() {
       <div className="grid h-full gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         {/* Left column - User details */}
         <aside className="lg:overflow-y-auto">
+          <SessionSync user={profile.data!} />
           <ProfileDetails user={profile.data!} />
         </aside>
 

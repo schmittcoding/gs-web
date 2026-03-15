@@ -20,6 +20,12 @@ export enum EPurchaseLimitType {
   Daily,
 }
 
+export type ItemGallery = {
+  image_id: string;
+  image_url: string;
+  sort_by: number;
+};
+
 export type ShopItem = {
   product_num: number;
   item_name: string;
@@ -38,4 +44,6 @@ export type ShopItem = {
   item_purchase_limit_type?: number;
   purchase_limit_text?: string | null;
   remaining_purchase_limit?: number | null;
+
+  item_gallery: ItemGallery[];
 };

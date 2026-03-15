@@ -1,4 +1,4 @@
-import { CheckoutContent } from "@/components/cart/checkout.cart";
+import { CheckoutContent } from "@/components/cart/checkout/checkout.cart";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

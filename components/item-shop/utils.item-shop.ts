@@ -1,5 +1,13 @@
 import { ShopItem } from "./types.item-shop";
 
+export function isItemUnavailable(item: ShopItem): boolean {
+  return (
+    (typeof item.remaining_purchase_limit === "number" &&
+      item.remaining_purchase_limit === 0) ||
+    item.item_stock <= 0
+  );
+}
+
 export function getItemMeta(item: ShopItem) {
   let tag: string | null = null;
   let variant: "basic" | "limited" | "promo" | "special" = "basic";

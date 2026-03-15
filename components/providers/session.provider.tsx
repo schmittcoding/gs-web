@@ -1,28 +1,44 @@
 "use client";
 
 import { User } from "@/lib/auth/api.auth";
-import { createContext, PropsWithChildren, useContext, useMemo } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
 type SessionContextProps = {
   user: User;
   expiresAt: string;
   isAdmin: boolean;
+  setUser: (user: User | ((prev: User) => User)) => void;
 };
 
 const SessionContext = createContext<SessionContextProps | null>(null);
 
 export function SessionProvider({
   expiresAt,
-  user,
+  user: initialUser,
   children,
-}: PropsWithChildren<Omit<SessionContextProps, "isAdmin">>) {
+}: PropsWithChildren<{ expiresAt: string; user: User }>) {
+  const [user, setUserState] = useState<User>(initialUser);
+
+  const setUser = useCallback(
+    (update: User | ((prev: User) => User)) => setUserState(update),
+    [],
+  );
+
   const value = useMemo<SessionContextProps>(
     () => ({
       user,
       expiresAt,
       isAdmin: user.user_role.toLowerCase() === "admin",
+      setUser,
     }),
-    [user, expiresAt],
+    [user, expiresAt, setUser],
   );
 
   return (

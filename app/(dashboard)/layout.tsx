@@ -38,7 +38,7 @@ export default async function Layout({ children, header }: LayoutProps) {
               />
               <div className="absolute inset-0 bg-linear-to-t from-background from-10% to-85%" />
             </div>
-            <DashboardHeader user={session.user} pageHeader={header} />
+            <DashboardHeader pageHeader={header} />
             <div className="flex min-h-0">
               <DashboardSidebar />
               <SidebarInset className="overflow-hidden bg-transparent">

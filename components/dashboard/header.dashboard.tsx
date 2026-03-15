@@ -1,6 +1,5 @@
 "use client";
 
-import { User } from "@/lib/auth/api.auth";
 import { IconMenu2, IconShoppingCart } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -8,22 +7,27 @@ import { CartSheet } from "../cart/sheet.cart";
 import Coin from "../common/coin";
 import GameButton from "../common/game.button";
 import { useCart } from "../providers/cart.provider";
+import { useSession } from "../providers/session.provider";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { useSidebar } from "../ui/sidebar";
 
 type DashboardHeaderProps = {
-  user: User;
   pageHeader: React.ReactNode;
 };
 
-export default function DashboardHeader({
-  user,
-  pageHeader,
-}: DashboardHeaderProps) {
+export default function DashboardHeader({ pageHeader }: DashboardHeaderProps) {
   const { toggleSidebar } = useSidebar();
   const { totalItems: cartItemCount } = useCart();
+  const { user } = useSession();
   const [cartOpen, setCartOpen] = useState(false);
+
+  const initials = user.user_name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   return (
     <header className="flex justify-between w-full px-5 pt-4 h-max">
@@ -59,7 +63,7 @@ export default function DashboardHeader({
         <div className="flex items-center gap-2">
           <Avatar size="lg">
             <AvatarFallback className="shape-hexagon bg-primary text-primary-foreground">
-              K
+              {initials}
             </AvatarFallback>
           </Avatar>
           <div>

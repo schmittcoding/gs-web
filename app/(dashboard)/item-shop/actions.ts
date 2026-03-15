@@ -25,6 +25,36 @@ const getLimitedCategoryName = (limitType: number): string => {
   }
 };
 
+export type PurchasePayload = {
+  product_num: number;
+  quantity: number;
+};
+
+export type PurchaseResult = {
+  success: boolean;
+  message: string;
+};
+
+export async function purchaseItems(
+  items: PurchasePayload[],
+): Promise<PurchaseResult> {
+  const res = await fetcherPrivate("/v1/item-shop/purchase", {
+    method: "POST",
+    body: JSON.stringify(items),
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      redirect(AUTH_CONFIG.loginPath);
+    }
+
+    const error = await res.text().catch(() => "Purchase failed");
+    return { success: false, message: error };
+  }
+
+  return { success: true, message: "Purchase completed successfully" };
+}
+
 export async function getItemShop(): Promise<
   Partial<Record<string, ShopItem[]>>
 > {

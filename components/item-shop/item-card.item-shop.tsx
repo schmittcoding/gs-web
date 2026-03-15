@@ -3,55 +3,33 @@
 
 import { cn } from "@/lib/utils";
 import { IconShoppingCartPlus } from "@tabler/icons-react";
-import { useState } from "react";
-import { sileo } from "sileo";
+import { useCallback, useState } from "react";
 import Coin from "../common/coin";
 import GameButton from "../common/game.button";
-import { useCart } from "../providers/cart.provider";
 import { STATE_LABELS } from "./constants.item-shop";
-import ItemDetailDialog from "./details.item-shop";
-import { getEffectiveLimit } from "@/lib/cart/utils.cart";
+import { useAddToCart } from "./hooks.item-shop";
+import { ItemDetailsDialog } from "./item-details.item-shop";
 import { ShopItem } from "./types.item-shop";
-import { getItemMeta } from "./utils.item-shop";
+import { getItemMeta, isItemUnavailable } from "./utils.item-shop";
 
 type ItemCardProps = {
   item: ShopItem;
 };
 
-export default function ItemCard({ item }: ItemCardProps) {
+function ItemCard({ item }: ItemCardProps) {
   const { state, tag, variant } = getItemMeta(item);
-  const { addItem } = useCart();
+  const { addToCart } = useAddToCart();
   const [detailOpen, setDetailOpen] = useState(false);
 
-  const isUnavailable =
-    (typeof item.remaining_purchase_limit === "number" &&
-      item.remaining_purchase_limit === 0) ||
-    item.item_stock <= 0;
+  const unavailable = isItemUnavailable(item);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const added = addItem({
-      product_num: item.product_num,
-      item_name: item.item_name,
-      item_image: item.item_image,
-      final_price: item.final_price,
-      item_price: item.item_price,
-      remaining_purchase_limit: item.remaining_purchase_limit,
-      item_stock: item.item_stock,
-    });
-
-    if (!added) {
-      const limit = getEffectiveLimit(item.remaining_purchase_limit, item.item_stock);
-      sileo.warning({
-        description: `You can only add up to ${limit} of ${item.item_name}.`,
-      });
-      return;
-    }
-
-    sileo.success({
-      description: `${item.item_name} has been added to your cart.`,
-    });
-  };
+  const handleAddToCart = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      addToCart(item);
+    },
+    [addToCart, item],
+  );
 
   return (
     <>
@@ -69,7 +47,7 @@ export default function ItemCard({ item }: ItemCardProps) {
           "data-[unavailable=true]:grayscale-100",
         )}
         data-state={state}
-        data-unavailable={isUnavailable}
+        data-unavailable={unavailable}
         data-variant={variant}
         onClick={() => setDetailOpen(true)}
       >
@@ -106,6 +84,8 @@ export default function ItemCard({ item }: ItemCardProps) {
                 <img
                   alt={item.item_name}
                   src={item.item_image}
+                  width={75}
+                  height={75}
                   className="object-fill size-full"
                 />
               </div>
@@ -123,11 +103,11 @@ export default function ItemCard({ item }: ItemCardProps) {
                   prevValue: item.item_price,
                 })}
               />
-              {!isUnavailable && !state && (
+              {!unavailable && !state && (
                 <GameButton
                   size="icon-sm"
                   variant="ghost"
-                  disabled={isUnavailable}
+                  disabled={unavailable}
                   onClick={handleAddToCart}
                 >
                   <IconShoppingCartPlus />
@@ -138,7 +118,7 @@ export default function ItemCard({ item }: ItemCardProps) {
           </section>
         </div>
       </div>
-      <ItemDetailDialog
+      <ItemDetailsDialog
         item={item}
         open={detailOpen}
         onOpenChange={setDetailOpen}
@@ -146,3 +126,5 @@ export default function ItemCard({ item }: ItemCardProps) {
     </>
   );
 }
+
+export { ItemCard };
