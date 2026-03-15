@@ -70,6 +70,8 @@ export async function getItemShop(): Promise<
 
   const data: ShopItem[] = await res.json();
 
+  console.log({ items: data });
+
   const grouped = Object.groupBy(
     data,
     ({ item_category, item_purchase_limit, item_purchase_limit_type }) => {
@@ -105,5 +107,7 @@ export async function getItemShop(): Promise<
       result[key] = value;
     }
   });
+
+  console.log({ result });
   return result;
 }
