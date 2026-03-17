@@ -26,6 +26,7 @@ export default function SidebarItem(item: MenuItem) {
       >
         <Link href={item.path} onClick={() => setOpenMobile(false)}>
           <item.icon />
+          <span className="hidden max-sm:block text-lg">{item.label}</span>
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>

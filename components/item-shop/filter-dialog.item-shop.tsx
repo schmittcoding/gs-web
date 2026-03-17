@@ -28,16 +28,16 @@ function FilterDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <GameButton variant="outline" size="sm" className="lg:hidden">
+        <GameButton variant="outline" size="default" className="lg:hidden">
           <IconFilter />
           {activeFilterCount > 0 && activeFilterCount}
         </GameButton>
       </DialogTrigger>
-      <DialogContent showCloseButton>
-        <DialogHeader>
+      <DialogContent className="gap-0 border-none" showCloseButton>
+        <DialogHeader className="sr-only">
           <DialogTitle>Filters</DialogTitle>
         </DialogHeader>
-        <div className="p-4">
+        <div className="**:data-[slot='filters-clear']:mr-4!">
           <ItemShopFilters
             filters={filters}
             onFiltersChange={onFiltersChange}

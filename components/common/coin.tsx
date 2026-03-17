@@ -1,11 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import { formatCurrency } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
-import { IconGameCoin, IconMileageCoin } from "../icons";
 
 type CoinVariant = "rcoin" | "mcoin";
 
-type CoinProps = React.ComponentProps<typeof IconGameCoin> & {
+type CoinProps = React.ComponentProps<"div"> & {
   variant?: CoinVariant;
   value: number;
   prevValue?: number;
@@ -14,8 +14,8 @@ type CoinProps = React.ComponentProps<typeof IconGameCoin> & {
 const coinVariants = cva("flex items-center gap-2 text-base", {
   variants: {
     size: {
-      sm: "text-xs [&_svg:not([class*='size-'])]:size-4",
-      lg: "[&_svg:not([class*='size-'])]:size-6",
+      sm: "text-xs [&_img:not([class*='size-'])]:size-4",
+      lg: "[&_img:not([class*='size-'])]:size-6",
     },
   },
 });
@@ -26,18 +26,17 @@ export default function Coin({
   size = "sm",
   variant = "rcoin",
   value,
-  ...props
 }: CoinProps & VariantProps<typeof coinVariants>) {
-  const Icon = variant === "rcoin" ? IconGameCoin : IconMileageCoin;
-
   return (
-    <p data-slot="coin" className={cn(coinVariants({ size, className }))}>
-      <Icon
+    <div data-slot="coin" className={cn(coinVariants({ size, className }))}>
+      <img
+        alt={variant === "rcoin" ? "R-Coin" : "Mileage"}
         data-slot="coin-icon"
-        title={variant === "rcoin" ? "R-Coin" : "Mileage"}
-        {...props}
+        src={`/icons/${variant === "rcoin" ? "coin" : "mileage"}.svg`}
       />
-      <span data-slot="coin-value">{formatCurrency(value)}</span>
+      <span className="font-medium" data-slot="coin-value">
+        {formatCurrency(value)}
+      </span>
       {typeof prevValue === "number" && prevValue > 0 && (
         <span
           className="text-muted-foreground line-through"
@@ -46,6 +45,6 @@ export default function Coin({
           {formatCurrency(prevValue)}
         </span>
       )}
-    </p>
+    </div>
   );
 }

@@ -45,6 +45,8 @@ export function ChangePasswordDialog({ children }: ChangePasswordDialogProps) {
   const fieldErrors = typeof state.error === "object" ? state.error : undefined;
   const globalError = typeof state.error === "string" ? state.error : undefined;
 
+  console.log("[[ChangePasswordDialog]]:", fieldErrors);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -96,7 +98,7 @@ export function ChangePasswordDialog({ children }: ChangePasswordDialogProps) {
           <DialogFooter>
             <GameButton
               type="submit"
-              size="sm"
+              size="default"
               className="w-full sm:w-auto"
               loading={pending}
             >

@@ -30,20 +30,27 @@ export default function DashboardHeader({ pageHeader }: DashboardHeaderProps) {
     .slice(0, 2);
 
   return (
-    <header className="flex justify-between w-full px-5 pt-4 h-max">
-      <section className="flex items-center gap-3">
-        <GameButton
-          variant="ghost"
-          size="icon-sm"
-          className="md:hidden"
-          onClick={toggleSidebar}
-        >
-          <IconMenu2 />
-          <span className="sr-only">Open menu</span>
-        </GameButton>
+    <header className="flex items-center justify-between w-full px-5 py-2 h-max border-b border-gray-900 bg-gray-950">
+      <GameButton
+        variant="ghost"
+        size="icon-sm"
+        className="md:hidden"
+        onClick={toggleSidebar}
+      >
+        <IconMenu2 />
+        <span className="sr-only">Open menu</span>
+      </GameButton>
+      <section className="flex items-center gap-3 max-md:hidden">
         <Image src="/logo.png" alt="Ran Online GS" width={120} height={72} />
-        {pageHeader && <div className="hidden md:block">{pageHeader}</div>}
+        {pageHeader && <div>{pageHeader}</div>}
       </section>
+      <Image
+        src="/logo.png"
+        alt="Ran Online GS"
+        width={120}
+        height={72}
+        className="md:hidden"
+      />
       <section className="flex items-center gap-4">
         <GameButton
           variant="ghost"
@@ -60,7 +67,7 @@ export default function DashboardHeader({ pageHeader }: DashboardHeaderProps) {
           <span className="sr-only">Cart</span>
         </GameButton>
         <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 max-md:hidden">
           <Avatar size="lg">
             <AvatarFallback className="shape-hexagon bg-primary text-primary-foreground">
               {initials}

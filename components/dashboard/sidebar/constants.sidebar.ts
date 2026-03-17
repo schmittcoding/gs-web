@@ -1,10 +1,9 @@
 import { IconRankings, IconUser } from "@/components/icons";
 import {
   IconAffiliateFilled,
-  IconDownload,
+  IconBasketFilled,
   IconExchangeFilled,
   IconLayoutDashboardFilled,
-  IconTagsFilled,
 } from "@tabler/icons-react";
 import { MenuItem } from "./types.sidebar";
 
@@ -14,16 +13,19 @@ export const sidebarMenu: Record<string, MenuItem[]> = {
       id: "dashboard",
       icon: IconLayoutDashboardFilled,
       path: "/",
+      label: "Dashboard",
     },
     {
       id: "item-shop",
-      icon: IconTagsFilled,
+      icon: IconBasketFilled,
       path: "/item-shop",
+      label: "Item Shop",
     },
     {
       id: "rankings",
       icon: IconRankings,
       path: "/rankings",
+      label: "Rankings",
     },
   ],
   game: [
@@ -31,23 +33,21 @@ export const sidebarMenu: Record<string, MenuItem[]> = {
       id: "referral",
       icon: IconAffiliateFilled,
       path: "/referral",
-    },
-    {
-      id: "downloads",
-      icon: IconDownload,
-      path: "/downloads",
+      label: "Referral",
     },
   ],
   account: [
     {
-      id: "transactions",
+      id: "recharge",
       icon: IconExchangeFilled,
-      path: "/transactions",
+      path: "/recharge",
+      label: "Recharge",
     },
     {
       id: "profile",
       icon: IconUser,
       path: "/profile",
+      label: "My Profile",
     },
   ],
 };

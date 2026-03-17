@@ -87,7 +87,7 @@ export function ChangeEmailDialog({ children }: ChangeEmailDialogProps) {
           <DialogFooter>
             <GameButton
               type="submit"
-              size="sm"
+              size="default"
               className="w-full sm:w-auto"
               loading={pending}
             >

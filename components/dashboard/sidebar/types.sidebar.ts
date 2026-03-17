@@ -4,4 +4,5 @@ export type MenuItem = {
   id: string;
   icon: Icon;
   path: string;
+  label: string;
 };

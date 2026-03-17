@@ -1,4 +1,4 @@
-import { CheckoutContent } from "@/components/cart/checkout/checkout.cart";
+import { CheckoutContent } from "@/components/cart/checkout/content.checkout";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function CheckoutPage() {
   return (
-    <div className="flex h-full overflow-hidden p-5">
+    <div className="flex size-full min-w-0 overflow-y-auto overflow-x-hidden lg:overflow-hidden px-4">
       <CheckoutContent />
     </div>
   );

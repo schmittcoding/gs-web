@@ -4,29 +4,29 @@ import { IconClock, IconDeviceGamepad2, IconSword } from "@tabler/icons-react";
 export default function ProfileOverviewTab() {
   return (
     <div className="space-y-4">
-      <section className="grid gap-4 sm:grid-cols-5">
-        <Card className="p-0 pb-4 shape-main">
-          <CardHeader className="px-4 py-3 bg-gray-800 shape-main">
-            <CardTitle className="flex items-center gap-2 text-sm">
+      <section className="grid grid-cols-4 gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>
               <IconClock className="text-muted-foreground size-4" />
               Total Play Time
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="py-4">
             <p className="text-2xl font-bold tabular-nums">0h 0m</p>
             <p className="text-xs text-muted-foreground">
               Across all characters
             </p>
           </CardContent>
         </Card>
-        <Card className="p-0 pb-4 shape-main">
-          <CardHeader className="px-4 py-3 bg-gray-800 shape-main">
-            <CardTitle className="flex items-center gap-2 text-sm">
+        <Card>
+          <CardHeader>
+            <CardTitle>
               <IconDeviceGamepad2 className="text-muted-foreground size-4" />
               Characters
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="py-4">
             <p className="text-2xl font-bold tabular-nums">0</p>
             <p className="text-xs text-muted-foreground">
               Total characters created
@@ -34,16 +34,15 @@ export default function ProfileOverviewTab() {
           </CardContent>
         </Card>
       </section>
-
-      <Card className="p-0 pb-4 shape-main">
-        <CardHeader className="px-4 py-3 bg-gray-800 shape-main">
-          <CardTitle className="flex items-center gap-2 text-sm">
+      <Card>
+        <CardHeader>
+          <CardTitle>
             <IconSword className="text-muted-foreground size-4" />
             Character List
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <EmptyState message="No characters yet" />
+          <EmptyState message="Coming soon..." />
         </CardContent>
       </Card>
     </div>
@@ -52,7 +51,7 @@ export default function ProfileOverviewTab() {
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-8 text-sm text-muted-foreground">
+    <div className="flex flex-col items-center justify-center py-8 text-xs text-muted-foreground">
       <p>{message}</p>
     </div>
   );

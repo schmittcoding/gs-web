@@ -66,17 +66,17 @@ function DataGrid<T>({
   onRowClick,
 }: DataGridProps<T>) {
   return (
-    <Card className={cn("p-0 pb-0 shape-main h-full max-w-full", className)}>
+    <Card className={cn("h-full max-w-full overflow-hidden", className)}>
       {title && (
-        <CardHeader className="px-4 py-3 bg-gray-800 shape-main shrink-0">
-          <CardTitle className="flex items-center gap-2 text-sm">
+        <CardHeader className="border-b border-gray-800">
+          <CardTitle>
             {icon}
             {title}
           </CardTitle>
         </CardHeader>
       )}
 
-      <CardContent className="p-0 min-h-0 flex-1 overflow-hidden">
+      <CardContent className="px-0 min-h-0 overflow-y-hidden overflow-x-auto">
         {loading && data.length === 0 ? (
           <div className="flex items-center justify-center py-12">
             <IconLoader2 className="size-5 animate-spin text-muted-foreground" />
@@ -86,7 +86,7 @@ function DataGrid<T>({
             <p>{emptyMessage}</p>
           </div>
         ) : (
-          <div className="relative h-full">
+          <div className="relative h-full overflow-x-auto">
             {loading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-card/60">
                 <IconLoader2 className="size-5 animate-spin text-muted-foreground" />
@@ -123,14 +123,14 @@ function DataGrid<T>({
       </CardContent>
 
       {pagination && pagination.totalPages > 0 && (
-        <CardFooter className="justify-between py-2 bg-gray-800 border-none rounded-none shrink-0">
-          <p className="text-sm text-muted-foreground tabular-nums">
+        <CardFooter className="justify-between bg-gray-800 border-none rounded-none shrink-0">
+          <p className="text-xs text-muted-foreground tabular-nums">
             Page {pagination.page} of {pagination.totalPages}
           </p>
           <div className="flex items-center gap-1">
             <GameButton
               variant="outline"
-              size="icon"
+              size="icon-sm"
               disabled={pagination.page <= 1 || pagination.disabled}
               onClick={() => pagination.onPageChange(pagination.page - 1)}
             >
@@ -138,7 +138,7 @@ function DataGrid<T>({
             </GameButton>
             <GameButton
               variant="outline"
-              size="icon"
+              size="icon-sm"
               disabled={
                 pagination.page >= pagination.totalPages || pagination.disabled
               }

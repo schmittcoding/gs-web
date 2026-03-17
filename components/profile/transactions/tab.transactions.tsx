@@ -25,19 +25,21 @@ function useTransactionColumns() {
       {
         key: "id",
         header: (
-          <span className="[&_span]:block">
-            <span>Transaction ID</span>
-            <span className="text-xs">Reference Number</span>
-          </span>
+          <div className="[&_span]:block pt-2 pb-1">
+            Transaction ID
+            <span className="text-xs text-muted-foreground">
+              Reference Number
+            </span>
+          </div>
         ),
         headerClassName: "w-[320px]",
         render: (tx) => (
-          <span className="[&_span]:block">
-            <span>{tx.transaction_id}</span>
+          <div className="[&_span]:block">
+            {tx.transaction_id}
             <span className="text-xs text-muted-foreground">
-              {tx.reference_code}
+              {tx.reference_code ?? "-"}
             </span>
-          </span>
+          </div>
         ),
       },
       {

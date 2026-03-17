@@ -10,19 +10,20 @@ export function isItemUnavailable(item: ShopItem): boolean {
 
 export function getItemMeta(item: ShopItem) {
   let tag: string | null = null;
-  let variant: "basic" | "limited" | "promo" | "special" = "basic";
+  let variant: "primary" | "secondary" | "accent" | "destructive" | "default" =
+    "default";
   let state: "sold" | "limit-reached" | undefined;
 
   // Determine tag & variant
   if (item.item_tag) {
     tag = item.item_tag;
-    variant = "special";
+    variant = "primary";
   } else if (typeof item.item_discount === "number") {
     tag = `${item.discount_percent}% OFF`;
-    variant = "promo";
+    variant = "destructive";
   } else if (item.item_purchase_limit) {
     tag = "Limited";
-    variant = "limited";
+    variant = "accent";
   }
 
   // Determine state

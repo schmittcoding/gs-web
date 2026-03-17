@@ -13,6 +13,7 @@ import { sileo } from "sileo";
 import Coin from "../common/coin";
 import GameButton from "../common/game.button";
 import { useCart } from "../providers/cart.provider";
+import ReadOnlyField from "../ui/input/read-only";
 import {
   Sheet,
   SheetContent,
@@ -124,27 +125,30 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
               ))}
             </div>
 
-            <SheetFooter className="bg-gray-800">
-              <div className="flex items-center justify-between w-full">
-                <span className="text-sm text-muted-foreground">Total</span>
+            <SheetFooter className="bg-gray-900 border-t border-gray-800 space-y-2">
+              <ReadOnlyField
+                className="flex items-center justify-between"
+                label="Total"
+              >
                 <Coin
-                  className="**:data-[slot='coin-value']:text-base **:data-[slot='coin-value']:font-bold **:data-[slot='coin-value']:text-primary"
+                  className="**:data-[slot='coin-value']:font-medium flex-row-reverse"
+                  size="lg"
                   value={totalPrice}
                 />
-              </div>
+              </ReadOnlyField>
               <div className="flex gap-2 w-full">
-                <GameButton variant="ghost" size="sm" onClick={clearCart}>
+                <GameButton variant="ghost" size="default" onClick={clearCart}>
                   Clear
                 </GameButton>
-
-                <GameButton
-                  asChild
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => onOpenChange(false)}
-                >
-                  <Link href="/checkout">Proceed to Checkout</Link>
-                </GameButton>
+                <Link className="flex-1" href="/checkout">
+                  <GameButton
+                    size="default"
+                    className="w-full"
+                    onClick={() => onOpenChange(false)}
+                  >
+                    Proceed to Checkout
+                  </GameButton>
+                </Link>
               </div>
             </SheetFooter>
           </>

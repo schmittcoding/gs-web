@@ -14,32 +14,51 @@ const oxanium = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL("https://ranonlinegs.com"),
   title: {
-    default: "Ran Online GS — Free Private MMORPG Server",
+    default:
+      "Ran Online GS — #1 Free Ran Online Private Server 2026 | Download & Play",
     template: "%s | Ran Online GS",
   },
   description:
-    "Play Ran Online GS, a free private MMORPG server with competitive PvP, faction wars, custom events, and an active community. Download and play now.",
+    "Play Ran Online GS, the best free Ran Online private server in 2026. Competitive PvP, faction wars, custom events, and an active community. Download now and join thousands of players!",
   keywords: [
     "ran online private server",
     "ran online gs",
     "ran online download",
     "best ran online private server",
+    "ran online private server philippines",
     "free mmorpg private server",
     "ran online pvp server",
+    "ran online private server 2026",
+    "classic ran online server",
   ],
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName: "Ran Online GS",
-    title: "Ran Online GS — Free Private MMORPG Server",
+    title: "Ran Online GS — #1 Free Ran Online Private Server 2026",
     description:
-      "Classic Ran Online experience with modern improvements. Competitive PvP, faction wars, and an active community. Free to play.",
+      "The best Ran Online private server with competitive PvP, faction wars, custom events, and an active community. Free to play — download now!",
+    images: [
+      {
+        url: "/og/home.png",
+        width: 1200,
+        height: 630,
+        alt: "Ran Online GS - Free Private MMORPG Server",
+      },
+    ],
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ran Online GS — Free Private MMORPG Server",
+    title: "Ran Online GS — #1 Free Ran Online Private Server 2026",
     description:
-      "Classic Ran Online experience with modern improvements. Competitive PvP, faction wars, and an active community. Free to play.",
+      "The best Ran Online private server with competitive PvP, faction wars, and active events. Free to play — download now!",
+    images: [
+      {
+        url: "/og/home.png",
+        alt: "Ran Online GS - Free Private MMORPG Server",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };
@@ -62,26 +81,44 @@ export default function RootLayout({
                   "@type": "WebSite",
                   name: "Ran Online GS",
                   url: "https://ranonlinegs.com",
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target:
+                      "https://ranonlinegs.com/search?q={search_term_string}",
+                    "query-input":
+                      "required name=search_term_string",
+                  },
                 },
                 {
                   "@type": "Organization",
                   name: "Ran Online GS",
                   url: "https://ranonlinegs.com",
                   logo: "https://ranonlinegs.com/logo.png",
+                  sameAs: [
+                    "https://discord.gg/ranonlinegs",
+                    "https://facebook.com/ranonlinegs",
+                  ],
                 },
                 {
                   "@type": "VideoGame",
                   name: "Ran Online GS",
+                  url: "https://ranonlinegs.com",
                   description:
-                    "A free private MMORPG server based on the classic Ran Online with competitive PvP, faction wars, and custom events.",
+                    "A free private MMORPG server based on the classic Ran Online with competitive PvP, faction wars, and custom events. Download and play for free.",
                   genre: ["MMORPG", "PvP", "Free-to-play"],
                   gamePlatform: "PC",
                   applicationCategory: "Game",
                   operatingSystem: "Windows",
+                  publisher: {
+                    "@type": "Organization",
+                    name: "Ran Online GS",
+                    url: "https://ranonlinegs.com",
+                  },
                   offers: {
                     "@type": "Offer",
                     price: "0",
                     priceCurrency: "USD",
+                    availability: "https://schema.org/InStock",
                   },
                 },
               ],

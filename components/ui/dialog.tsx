@@ -6,6 +6,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { IconX } from "@tabler/icons-react";
+import GameButton from "../common/game.button";
 
 function Dialog({
   ...props
@@ -114,7 +115,7 @@ function DialogFooter({
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close asChild>
-          <Button variant="outline">Close</Button>
+          <GameButton variant="outline">Close</GameButton>
         </DialogPrimitive.Close>
       )}
     </div>
