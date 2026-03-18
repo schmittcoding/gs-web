@@ -30,6 +30,7 @@ type FormPasswordInputProps = Omit<
   label?: string;
   startIcon?: React.ElementType;
   withValidation?: boolean;
+  showValidation?: boolean;
 };
 
 export function FormPasswordInput({
@@ -39,6 +40,7 @@ export function FormPasswordInput({
   name,
   startIcon: StartIcon,
   withValidation,
+  showValidation,
   defaultValue,
   onChange,
   ...props
@@ -76,7 +78,7 @@ export function FormPasswordInput({
           name={name}
           type={visible ? "text" : "password"}
           className={cn(
-            "h-10 pl-9 pr-10 bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-600 focus-visible:border-primary",
+            "h-10 pl-9 pr-10 bg-gray-800 border-gray-700 shape-main text-gray-100 placeholder:text-gray-600 focus-visible:border-primary",
             !!error && "border-destructive",
           )}
           aria-invalid={!!error}
@@ -99,7 +101,7 @@ export function FormPasswordInput({
       </div>
       {error && <FieldError errors={[{ message: error }]} />}
 
-      {withValidation && !!value && (
+      {((withValidation && !!value) || showValidation) && (
         <ul className="space-y-1.5">
           {passwordRequirements.map((req, index) => {
             const isValid = req.regex.test(value);

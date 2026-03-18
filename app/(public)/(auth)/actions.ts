@@ -3,7 +3,14 @@
 import { login as apiLogin } from "@/lib/auth/api.auth";
 import { parseSetCookie } from "@/lib/auth/utils.auth";
 import { AUTH_CONFIG } from "@/lib/constants";
-import { LoginPayload, loginSchema } from "@/lib/validations/auth";
+import {
+  ForgotPasswordPayload,
+  forgotPasswordSchema,
+  LoginPayload,
+  loginSchema,
+  RegisterPayload,
+  registerSchema,
+} from "@/lib/validations/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import z, { ZodFlattenedError } from "zod";
@@ -71,4 +78,112 @@ export async function loginAction(
   }
 
   redirect(AUTH_CONFIG.defaultRedirect);
+}
+
+/* ── Registration availability checks ─────────────── */
+
+export async function checkUsernameAvailability(
+  username: string,
+): Promise<{ available: boolean; error?: string }> {
+  try {
+    const res = await fetch(`${AUTH_CONFIG.apiUrl}/v1/auth/validate-username`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username }),
+    });
+    const data = await res.json();
+    console.log({ data });
+    return { available: data, error: data.error };
+  } catch {
+    return { available: false, error: "Unable to verify username" };
+  }
+}
+
+/* ── Register action ──────────────────────────────── */
+
+export type RegisterState = {
+  error?: string;
+  success?: boolean;
+};
+
+export async function registerAction(
+  _prevState: RegisterState,
+  payload: RegisterPayload,
+): Promise<RegisterState> {
+  const parsed = registerSchema.safeParse(payload);
+
+  if (!parsed.success) {
+    const firstError = parsed.error.issues[0]?.message ?? "Invalid input";
+    return { error: firstError };
+  }
+
+  try {
+    const res = await fetch(`${AUTH_CONFIG.apiUrl}/v1/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(parsed.data),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return { error: data.error ?? data.message ?? "Registration failed" };
+    }
+
+    return { success: true };
+  } catch {
+    return { error: "Unable to connect to the server. Please try again." };
+  }
+}
+
+/* ── Forgot Password action ──────────────────────── */
+
+export type ForgotPasswordState = {
+  error?: string | z.ZodFlattenedError<ForgotPasswordPayload>["fieldErrors"];
+  success?: boolean;
+};
+
+export async function forgotPasswordAction(
+  _prevState: ForgotPasswordState,
+  formData: FormData,
+): Promise<ForgotPasswordState> {
+  const raw = {
+    username: formData.get("username"),
+    email: formData.get("email"),
+  };
+
+  const parsed = forgotPasswordSchema.safeParse(raw);
+
+  if (!parsed.success) {
+    return { error: z.flattenError(parsed.error).fieldErrors };
+  }
+
+  try {
+    await fetch(`${AUTH_CONFIG.apiUrl}/v1/auth/forgot-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(parsed.data),
+    });
+  } catch {
+    // Silently swallow — always return success to avoid leaking account info
+  }
+
+  return { success: true };
+}
+
+export async function checkEmailAvailability(
+  email: string,
+): Promise<{ available: boolean; error?: string }> {
+  try {
+    const res = await fetch(`${AUTH_CONFIG.apiUrl}/v1/auth/validate-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+    console.log({ data });
+    return { available: data, error: data.error };
+  } catch {
+    return { available: false, error: "Unable to verify email" };
+  }
 }
