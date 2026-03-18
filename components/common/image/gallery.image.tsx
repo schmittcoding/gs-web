@@ -29,7 +29,7 @@ export default function ImageGallery({
       />
       <div
         data-slot="image-gallery-thumbnails"
-        className="mt-2 flex gap-1 overflow-x-auto"
+        className="mt-2 gap-1.5 overflow-x-auto grid grid-cols-5"
       >
         {images.map((url, index) => (
           <img

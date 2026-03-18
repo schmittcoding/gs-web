@@ -67,9 +67,9 @@ function ItemDetailsDialog({
         <section className="px-4 flex flex-col gap-4 max-md:flex-col-reverse md:flex-row">
           {hasGallery && (
             <>
-              <section className="px-2">
+              <section className="">
                 <ImageGallery
-                  className="max-md:**:data-[slot='image-gallery-preview']:w-1/2 mx-auto md:w-50 md:shrink-0 group-data-gallery:md:w-62.5"
+                  className="max-md:**:data-[slot='image-gallery-preview']:w-1/3 mx-auto md:w-50 md:shrink-0 group-data-gallery:md:w-62.5"
                   images={galleryUrls}
                 />
               </section>
