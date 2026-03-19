@@ -10,8 +10,7 @@ import {
 } from "@/components/recharge/types.recharge";
 import { AUTH_CONFIG } from "@/lib/constants";
 import { fetcherPrivate } from "@/lib/fetcher";
-import { fileToBase64 } from "@/lib/file";
-import { RechargePayload, rechargeSchema } from "@/lib/validations/recharge";
+import { rechargeSchema } from "@/lib/validations/recharge";
 import { redirect } from "next/navigation";
 import z from "zod";
 
@@ -84,20 +83,22 @@ export type ConfirmTransactionResult = {
   data?: string | null;
 };
 
+export type ConfirmTransactionPayload = {
+  id: string;
+  gateway: string;
+  referenceNumber: string;
+  proofImageBase64: string | null;
+};
+
 export async function confirmTransaction(
   _prev: ConfirmTransactionResult,
-  formData: FormData,
+  payload: ConfirmTransactionPayload,
 ): Promise<ConfirmTransactionResult> {
-  const raw: RechargePayload = {
-    id: String(formData.get("id")),
-    gateway: String(formData.get("gateway")),
-    referenceNumber: String(formData.get("referenceNumber") ?? ""),
-    proofImage: (formData.get("proofImage") as File | undefined) ?? undefined,
-  };
-
-  console.log({ raw });
-
-  const validated = rechargeSchema.safeParse(raw);
+  const validated = rechargeSchema.safeParse({
+    id: payload.id,
+    gateway: payload.gateway,
+    referenceNumber: payload.referenceNumber,
+  });
 
   console.log({ validated });
 
@@ -110,17 +111,16 @@ export async function confirmTransaction(
     };
   }
 
-  const { id, gateway, referenceNumber, proofImage } = validated.data;
+  const { id, gateway, referenceNumber } = validated.data;
   const provider = gateway.toLowerCase();
 
   let body: Record<string, unknown> | null = null;
 
   if (provider === "gcash") {
-    const image = proofImage?.size ? await fileToBase64(proofImage) : null;
     body = {
       type: "gcash",
       reference_number: referenceNumber,
-      proof_image: image,
+      proof_image: payload.proofImageBase64,
     };
   } else if (provider === "wise") {
     body = {
@@ -146,8 +146,6 @@ export async function confirmTransaction(
     const error = await res
       .json()
       .catch(() => ({ message: "Transaction failed" }));
-
-    console.log({ error });
     return {
       success: false,
       message: error.message ?? "Transaction failed",
@@ -155,8 +153,6 @@ export async function confirmTransaction(
   }
 
   const data = await res.json();
-
-  console.log({ data });
 
   const hasRedirectUrl = ["paymongo", "paypal"].includes(provider);
 
