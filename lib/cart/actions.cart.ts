@@ -62,8 +62,23 @@ export async function getCartItemsFresh(
     }));
   }
 
-  const shopItems: ShopItem[] = await res.json();
+  console.log({ res });
+
+  let shopItems: ShopItem[];
+  try {
+    shopItems = await res.json();
+    console.log({ shopItems });
+  } catch {
+    return cartItems.map((item) => ({
+      ...item,
+      final_price: 0,
+      item_price: 0,
+      item_stock: 0,
+      is_removed: false,
+    }));
+  }
   const shopMap = new Map(shopItems.map((s) => [s.product_num, s]));
+  console.log({ shopMap });
 
   return cartItems.map((cartItem) => {
     const fresh = shopMap.get(cartItem.product_num);
