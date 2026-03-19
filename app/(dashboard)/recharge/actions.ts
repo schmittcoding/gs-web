@@ -95,7 +95,11 @@ export async function confirmTransaction(
     proofImage: (formData.get("proofImage") as File | undefined) ?? undefined,
   };
 
+  console.log({ raw });
+
   const validated = rechargeSchema.safeParse(raw);
+
+  console.log({ validated });
 
   if (!validated.success) {
     const fieldErrors = z.flattenError(validated.error).fieldErrors;
@@ -125,10 +129,14 @@ export async function confirmTransaction(
     };
   }
 
+  console.log({ body });
+
   const res = await fetcherPrivate(`/v1/payments/transaction/${id}`, {
     method: "POST",
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
+
+  console.log({ res });
 
   if (res.status === 401) {
     redirect(AUTH_CONFIG.loginPath);
@@ -138,6 +146,8 @@ export async function confirmTransaction(
     const error = await res
       .json()
       .catch(() => ({ message: "Transaction failed" }));
+
+    console.log({ error });
     return {
       success: false,
       message: error.message ?? "Transaction failed",
@@ -145,6 +155,8 @@ export async function confirmTransaction(
   }
 
   const data = await res.json();
+
+  console.log({ data });
 
   const hasRedirectUrl = ["paymongo", "paypal"].includes(provider);
 
