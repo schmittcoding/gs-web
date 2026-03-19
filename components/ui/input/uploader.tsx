@@ -52,7 +52,6 @@ export default function Uploader({
       <div className="relative">
         <input
           type="file"
-          name={name}
           className="hidden pointer-events-none"
           style={{ opacity: 0 }}
           ref={hiddenInputRef}
@@ -86,7 +85,7 @@ export default function Uploader({
             )}
             data-error={error}
           >
-            <input {...getInputProps()} name={name} />
+            <input {...getInputProps()} />
             <span className="text-gray-500 text-center text-sm">
               {placeholder ??
                 "Drag & drop some files here, or click to select files"}
