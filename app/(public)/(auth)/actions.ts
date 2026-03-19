@@ -92,7 +92,6 @@ export async function checkUsernameAvailability(
       body: JSON.stringify({ username }),
     });
     const data = await res.json();
-    console.log({ data });
     return { available: data, error: data.error };
   } catch {
     return { available: false, error: "Unable to verify username" };
@@ -181,7 +180,6 @@ export async function checkEmailAvailability(
       body: JSON.stringify({ email }),
     });
     const data = await res.json();
-    console.log({ data });
     return { available: data, error: data.error };
   } catch {
     return { available: false, error: "Unable to verify email" };

@@ -45,8 +45,6 @@ export function ChangePasswordDialog({ children }: ChangePasswordDialogProps) {
   const fieldErrors = typeof state.error === "object" ? state.error : undefined;
   const globalError = typeof state.error === "string" ? state.error : undefined;
 
-  console.log("[[ChangePasswordDialog]]:", fieldErrors);
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -89,7 +87,7 @@ export function ChangePasswordDialog({ children }: ChangePasswordDialogProps) {
             {globalError && (
               <div
                 role="alert"
-                className="rounded-lg border border-destructive/25 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+                className="px-3 py-2 text-sm border rounded-lg border-destructive/25 bg-destructive/10 text-destructive"
               >
                 {globalError}
               </div>

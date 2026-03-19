@@ -1,6 +1,5 @@
 import { IconRankings, IconUser } from "@/components/icons";
 import {
-  IconAffiliateFilled,
   IconBasketFilled,
   IconExchangeFilled,
   IconLayoutDashboardFilled,
@@ -28,14 +27,14 @@ export const sidebarMenu: Record<string, MenuItem[]> = {
       label: "Rankings",
     },
   ],
-  game: [
-    {
-      id: "referral",
-      icon: IconAffiliateFilled,
-      path: "/referral",
-      label: "Referral",
-    },
-  ],
+  //   game: [
+  //     {
+  //       id: "referral",
+  //       icon: IconAffiliateFilled,
+  //       path: "/referral",
+  //       label: "Referral",
+  //     },
+  //   ],
   account: [
     {
       id: "recharge",

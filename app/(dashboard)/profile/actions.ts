@@ -1,5 +1,6 @@
 "use server";
 
+import { type CharactersResponse } from "@/components/profile/overview/types.characters";
 import {
   changeEmailSchema,
   ChangeEmailState,
@@ -182,6 +183,36 @@ export async function logoutAction() {
     await apiLogout();
     revalidateTag(`session:${tokenHash}`, {});
   }
+}
+
+const EMPTY_CHARACTERS_RESPONSE: CharactersResponse = {
+  data: [],
+  limit: 0,
+  page: 1,
+  total_items: 0,
+  total_pages: 0,
+};
+
+export async function getCharacters(
+  page: number = 1,
+  limit: number = 10,
+): Promise<CharactersResponse> {
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+  });
+
+  const res = await fetcherPrivate(`/v1/characters?${params}`);
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      redirect(AUTH_CONFIG.loginPath);
+    }
+
+    return EMPTY_CHARACTERS_RESPONSE;
+  }
+
+  return res.json();
 }
 
 export async function resetPin() {

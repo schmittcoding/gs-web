@@ -257,7 +257,15 @@
 }
 
 @utility fixed-center {
-  @apply fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+  @apply fixed -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2;
+}
+
+@utility absolute-center {
+  @apply absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2;
+}
+
+@utility absolute-bottom-center {
+  @apply absolute bottom-0 -translate-x-1/2 left-1/2;
 }
 
 /* ─── Landing page animations ─── */
