@@ -43,9 +43,8 @@ export type SyncedCartItem = CartItem & {
  * Returns synced items with up-to-date prices, stock, and limits.
  * Items no longer in the shop are flagged with `is_removed: true`.
  */
-export async function getCartItemsFresh(
-  cartItems: CartCookieItem[],
-): Promise<SyncedCartItem[]> {
+export async function getCartItemsFresh(): Promise<SyncedCartItem[]> {
+  const cartItems = await getCartFromCookiesServer();
   if (cartItems.length === 0) return [];
 
   const res = await fetcherPrivate("/v1/item-shop");

@@ -99,7 +99,9 @@ export function CartProvider({
     let cancelled = false;
     setIsSyncing(true);
 
-    getCartItemsFresh(currentItems).then((synced) => {
+    console.log({ currentItems });
+
+    getCartItemsFresh().then((synced) => {
       if (cancelled) return;
 
       // Filter out removed items and map back to CartItem shape
