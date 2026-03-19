@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
 
   cacheComponents: true,
 
+  experimental: {
+    serverActions: {
+      allowedOrigins: ["dashboard.ranonlinegs.com"],
+      bodySizeLimit: "5mb",
+    },
+  },
+
   images: {
     remotePatterns: [
       {
