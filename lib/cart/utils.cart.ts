@@ -6,38 +6,6 @@ const CART_COOKIE_MAX_AGE = Number(
 );
 
 /**
- * Client-side: read cart from `document.cookie`.
- * Returns only cookie-safe fields; server-authoritative data
- * must be populated via `getCartItemsFresh`.
- */
-export function getCartFromCookiesClient(): CartCookieItem[] {
-  if (typeof document === "undefined") return [];
-
-  const match = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith(`${CART_COOKIE_KEY}=`));
-
-  if (!match) return [];
-
-  try {
-    const parsed: unknown[] = JSON.parse(
-      decodeURIComponent(match.split("=").slice(1).join("=")),
-    );
-    return parsed.map((raw) => {
-      const r = raw as Record<string, unknown>;
-      return {
-        product_num: Number(r.product_num),
-        quantity: Number(r.quantity),
-        item_name: String(r.item_name ?? ""),
-        item_image: String(r.item_image ?? ""),
-      };
-    });
-  } catch {
-    return [];
-  }
-}
-
-/**
  * Returns true when an item cannot be purchased:
  * - purchase limit reached (`remaining_purchase_limit === 0`)
  * - out of stock (`item_stock <= 0`)
@@ -60,7 +28,8 @@ export function getEffectiveLimit(
   itemStock?: number,
 ): number | null {
   const limits: number[] = [];
-  if (typeof remainingPurchaseLimit === "number") limits.push(remainingPurchaseLimit);
+  if (typeof remainingPurchaseLimit === "number")
+    limits.push(remainingPurchaseLimit);
   if (typeof itemStock === "number") limits.push(itemStock);
   return limits.length > 0 ? Math.min(...limits) : null;
 }
@@ -76,6 +45,6 @@ export function saveCartToCookiesClient(items: CartItem[]) {
     item_name: item.item_name,
     item_image: item.item_image,
   }));
-  const value = encodeURIComponent(JSON.stringify(cookieItems));
+  const value = JSON.stringify(cookieItems);
   document.cookie = `${CART_COOKIE_KEY}=${value}; path=/; max-age=${CART_COOKIE_MAX_AGE}; SameSite=Lax`;
 }

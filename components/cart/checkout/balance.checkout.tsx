@@ -16,8 +16,8 @@ export default function BalanceSection({
   canAfford,
 }: BalanceSectionProps) {
   return (
-    <section className="space-y-3 px-4">
-      <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+    <section className="px-4 space-y-3">
+      <h2 className="mb-2 text-sm font-semibold tracking-wider uppercase text-muted-foreground">
         Balance
       </h2>
       <ReadOnlyField
