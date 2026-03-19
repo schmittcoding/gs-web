@@ -13,13 +13,17 @@ const CART_COOKIE_KEY = process.env.NEXT_PUBLIC_CART_COOKIE_KEY ?? "gs_cart";
  * must be populated via `getCartItemsFresh`.
  */
 export async function getCartFromCookiesServer(): Promise<CartCookieItem[]> {
+  console.log("[[getCartFromCookiesServer]]");
   const cookieStore = await cookies();
+  console.log("[[getCartFromCookiesServer]]", cookieStore);
   const raw = cookieStore.get(CART_COOKIE_KEY)?.value;
+  console.log("[[getCartFromCookiesServer]]", raw);
 
   if (!raw) return [];
 
   try {
     const parsed: unknown[] = JSON.parse(raw);
+    console.log("[[getCartFromCookiesServer]]", parsed);
     return parsed.map((r) => {
       const item = r as Record<string, unknown>;
       return {
@@ -44,10 +48,13 @@ export type SyncedCartItem = CartItem & {
  * Items no longer in the shop are flagged with `is_removed: true`.
  */
 export async function getCartItemsFresh(): Promise<SyncedCartItem[]> {
+  console.log("[[getCartItemsFresh]]");
   const cartItems = await getCartFromCookiesServer();
+  console.log("[[getCartItemsFresh]]", cartItems);
   if (cartItems.length === 0) return [];
 
   const res = await fetcherPrivate("/v1/item-shop");
+  console.log("[[getCartItemsFresh]]", res);
 
   if (!res.ok) {
     // On failure, return cookie data with zeroed prices so UI shows "syncing"
