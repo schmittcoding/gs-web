@@ -58,6 +58,8 @@ export default function RechargeDialog({
       formData.set("id", id);
       formData.set("gateway", type ?? "");
 
+      console.log({ formData });
+
       if (proofFiles[0]) {
         formData.set("proofImage", proofFiles[0]);
       }
@@ -114,13 +116,13 @@ export default function RechargeDialog({
           <section className="flex flex-col lg:group-data-[account=true]:flex-row px-4 py-3 gap-4">
             {gateway?.image && (
               <>
-                <section className="flex gap-4 items-center">
+                <section className="flex items-center gap-4">
                   <img
                     src={`data:image/png;base64,${gateway?.image}`}
                     alt="Ran Online GS | Recharge"
                     className="relative aspect-square w-1/3 lg:w-62.5"
                   />
-                  <div className="space-y-2 flex-1 lg:hidden">
+                  <div className="flex-1 space-y-2 lg:hidden">
                     {gateway?.name && (
                       <ReadOnlyField
                         className="flex items-center justify-between **:data-[slot='read-only-value']:uppercase"
@@ -143,7 +145,7 @@ export default function RechargeDialog({
                 <Separator orientation="vertical" className="hidden lg:block" />
               </>
             )}
-            <section className="space-y-3 flex-1">
+            <section className="flex-1 space-y-3">
               <ReadOnlyField
                 className="flex items-center justify-between **:data-[slot='read-only-value']:font-bold **:data-[slot='read-only-value']:text-lg"
                 label="You will receive"
@@ -184,7 +186,7 @@ export default function RechargeDialog({
 
               {requiresReference && (
                 <FormInput
-                  id="reference-number"
+                  id="referenceNumber"
                   name="referenceNumber"
                   placeholder="Enter reference number"
                   label="Reference number"
@@ -196,7 +198,7 @@ export default function RechargeDialog({
                 <Field>
                   <FieldLabel
                     htmlFor="proof"
-                    className="text-xs font-medium uppercase tracking-wider text-gray-400"
+                    className="text-xs font-medium tracking-wider text-gray-400 uppercase"
                   >
                     Proof of Transaction
                   </FieldLabel>
