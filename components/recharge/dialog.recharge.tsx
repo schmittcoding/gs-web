@@ -3,10 +3,8 @@
 
 import {
   confirmTransaction,
-  ConfirmTransactionPayload,
   ConfirmTransactionResult,
 } from "@/app/(dashboard)/recharge/actions";
-import { fileToBase64 } from "@/lib/file";
 import { formatCurrency } from "@/lib/formatters";
 import { IconReceipt } from "@tabler/icons-react";
 import { PropsWithChildren, useActionState, useState } from "react";
@@ -57,19 +55,19 @@ export default function RechargeDialog({
 
   const [state, action, pending] = useActionState(
     async (_prev: ConfirmTransactionResult, formData: FormData) => {
-      const proofFile = proofFiles[0];
-      const proofImageBase64 = proofFile ? await fileToBase64(proofFile) : null;
+      const newFormData = new FormData();
+      newFormData.set("id", id);
+      newFormData.set("gateway", type ?? "");
+      newFormData.set(
+        "referenceNumber",
+        String(formData.get("referenceNumber") ?? ""),
+      );
 
-      const payload: ConfirmTransactionPayload = {
-        id,
-        gateway: type ?? "",
-        referenceNumber: String(formData.get("referenceNumber") ?? ""),
-        proofImageBase64,
-      };
+      if (proofFiles[0]) {
+        newFormData.set("proofImage", proofFiles[0]);
+      }
 
-      console.log({ payload });
-
-      const result = await confirmTransaction(_prev, payload);
+      const result = await confirmTransaction(_prev, newFormData);
 
       if (result.success) {
         const gatewayKey = type as keyof typeof ERechargeProvider;
