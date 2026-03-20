@@ -14,7 +14,7 @@ export default async function RechargePage() {
       {Object.entries(data).map(([gateway, { denomination, details }]) => (
         <section key={gateway} className="space-y-2">
           <p className="text-2xl font-semibold">{gateway}</p>
-          <section className="grid gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <section className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
             {denomination?.map((item) => (
               <RechargeItemCard
                 key={item.id}

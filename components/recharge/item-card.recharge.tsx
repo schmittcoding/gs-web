@@ -19,7 +19,7 @@ export default function RechargeItemCard({
   return (
     <Card className="aspect-square item-card">
       <CardContent className="flex flex-col items-center justify-center gap-2">
-        <IconGameCoins className="size-24" />
+        <IconGameCoins className="size-16 md:size-24" />
         <div className="text-center">
           <p className="text-2xl font-bold leading-5">
             {formatCurrency(denomination.amount)}

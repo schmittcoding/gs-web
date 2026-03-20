@@ -8,8 +8,8 @@ import { ItemCard } from "@/components/item-shop/item-card.item-shop";
 import { IconSearch, IconX } from "@tabler/icons-react";
 import { useEffect, useMemo, useState } from "react";
 
-import { useCart } from "../providers/cart.provider";
 import { default as GameButton } from "../common/game.button";
+import { useCart } from "../providers/cart.provider";
 import FormInput from "../ui/form/input.form";
 import { EItemCategory, ShopItem } from "./types.item-shop";
 
@@ -151,7 +151,7 @@ export default function ItemShopContent({ items }: ItemShopContentProps) {
                   <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                     {category}
                   </h2>
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
                     {groupItems.map((item) => (
                       <ItemCard key={item.product_num} item={item} />
                     ))}
@@ -192,7 +192,6 @@ export default function ItemShopContent({ items }: ItemShopContentProps) {
           </div>
         </div>
       </div>
-
     </div>
   );
 }

@@ -176,8 +176,11 @@ function DataGrid<T>({
                 ) : (
                   <GameButton
                     key={p}
-                    className="min-w-8.5! w-max px-1.5 text-sm"
-                    variant={p === pagination.page ? "default" : "outline"}
+                    className={cn(
+                      "min-w-8.5! w-max px-1.5 text-sm",
+                      p === pagination.page && "bg-gray-700 border-gray-400",
+                    )}
+                    variant="outline"
                     size="icon-sm"
                     disabled={pagination.disabled}
                     onClick={() => pagination.onPageChange(p as number)}
