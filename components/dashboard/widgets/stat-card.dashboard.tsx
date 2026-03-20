@@ -5,7 +5,6 @@ type StatCardProps = {
   icon: React.ReactNode;
   label: string;
   value: string | number;
-  description?: string;
   accentColor?: string;
   className?: string;
 };
@@ -14,7 +13,6 @@ function StatCard({
   icon,
   label,
   value,
-  description,
   accentColor = "text-primary",
   className,
 }: StatCardProps) {
@@ -37,9 +35,6 @@ function StatCard({
           <p className="text-2xl font-black leading-tight tabular-nums">
             {value}
           </p>
-          {description && (
-            <p className="text-xs text-gray-500 truncate">{description}</p>
-          )}
         </div>
       </CardContent>
     </Card>

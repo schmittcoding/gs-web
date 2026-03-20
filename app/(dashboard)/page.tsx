@@ -65,11 +65,6 @@ export default async function DashboardPage() {
           icon={<IconWifi className="size-6" />}
           label="Online Now"
           value={onlineCount}
-          description={
-            onlineCount > 0
-              ? `${onlineCount} of ${characters.total_items}`
-              : undefined
-          }
           accentColor="text-green-400"
         />
       </section>

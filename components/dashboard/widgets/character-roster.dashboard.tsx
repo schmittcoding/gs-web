@@ -10,15 +10,21 @@ import { cn } from "@/lib/utils";
 import { IconDeviceGamepad2 } from "@tabler/icons-react";
 import Link from "next/link";
 
-function CharacterRosterShell({ children, total }: { children: React.ReactNode; total?: number }) {
+function CharacterRosterShell({
+  children,
+  total,
+}: {
+  children: React.ReactNode;
+  total?: number;
+}) {
   return (
     <div className="col-span-1 md:col-span-3 lg:col-span-4 relative overflow-hidden shape-main border border-gray-800 bg-gray-950">
       <div className="flex items-center justify-between px-5 py-3 border-b border-gray-800 bg-gray-900/50">
         <div className="flex items-center gap-2">
           <IconDeviceGamepad2 className="size-4 text-primary" />
-          <h2 className="text-sm font-bold uppercase tracking-wider">
+          <span className="text-sm font-bold uppercase tracking-wider">
             Characters
-          </h2>
+          </span>
         </div>
         <Link
           href="/profile"

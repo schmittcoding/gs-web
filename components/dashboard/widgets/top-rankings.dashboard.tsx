@@ -27,9 +27,9 @@ function TopRankingsShell({ children }: { children: React.ReactNode }) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <IconTrophy className="size-4 text-primary" />
-          <h2 className="text-sm font-bold uppercase tracking-wider">
+          <span className="text-sm font-bold uppercase tracking-wider">
             Gold Rankings
-          </h2>
+          </span>
         </CardTitle>
         <CardAction>
           <Link

@@ -34,9 +34,9 @@ export async function CharacterStats({ characters }: DashboardStatsProps) {
         <CardHeader>
           <CardTitle>
             <IconDeviceGamepad2 className="size-4 text-primary" />
-            <h2 className="text-sm font-bold uppercase tracking-wider">
+            <span className="text-sm font-bold uppercase tracking-wider">
               Characters
-            </h2>
+            </span>
           </CardTitle>
           <CardAction>
             <Link
