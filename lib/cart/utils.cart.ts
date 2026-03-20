@@ -1,9 +1,6 @@
 import { CartCookieItem, CartItem } from "./types.cart";
 
-const CART_COOKIE_KEY = process.env.NEXT_PUBLIC_CART_COOKIE_KEY ?? "gs_cart";
-const CART_COOKIE_MAX_AGE = Number(
-  process.env.NEXT_PUBLIC_CART_COOKIE_MAX_AGE ?? 2592000,
-);
+const CART_STORAGE_KEY = process.env.NEXT_PUBLIC_CART_COOKIE_KEY ?? "gs_cart";
 
 /**
  * Returns true when an item cannot be purchased:
@@ -35,16 +32,29 @@ export function getEffectiveLimit(
 }
 
 /**
- * Client-side: write cart to `document.cookie`.
- * Only persists user intent + display fields — never prices, limits, or stock.
+ * Client-side: read cart from localStorage.
  */
-export function saveCartToCookiesClient(items: CartItem[]) {
+export function getCartFromStorage(): CartCookieItem[] {
+  try {
+    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw) as CartCookieItem[];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Client-side: write cart to localStorage.
+ * Persists user intent + display fields + last-known price for offline display.
+ */
+export function saveCartToStorage(items: CartItem[]) {
   const cookieItems: CartCookieItem[] = items.map((item) => ({
     product_num: item.product_num,
     quantity: item.quantity,
     item_name: item.item_name,
     item_image: item.item_image,
+    final_price: item.final_price,
   }));
-  const value = JSON.stringify(cookieItems);
-  document.cookie = `${CART_COOKIE_KEY}=${value}; path=/; max-age=${CART_COOKIE_MAX_AGE}; SameSite=Lax`;
+  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cookieItems));
 }

@@ -1,18 +1,20 @@
 "use client";
 
+import { ShopItem } from "@/components/item-shop/types.item-shop";
 import { getCartItemsFresh } from "@/lib/cart/actions.cart";
-import { CartCookieItem, CartItem } from "@/lib/cart/types.cart";
+import { CartItem } from "@/lib/cart/types.cart";
 import {
+  getCartFromStorage,
   getEffectiveLimit,
-  saveCartToCookiesClient,
+  saveCartToStorage,
 } from "@/lib/cart/utils.cart";
 import {
   createContext,
   PropsWithChildren,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
 } from "react";
@@ -26,6 +28,10 @@ type CartContextProps = {
   removeItem: (productNum: number) => void;
   updateQuantity: (productNum: number, quantity: number) => boolean;
   clearCart: () => void;
+  /** Fetch fresh item-shop data from the server and sync cart prices/stock. */
+  syncCart: () => Promise<void>;
+  /** Sync cart prices/stock from already-available shop items (no fetch). */
+  syncCartFromShopData: (shopItems: ShopItem[]) => void;
 };
 
 const CartContext = createContext<CartContextProps | null>(null);
@@ -45,7 +51,7 @@ function createCartStore(initialItems: CartItem[]) {
 
   function setItems(next: CartItem[] | ((prev: CartItem[]) => CartItem[])) {
     items = typeof next === "function" ? next(items) : next;
-    saveCartToCookiesClient(items);
+    saveCartToStorage(items);
     listeners.forEach((l) => l());
   }
 
@@ -61,73 +67,102 @@ function getOrCreateStore(initialItems: CartItem[]) {
   return storeInstance;
 }
 
-/**
- * Hydrate cookie items into CartItem shape with zeroed server fields.
- * Prices/limits will be populated by `getCartItemsFresh` on mount.
- */
-function hydrateCookieItems(cookieItems: CartCookieItem[]): CartItem[] {
-  return cookieItems.map((c) => ({
-    ...c,
-    final_price: 0,
-    item_price: 0,
-  }));
-}
+const EMPTY_CART: CartItem[] = [];
 
-export function CartProvider({
-  initialItems = [],
-  children,
-}: PropsWithChildren<{ initialItems?: CartCookieItem[] }>) {
-  const hydratedItems = useMemo(
-    () => hydrateCookieItems(initialItems),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only on mount
-    [],
-  );
-  const store = getOrCreateStore(hydratedItems);
-  const [isSyncing, setIsSyncing] = useState(initialItems.length > 0);
+export function CartProvider({ children }: PropsWithChildren) {
+  const store = useMemo(() => {
+    const initial = getCartFromStorage().map((c) => ({
+      ...c,
+      item_price: c.final_price,
+    }));
+    return getOrCreateStore(initial);
+  }, []);
+
+  const [isSyncing, setIsSyncing] = useState(false);
+  const syncRef = useRef(0);
 
   const items = useSyncExternalStore(
     store.subscribe,
     store.getSnapshot,
-    () => hydratedItems,
+    () => EMPTY_CART,
   );
 
-  // Auto-sync cart items with fresh server data on mount
-  useEffect(() => {
+  /**
+   * Merge shop data into current cart items.
+   * Items not found in shopMap are flagged as removed and filtered out.
+   */
+  const applyShopData = useCallback(
+    (shopMap: Map<number, ShopItem>) => {
+      const currentItems = store.getSnapshot();
+      const updatedItems: CartItem[] = currentItems
+        .filter((c) => shopMap.has(c.product_num))
+        .map((c) => {
+          const fresh = shopMap.get(c.product_num)!;
+          return {
+            product_num: c.product_num,
+            quantity: c.quantity,
+            item_name: fresh.item_name,
+            item_image: fresh.item_image,
+            item_price: fresh.item_price,
+            final_price: fresh.final_price,
+            remaining_purchase_limit: fresh.remaining_purchase_limit,
+            item_stock: fresh.item_stock,
+            item_description: fresh.item_description,
+          };
+        });
+      store.setItems(updatedItems);
+    },
+    [store],
+  );
+
+  /** Sync cart prices/stock from already-available shop items (no fetch). */
+  const syncCartFromShopData = useCallback(
+    (shopItems: ShopItem[]) => {
+      if (store.getSnapshot().length === 0) return;
+      const shopMap = new Map(shopItems.map((s) => [s.product_num, s]));
+      applyShopData(shopMap);
+    },
+    [store, applyShopData],
+  );
+
+  /** Fetch fresh item-shop data from the server and sync cart prices/stock. */
+  const syncCart = useCallback(async () => {
     const currentItems = store.getSnapshot();
     if (currentItems.length === 0) return;
 
-    let cancelled = false;
+    const id = ++syncRef.current;
     setIsSyncing(true);
 
-    console.log({ currentItems });
+    const cookieItems = currentItems.map((i) => ({
+      product_num: i.product_num,
+      quantity: i.quantity,
+      item_name: i.item_name,
+      item_image: i.item_image,
+      final_price: i.final_price,
+    }));
 
-    getCartItemsFresh().then((synced) => {
-      if (cancelled) return;
+    const synced = await getCartItemsFresh(cookieItems);
 
-      // Filter out removed items and map back to CartItem shape
-      const updatedItems: CartItem[] = synced
-        .filter((s) => !s.is_removed)
-        .map((s) => ({
-          product_num: s.product_num,
-          item_name: s.item_name,
-          item_image: s.item_image,
-          final_price: s.final_price,
-          item_price: s.item_price,
-          quantity: s.quantity,
-          remaining_purchase_limit: s.remaining_purchase_limit,
-          item_stock: s.item_stock,
-          item_description: s.item_description,
-        }));
+    // Stale response — a newer sync was started
+    if (id !== syncRef.current) return;
 
-      store.setItems(updatedItems);
-      setIsSyncing(false);
-    });
+    const updatedItems: CartItem[] = synced
+      .filter((s) => !s.is_removed)
+      .map((s) => ({
+        product_num: s.product_num,
+        item_name: s.item_name,
+        item_image: s.item_image,
+        final_price: s.final_price,
+        item_price: s.item_price,
+        quantity: s.quantity,
+        remaining_purchase_limit: s.remaining_purchase_limit,
+        item_stock: s.item_stock,
+        item_description: s.item_description,
+      }));
 
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- sync once on mount
-  }, []);
+    store.setItems(updatedItems);
+    setIsSyncing(false);
+  }, [store]);
 
   const addItem = useCallback(
     (item: Omit<CartItem, "quantity">): boolean => {
@@ -220,6 +255,8 @@ export function CartProvider({
       removeItem,
       updateQuantity,
       clearCart,
+      syncCart,
+      syncCartFromShopData,
     }),
     [
       items,
@@ -230,6 +267,8 @@ export function CartProvider({
       removeItem,
       updateQuantity,
       clearCart,
+      syncCart,
+      syncCartFromShopData,
     ],
   );
 

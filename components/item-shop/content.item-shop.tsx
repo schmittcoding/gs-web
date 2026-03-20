@@ -6,8 +6,9 @@ import ItemShopFilters, {
 } from "@/components/item-shop/filters.item-shop";
 import { ItemCard } from "@/components/item-shop/item-card.item-shop";
 import { IconSearch, IconX } from "@tabler/icons-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
+import { useCart } from "../providers/cart.provider";
 import { default as GameButton } from "../common/game.button";
 import FormInput from "../ui/form/input.form";
 import { EItemCategory, ShopItem } from "./types.item-shop";
@@ -17,6 +18,14 @@ type ItemShopContentProps = {
 };
 
 export default function ItemShopContent({ items }: ItemShopContentProps) {
+  const { syncCartFromShopData } = useCart();
+
+  // Sync cart prices/stock from the already-fetched shop data (no extra request)
+  useEffect(() => {
+    const allItems = Object.values(items).flat().filter(Boolean) as ShopItem[];
+    syncCartFromShopData(allItems);
+  }, [items, syncCartFromShopData]);
+
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<ItemFilters>({
     category: EItemCategory.All,

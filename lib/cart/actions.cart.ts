@@ -2,41 +2,7 @@
 
 import { ShopItem } from "@/components/item-shop/types.item-shop";
 import { fetcherPrivate } from "@/lib/fetcher";
-import { cookies } from "next/headers";
 import { CartCookieItem, CartItem } from "./types.cart";
-
-const CART_COOKIE_KEY = process.env.NEXT_PUBLIC_CART_COOKIE_KEY ?? "gs_cart";
-
-/**
- * Server-side: read cart from cookies using `next/headers`.
- * Returns only cookie-safe fields; server-authoritative data
- * must be populated via `getCartItemsFresh`.
- */
-export async function getCartFromCookiesServer(): Promise<CartCookieItem[]> {
-  console.log("[[getCartFromCookiesServer]]");
-  const cookieStore = await cookies();
-  console.log("[[getCartFromCookiesServer]]", cookieStore);
-  const raw = cookieStore.get(CART_COOKIE_KEY)?.value;
-  console.log("[[getCartFromCookiesServer]]", raw);
-
-  if (!raw) return [];
-
-  try {
-    const parsed: unknown[] = JSON.parse(raw);
-    console.log("[[getCartFromCookiesServer]]", parsed);
-    return parsed.map((r) => {
-      const item = r as Record<string, unknown>;
-      return {
-        product_num: Number(item.product_num),
-        quantity: Number(item.quantity),
-        item_name: String(item.item_name ?? ""),
-        item_image: String(item.item_image ?? ""),
-      };
-    });
-  } catch {
-    return [];
-  }
-}
 
 export type SyncedCartItem = CartItem & {
   is_removed: boolean;
@@ -47,44 +13,35 @@ export type SyncedCartItem = CartItem & {
  * Returns synced items with up-to-date prices, stock, and limits.
  * Items no longer in the shop are flagged with `is_removed: true`.
  */
-export async function getCartItemsFresh(): Promise<SyncedCartItem[]> {
-  console.log("[[getCartItemsFresh]]");
-  const cartItems = await getCartFromCookiesServer();
-  console.log("[[getCartItemsFresh]]", cartItems);
+export async function getCartItemsFresh(
+  cartItems: CartCookieItem[],
+): Promise<SyncedCartItem[]> {
   if (cartItems.length === 0) return [];
 
   const res = await fetcherPrivate("/v1/item-shop");
-  console.log("[[getCartItemsFresh]]", res);
 
   if (!res.ok) {
-    // On failure, return cookie data with zeroed prices so UI shows "syncing"
-    // state rather than trusting any client-provided values
     return cartItems.map((item) => ({
       ...item,
-      final_price: 0,
-      item_price: 0,
+      item_price: item.final_price,
       item_stock: 0,
       is_removed: false,
     }));
   }
-
-  console.log({ res });
 
   let shopItems: ShopItem[];
   try {
     shopItems = await res.json();
-    console.log({ shopItems });
   } catch {
     return cartItems.map((item) => ({
       ...item,
-      final_price: 0,
-      item_price: 0,
+      item_price: item.final_price,
       item_stock: 0,
       is_removed: false,
     }));
   }
+
   const shopMap = new Map(shopItems.map((s) => [s.product_num, s]));
-  console.log({ shopMap });
 
   return cartItems.map((cartItem) => {
     const fresh = shopMap.get(cartItem.product_num);
@@ -92,8 +49,7 @@ export async function getCartItemsFresh(): Promise<SyncedCartItem[]> {
     if (!fresh) {
       return {
         ...cartItem,
-        final_price: 0,
-        item_price: 0,
+        item_price: cartItem.final_price,
         item_stock: 0,
         is_removed: true,
       };

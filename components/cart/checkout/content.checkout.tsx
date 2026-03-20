@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { isCartItemUnavailable } from "@/lib/cart/utils.cart";
-import { IconReceipt, IconShoppingCart } from "@tabler/icons-react";
+import { IconLoader2, IconReceipt, IconShoppingCart } from "@tabler/icons-react";
 import Link from "next/link";
-import { useMemo, useTransition } from "react";
+import { useEffect, useMemo, useTransition } from "react";
 import { sileo } from "sileo";
 import { useCart } from "../../providers/cart.provider";
 import { useSession } from "../../providers/session.provider";
@@ -23,9 +23,19 @@ import PriceBreakdown from "./price-breakdown.checkout";
 import UnavailableSection from "./unavailable.checkout";
 
 export function CheckoutContent() {
-  const { items, isSyncing, clearCart } = useCart();
+  const { items, isSyncing, clearCart, syncCart } = useCart();
   const { user, setUser } = useSession();
   const [isPending, startTransition] = useTransition();
+
+  // Always fetch fresh data when checkout mounts
+  useEffect(() => {
+    syncCart();
+  }, [syncCart]);
+
+  // Items loaded from storage have final_price=0 until synced
+  const isLoading =
+    isSyncing ||
+    (items.length > 0 && items.every((i) => i.final_price === 0));
 
   const { availableItems, unavailableItems } = useMemo(() => {
     const available: typeof items = [];
@@ -85,7 +95,7 @@ export function CheckoutContent() {
     });
   };
 
-  if (items.length === 0) {
+  if (!isLoading && items.length === 0) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-2 text-gray-400 text-center">
         <IconShoppingCart className="size-12 opacity-50" />
@@ -100,17 +110,21 @@ export function CheckoutContent() {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center gap-2 text-muted-foreground">
+        <IconLoader2 className="size-8 animate-spin" />
+        <p className="text-sm">Syncing your cart…</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex w-full min-w-0 flex-1 flex-col gap-4 lg:flex-row lg:overflow-hidden">
       {/* Left column — scrollable item list */}
       <div className="min-w-0 flex-1 space-y-6 lg:overflow-y-auto pt-4 lg:pb-4">
-        {isSyncing && (
-          <p className="text-xs text-muted-foreground animate-pulse">
-            Syncing item availability…
-          </p>
-        )}
         <UnavailableSection items={unavailableItems} />
-        <OrderSummarySection syncing={isSyncing} items={availableItems} />
+        <OrderSummarySection syncing={false} items={availableItems} />
       </div>
 
       {/* Right column — sticky purchase summary */}
@@ -141,7 +155,7 @@ export function CheckoutContent() {
                 className="w-full"
                 size="default"
                 onClick={handleCheckout}
-                disabled={!canAfford || isPending || isSyncing}
+                disabled={!canAfford || isPending}
                 loading={isPending}
               >
                 {isPending ? "Processing…" : "Checkout"}

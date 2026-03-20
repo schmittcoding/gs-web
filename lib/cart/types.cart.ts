@@ -1,12 +1,13 @@
 /**
- * Minimal shape persisted in the cookie.
- * Only user intent + display fields — never prices, limits, or stock.
+ * Minimal shape persisted in localStorage.
+ * User intent + display fields + last-known price for offline display.
  */
 export type CartCookieItem = {
   product_num: number;
   quantity: number;
   item_name: string;
   item_image: string;
+  final_price: number;
 };
 
 /**
