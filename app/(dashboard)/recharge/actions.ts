@@ -94,8 +94,6 @@ export async function confirmTransaction(
     referenceNumber: String(formData.get("referenceNumber") ?? ""),
   });
 
-  console.log({ validated });
-
   if (!validated.success) {
     const fieldErrors = z.flattenError(validated.error).fieldErrors;
     const firstError = Object.values(fieldErrors).flat().find(Boolean);
@@ -126,13 +124,10 @@ export async function confirmTransaction(
     };
   }
 
-  console.log({ body });
-
   const res = await fetcherPrivate(`/v1/payments/transaction/${id}`, {
     method: "POST",
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
-  console.log({ res });
 
   if (res.status === 401) {
     redirect(AUTH_CONFIG.loginPath);
