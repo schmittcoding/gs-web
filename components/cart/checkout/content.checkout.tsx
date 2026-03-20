@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { isCartItemUnavailable } from "@/lib/cart/utils.cart";
+import { classifyCartItems } from "@/lib/cart/utils.cart";
 import { IconLoader2, IconReceipt, IconShoppingCart } from "@tabler/icons-react";
 import Link from "next/link";
 import { useEffect, useMemo, useTransition } from "react";
@@ -37,18 +37,10 @@ export function CheckoutContent() {
     isSyncing ||
     (items.length > 0 && items.every((i) => i.final_price === 0));
 
-  const { availableItems, unavailableItems } = useMemo(() => {
-    const available: typeof items = [];
-    const unavailable: typeof items = [];
-    for (const item of items) {
-      if (isCartItemUnavailable(item)) {
-        unavailable.push(item);
-      } else {
-        available.push(item);
-      }
-    }
-    return { availableItems: available, unavailableItems: unavailable };
-  }, [items]);
+  const { availableItems, unavailableItems } = useMemo(
+    () => classifyCartItems(items),
+    [items],
+  );
 
   const totalPrice = useMemo(
     () =>

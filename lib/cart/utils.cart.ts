@@ -1,4 +1,4 @@
-import { CartCookieItem, CartItem } from "./types.cart";
+import { CartCookieItem, CartItem, UnavailableCartItem } from "./types.cart";
 
 const CART_STORAGE_KEY = process.env.NEXT_PUBLIC_CART_COOKIE_KEY ?? "gs_cart";
 
@@ -29,6 +29,64 @@ export function getEffectiveLimit(
     limits.push(remainingPurchaseLimit);
   if (typeof itemStock === "number") limits.push(itemStock);
   return limits.length > 0 ? Math.min(...limits) : null;
+}
+
+/**
+ * Classifies cart items into available and unavailable for checkout.
+ *
+ * Handles three scenarios:
+ * 1. Fully unavailable — stock is 0 or purchase limit is 0
+ * 2. Quantity exceeded — cart quantity exceeds the effective limit (stock or
+ *    purchase limit). The item is split: available portion gets clamped,
+ *    excess goes to unavailable.
+ * 3. Fully available — passes validation as-is
+ */
+export function classifyCartItems(items: CartItem[]): {
+  availableItems: CartItem[];
+  unavailableItems: UnavailableCartItem[];
+} {
+  const availableItems: CartItem[] = [];
+  const unavailableItems: UnavailableCartItem[] = [];
+
+  for (const item of items) {
+    if (isCartItemUnavailable(item)) {
+      unavailableItems.push({
+        ...item,
+        unavailable_reason:
+          typeof item.item_stock === "number" && item.item_stock <= 0
+            ? "sold_out"
+            : "limit_reached",
+      });
+      continue;
+    }
+
+    const limit = getEffectiveLimit(
+      item.remaining_purchase_limit,
+      item.item_stock,
+    );
+
+    if (limit !== null && item.quantity > limit) {
+      if (limit > 0) {
+        availableItems.push({ ...item, quantity: limit });
+      }
+      unavailableItems.push({
+        ...item,
+        quantity: limit > 0 ? item.quantity - limit : item.quantity,
+        unavailable_reason:
+          limit <= 0
+            ? typeof item.item_stock === "number" && item.item_stock <= 0
+              ? "sold_out"
+              : "limit_reached"
+            : "quantity_exceeded",
+        effective_limit: limit,
+      });
+      continue;
+    }
+
+    availableItems.push(item);
+  }
+
+  return { availableItems, unavailableItems };
 }
 
 /**

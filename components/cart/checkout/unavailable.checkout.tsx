@@ -1,11 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { CartItem } from "@/lib/cart/types.cart";
+import { UnavailableCartItem } from "@/lib/cart/types.cart";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import { getUnavailableReason } from "../utils.cart";
 import ItemCheckoutThumbnail from "./thumbnail.checkout";
 import { pluralizeItem } from "./utils.checkout";
 
-export default function UnavailableSection({ items }: { items: CartItem[] }) {
+export default function UnavailableSection({
+  items,
+}: {
+  items: UnavailableCartItem[];
+}) {
   if (items.length === 0) return null;
 
   return (
@@ -23,7 +27,7 @@ export default function UnavailableSection({ items }: { items: CartItem[] }) {
         <CardContent className="px-0 divide-y divide-gray-700">
           {items.map((item) => (
             <div
-              key={item.product_num}
+              key={`${item.product_num}-${item.unavailable_reason}`}
               className="flex items-center gap-3 bg-gray-900/30 p-3 opacity-80 grayscale"
             >
               <ItemCheckoutThumbnail
@@ -35,6 +39,11 @@ export default function UnavailableSection({ items }: { items: CartItem[] }) {
                 <span className="text-xs font-semibold text-destructive">
                   {getUnavailableReason(item)}
                 </span>
+                {item.unavailable_reason === "quantity_exceeded" && (
+                  <span className="text-xs text-muted-foreground">
+                    {item.quantity} excess {pluralizeItem(item.quantity)} removed
+                  </span>
+                )}
               </div>
             </div>
           ))}

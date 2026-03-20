@@ -22,3 +22,13 @@ export type CartItem = CartCookieItem & {
   item_stock?: number;
   item_description?: string;
 };
+
+/**
+ * A cart item that failed checkout validation, with a reason explaining why.
+ * For split items (quantity exceeded), `quantity` reflects the excess amount.
+ */
+export type UnavailableCartItem = CartItem & {
+  unavailable_reason: "sold_out" | "limit_reached" | "quantity_exceeded";
+  /** The maximum purchasable quantity (only set for quantity_exceeded) */
+  effective_limit?: number;
+};
