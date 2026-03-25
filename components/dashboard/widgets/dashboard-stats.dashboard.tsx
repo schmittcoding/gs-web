@@ -2,8 +2,8 @@
 import { CharactersResponse } from "@/components/profile/overview/types.characters";
 import {
   getClassName,
+  getSchoolAbbr,
   getSchoolColor,
-  getSchoolName,
 } from "@/components/rankings/types.rankings";
 import {
   Card,
@@ -90,8 +90,8 @@ export async function CharacterStats({ characters }: DashboardStatsProps) {
                     <div className="flex items-center gap-2 mt-0.5">
                       <img
                         className="size-3.5"
-                        alt={getSchoolName(char.cha_school)}
-                        src={`https://images.ranonlinegs.com/assets/campus/${getSchoolName(char.cha_school)}.png`}
+                        alt={getSchoolAbbr(char.cha_school)}
+                        src={`https://images.ranonlinegs.com/assets/campus/${getSchoolAbbr(char.cha_school)}.png`}
                       />
                       <span
                         className={cn(
@@ -99,7 +99,7 @@ export async function CharacterStats({ characters }: DashboardStatsProps) {
                           getSchoolColor(char.cha_school),
                         )}
                       >
-                        {getSchoolName(char.cha_school)}
+                        {getSchoolAbbr(char.cha_school)}
                       </span>
                     </div>
                   </div>

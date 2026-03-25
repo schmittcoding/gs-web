@@ -4,8 +4,8 @@
 import { getCharacters } from "@/app/(dashboard)/profile/actions";
 import {
   getClassName,
+  getSchoolAbbr,
   getSchoolColor,
-  getSchoolName,
 } from "@/components/rankings/types.rankings";
 import { DataGrid, type DataGridColumn } from "@/components/ui/data-grid";
 import { cn } from "@/lib/utils";
@@ -26,8 +26,8 @@ const columns: DataGridColumn<CharacterInfo>[] = [
       <div className="flex items-center gap-2">
         <img
           className="size-6.25 md:hidden"
-          alt={`Ran Online GS | ${getSchoolName(row.cha_school)}`}
-          src={`https://images.ranonlinegs.com/assets/campus/${getSchoolName(row.cha_school)}.png`}
+          alt={`Ran Online GS | ${getSchoolAbbr(row.cha_school)}`}
+          src={`https://images.ranonlinegs.com/assets/campus/${getSchoolAbbr(row.cha_school)}.png`}
         />
         <img
           className="size-6.25 rounded-full"
@@ -58,8 +58,8 @@ const columns: DataGridColumn<CharacterInfo>[] = [
       <div className="flex items-center gap-1.5">
         <img
           className="size-5"
-          alt={`Ran Online GS | ${getSchoolName(row.cha_school)}`}
-          src={`https://images.ranonlinegs.com/assets/campus/${getSchoolName(row.cha_school)}.png`}
+          alt={`Ran Online GS | ${getSchoolAbbr(row.cha_school)}`}
+          src={`https://images.ranonlinegs.com/assets/campus/${getSchoolAbbr(row.cha_school)}.png`}
         />
         <span
           className={cn(
@@ -67,7 +67,7 @@ const columns: DataGridColumn<CharacterInfo>[] = [
             getSchoolColor(row.cha_school),
           )}
         >
-          {getSchoolName(row.cha_school)}
+          {getSchoolAbbr(row.cha_school)}
         </span>
       </div>
     ),

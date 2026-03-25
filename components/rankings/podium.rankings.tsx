@@ -8,7 +8,7 @@ import { Separator } from "../ui/separator";
 import {
   formatGold,
   getClassName,
-  getSchoolName,
+  getSchoolAbbr,
   type GoldRankingEntry,
 } from "./types.rankings";
 
@@ -84,8 +84,8 @@ function PodiumCard({ entry, position }: PodiumCardProps) {
       >
         <img
           className="absolute top-10 right-0 scale-270 opacity-5 blur-[1px] -rotate-12"
-          alt={`Ran Online GS | Rankings | ${getSchoolName(entry.cha_school)}`}
-          src={`https://images.ranonlinegs.com/assets/campus/${getSchoolName(entry.cha_school)}.png`}
+          alt={`Ran Online GS | Rankings | ${getSchoolAbbr(entry.cha_school)}`}
+          src={`https://images.ranonlinegs.com/assets/campus/${getSchoolAbbr(entry.cha_school)}.png`}
         />
         <div
           className={cn(

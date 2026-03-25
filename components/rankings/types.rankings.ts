@@ -16,10 +16,13 @@ export type GoldRankingsResponse = {
 };
 
 // Ran Online GS school/faction mapping
-export const SCHOOL_MAP: Record<number, { name: string; color: string }> = {
-  0: { name: "sg", color: "text-primary" },
-  1: { name: "mp", color: "text-blue-400" },
-  2: { name: "ph", color: "text-accent" },
+export const SCHOOL_MAP: Record<
+  number,
+  { abbr: string; color: string; fullName: string }
+> = {
+  0: { abbr: "sg", color: "text-primary", fullName: "Sacred Gate" },
+  1: { abbr: "mp", color: "text-blue-400", fullName: "Mystic Peak" },
+  2: { abbr: "ph", color: "text-accent", fullName: "Phoenix" },
 };
 
 // Ran Online GS class mapping (M/F variants merged to class name only)
@@ -44,8 +47,12 @@ export const CLASS_MAP: Record<number, string> = {
   524288: "Shaper",
 };
 
-export function getSchoolName(school: number): string {
-  return SCHOOL_MAP[school]?.name ?? "Unknown";
+export function getSchoolAbbr(school: number): string {
+  return SCHOOL_MAP[school]?.abbr ?? "Unknown";
+}
+
+export function getSchoolFullName(school: number): string {
+  return SCHOOL_MAP[school]?.fullName ?? "Unknown";
 }
 
 export function getSchoolColor(school: number): string {
