@@ -8,7 +8,7 @@ import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { RankingsPodium } from "./podium.rankings";
 import {
   getClassName,
-  getSchoolName,
+  getSchoolAbbr,
   type GoldRankingEntry,
   type GoldRankingsResponse,
 } from "./types.rankings";
@@ -39,8 +39,8 @@ const columns: DataGridColumn<GoldRankingEntry>[] = [
         />
         <img
           className="size-6.25"
-          alt={`Ran Online GS | ${getSchoolName(row.cha_school)}`}
-          src={`https://images.ranonlinegs.com/assets/campus/${getSchoolName(row.cha_school)}.png`}
+          alt={`Ran Online GS | ${getSchoolAbbr(row.cha_school)}`}
+          src={`https://images.ranonlinegs.com/assets/campus/${getSchoolAbbr(row.cha_school)}.png`}
         />
         <span className="font-semibold truncate text-foreground max-w-45">
           {row.cha_name}

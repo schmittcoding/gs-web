@@ -3,8 +3,8 @@ import { getGoldRankings } from "@/app/(dashboard)/rankings/actions";
 import {
   formatGold,
   getClassName,
+  getSchoolAbbr,
   getSchoolColor,
-  getSchoolName,
 } from "@/components/rankings/types.rankings";
 import { Card, CardAction, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -109,7 +109,7 @@ async function TopRankings() {
                           getSchoolColor(entry.cha_school),
                         )}
                       >
-                        {getSchoolName(entry.cha_school)}
+                        {getSchoolAbbr(entry.cha_school)}
                       </span>
                       <span className="text-[10px] text-gray-600">
                         &middot;

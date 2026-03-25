@@ -5,6 +5,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MenuItem } from "./types.sidebar";
@@ -16,7 +17,10 @@ export default function SidebarItem(item: MenuItem) {
   return (
     <SidebarMenuItem data-id={item.id}>
       <SidebarMenuButton
-        className="justify-center [&_svg]:size-8 py-5 text-gray-500 not-data-active:hover:text-gray-400 hover:bg-transparent data-active:text-foreground data-active:bg-transparent fill-gray-400"
+        className={cn(
+          "relative justify-center [&_svg]:size-8 py-5 text-gray-500 not-data-active:hover:text-gray-400 hover:bg-transparent data-active:text-foreground data-active:bg-transparent fill-gray-400",
+          item.className,
+        )}
         data-active={
           item.id === "dashboard"
             ? pathname === item.path

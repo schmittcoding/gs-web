@@ -5,8 +5,8 @@ import {
 } from "@/components/profile/overview/types.characters";
 import {
   getClassName,
+  getSchoolAbbr,
   getSchoolColor,
-  getSchoolName,
 } from "@/components/rankings/types.rankings";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -56,7 +56,7 @@ function WelcomeCardContent({
         <img
           className="absolute right-0 top-0 h-full w-1/2 object-cover object-top opacity-[0.08] blur-[1px] scale-110"
           alt=""
-          src={`https://images.ranonlinegs.com/assets/campus/${getSchoolName(topCharacter.cha_school)}.png`}
+          src={`https://images.ranonlinegs.com/assets/campus/${getSchoolAbbr(topCharacter.cha_school)}.png`}
         />
       )}
       <div
@@ -115,7 +115,7 @@ function WelcomeCardContent({
                 <span
                   className={`text-xs font-medium uppercase ${getSchoolColor(topCharacter.cha_school)}`}
                 >
-                  {getSchoolName(topCharacter.cha_school)}
+                  {getSchoolAbbr(topCharacter.cha_school)}
                 </span>
                 <span className="text-xs text-gray-400 tabular-nums">
                   Lv. {topCharacter.cha_level}
