@@ -118,6 +118,17 @@ export default async function EventsPage() {
                       </p>
                     </ReadOnlyField>
                   </section>
+                  {is_registration_available && (
+                    <Link href={`/events/${event.event_id}/participants`}>
+                      <GameButton
+                        className="w-full"
+                        size="default"
+                        variant="outline"
+                      >
+                        View Participants
+                      </GameButton>
+                    </Link>
+                  )}
                   {session?.user.user_role === "admin" && (
                     <Link href={`/events/${event.event_id}`}>
                       <GameButton
