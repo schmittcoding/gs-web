@@ -301,6 +301,80 @@ export async function getKothLeaderboard(
   return res.json();
 }
 
+// --- Participants ---
+export type GuildParticipant = {
+  cha_school: number;
+  guild_name: string;
+  guild_num: number;
+  gvg_count: number;
+  koth_count: number;
+  member_count: number;
+  rank: 1;
+};
+
+type GetParticipantResponse<T> = {
+  success: boolean;
+  pagination: Pagination;
+  participants: T[];
+};
+
+export async function getGuildParticipants(
+  eventId: string,
+): Promise<GetParticipantResponse<GuildParticipant>> {
+  const res = await fetcherPrivate(
+    `/v1/events/${eventId}/participants/guilds?page=1&limit=100`,
+  );
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      redirect(AUTH_CONFIG.loginPath);
+    }
+
+    return {
+      success: false,
+      pagination: { page: 1, page_size: 100, total_items: 0 },
+      participants: [],
+    };
+  }
+
+  return res.json();
+}
+
+export type KothParticipant = {
+  cha_class: number;
+  cha_level: number;
+  cha_name: string;
+  cha_num: number;
+  cha_school: number;
+  guild_name: string;
+  guild_num: number;
+  join_gvg: boolean;
+  join_koth: boolean;
+};
+
+export async function getKothParticipants(
+  eventId: string,
+  chaClass: number,
+): Promise<GetParticipantResponse<KothParticipant>> {
+  const res = await fetcherPrivate(
+    `/v1/events/${eventId}/participants/characters?cha_class=${chaClass}&page=1&limit=100`,
+  );
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      redirect(AUTH_CONFIG.loginPath);
+    }
+
+    return {
+      success: false,
+      pagination: { page: 1, page_size: 100, total_items: 0 },
+      participants: [],
+    };
+  }
+
+  return res.json();
+}
+
 // --- Snapshots ---
 
 type SnapshotListResponse = {
