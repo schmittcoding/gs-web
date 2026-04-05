@@ -7,6 +7,7 @@ import {
 } from "@/components/dashboard/widgets/top-rankings.dashboard";
 import { WalletCard } from "@/components/dashboard/widgets/wallet-card.dashboard";
 import { WelcomeCard } from "@/components/dashboard/widgets/welcome-card.dashboard";
+import { GvgStandingsDialog } from "@/components/events/dialog.gvg-standings";
 import EventPromotion from "@/components/promotions/event.promotion";
 import { requireSession } from "@/lib/auth/session.auth";
 import {
@@ -16,7 +17,7 @@ import {
 } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { getCurrentEvent } from "./events/actions";
+import { getCurrentEvent, getGuildLeaderboard } from "./events/actions";
 import { getCharacters, getProfile } from "./profile/actions";
 
 export const metadata: Metadata = {
@@ -27,12 +28,17 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  const [session, profile, characters, currentEvent] = await Promise.all([
-    requireSession(),
-    getProfile(),
-    getCharacters(1, 50),
-    getCurrentEvent(),
-  ]);
+  const [session, profile, characters, { event, is_registration_available }] =
+    await Promise.all([
+      requireSession(),
+      getProfile(),
+      getCharacters(1, 50),
+      getCurrentEvent(),
+    ]);
+
+  const gvgRankings = event?.event_id
+    ? await getGuildLeaderboard(event.event_id, 1, 5)
+    : null;
 
   const activeCharacters = characters.data.filter((c) => c.cha_deleted === 0);
   const highestLevel = activeCharacters.reduce(
@@ -82,7 +88,18 @@ export default async function DashboardPage() {
           </Suspense>
         </section>
       </section>
-      {currentEvent.event?.event_id && <EventPromotion />}
+      {event?.event_id && is_registration_available && <EventPromotion />}
+      {event?.event_id &&
+        !is_registration_available &&
+        gvgRankings &&
+        gvgRankings.rankings.length > 0 && (
+          <GvgStandingsDialog
+            eventId={event.event_id}
+            eventName={event.event_name}
+            season={event.season}
+            rankings={gvgRankings.rankings}
+          />
+        )}
     </main>
   );
 }
