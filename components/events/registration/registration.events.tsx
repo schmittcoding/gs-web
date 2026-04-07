@@ -17,6 +17,7 @@ export default async function EventRegistration({
   canRegister,
 }: EventRegistrationProps) {
   if (!canRegister) {
+    console.log("Server hit here");
     return (
       <span className="font-black leading-none text-destructive">
         REGISTRATION CLOSED
@@ -28,6 +29,9 @@ export default async function EventRegistration({
     getRegistrationStatus(eventId),
     getEligibleCharacters(eventId),
   ]);
+
+  console.log("registrations", registrations);
+  console.log("characters", characters);
 
   return (
     <EventRegistrationDialog

@@ -87,11 +87,15 @@ export async function getRegistrationStatus(
   return res.json();
 }
 
-export async function getEligibleCharacters(eventId: string): Promise<{
+type EligibleCharacterResponse = {
   success: boolean;
   event_id: string | null;
   characters: EventRegistrationCharacterData[];
-}> {
+};
+
+export async function getEligibleCharacters(
+  eventId: string,
+): Promise<EligibleCharacterResponse> {
   const res = await fetcherPrivate(`/v1/events/${eventId}/characters`, {
     cache: "no-cache",
   });
@@ -104,7 +108,15 @@ export async function getEligibleCharacters(eventId: string): Promise<{
     return { success: false, event_id: null, characters: [] };
   }
 
-  return res.json();
+  const data: EligibleCharacterResponse = await res.json();
+  const filteredCharacters = data.characters.filter(
+    ({ eligible_gvg, eligible_koth }) => eligible_gvg || eligible_koth,
+  );
+
+  return {
+    ...data,
+    characters: filteredCharacters,
+  };
 }
 
 // --- Match Status ---
