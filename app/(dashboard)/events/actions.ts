@@ -24,7 +24,9 @@ type CurrentEventResponse = {
 };
 
 export async function getCurrentEvent(): Promise<CurrentEventResponse> {
-  const res = await fetcherPrivate("/v1/events/current");
+  const res = await fetcherPrivate("/v1/events/current", {
+    cache: "no-cache",
+  });
 
   if (!res.ok) {
     if (res.status === 401) {
@@ -67,7 +69,12 @@ type RegistrationStatusResponse = {
 export async function getRegistrationStatus(
   eventId: string,
 ): Promise<RegistrationStatusResponse> {
-  const res = await fetcherPrivate(`/v1/events/${eventId}/registration-status`);
+  const res = await fetcherPrivate(
+    `/v1/events/${eventId}/registration-status`,
+    {
+      cache: "no-cache",
+    },
+  );
 
   if (!res.ok) {
     if (res.status === 401) {
@@ -85,7 +92,9 @@ export async function getEligibleCharacters(eventId: string): Promise<{
   event_id: string | null;
   characters: EventRegistrationCharacterData[];
 }> {
-  const res = await fetcherPrivate(`/v1/events/${eventId}/characters`);
+  const res = await fetcherPrivate(`/v1/events/${eventId}/characters`, {
+    cache: "no-cache",
+  });
 
   if (!res.ok) {
     if (res.status === 401) {
