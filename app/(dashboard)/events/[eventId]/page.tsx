@@ -24,7 +24,7 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <main className="min-h-0 h-full overflow-auto bg-gray-950 p-4">
-      <section className="space-y-4 h-full flex flex-col">
+      <section className="space-y-4 h-max overflow-auto flex flex-col">
         <Tabs
           className="gap-4 lg:h-full lg:grid lg:grid-rows-[auto_1fr] lg:overflow-hidden"
           defaultValue="gvg"
