@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import GameButton from "@/components/common/game.button";
-import { MATCHES } from "@/components/events/constants.events";
 import EventRegistration from "@/components/events/registration/registration.events";
 import { Card, CardContent } from "@/components/ui/card";
 import ReadOnlyField from "@/components/ui/input/read-only";
@@ -11,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { IconLink } from "@tabler/icons-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import { getCurrentEvent } from "./actions";
+import { getCurrentEvent, getEventMatches } from "./actions";
 
 export default async function EventsPage() {
   const [{ event, is_registration_available }, session] = await Promise.all([
@@ -29,7 +28,7 @@ export default async function EventsPage() {
     );
   }
 
-  //   const { matches } = await getEventMatches(event.event_id);
+  const { matches } = await getEventMatches(event.event_id);
 
   return (
     <main className="min-h-0 size-full bg-gray-950 relative overflow-auto p-4">
@@ -129,17 +128,15 @@ export default async function EventsPage() {
                       </GameButton>
                     </Link>
                   )}
-                  {session?.user.user_role === "admin" && (
-                    <Link href={`/events/${event.event_id}`}>
-                      <GameButton
-                        className="w-full"
-                        size="default"
-                        variant="outline"
-                      >
-                        View Leaderboard
-                      </GameButton>
-                    </Link>
-                  )}
+                  <Link href={`/events/${event.event_id}`}>
+                    <GameButton
+                      className="w-full"
+                      size="default"
+                      variant="outline"
+                    >
+                      View Leaderboard
+                    </GameButton>
+                  </Link>
                 </section>
               </CardContent>
             </Card>
@@ -150,7 +147,7 @@ export default async function EventsPage() {
           <section className="space-y-2">
             <h3 className="text-xl font-bold">Event Schedule</h3>
             <div className="space-y-1.5">
-              {MATCHES.map((match) => (
+              {matches.map((match) => (
                 <div
                   key={match.match_id}
                   className={cn(
