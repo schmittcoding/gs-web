@@ -1,7 +1,8 @@
 "use client";
 
-import { IconMenu2, IconShoppingCart } from "@tabler/icons-react";
+import { IconDownload, IconMenu2, IconShoppingCart } from "@tabler/icons-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { CartSheet } from "../cart/sheet.cart";
 import Coin from "../common/coin";
@@ -14,9 +15,13 @@ import { useSidebar } from "../ui/sidebar";
 
 type DashboardHeaderProps = {
   pageHeader: React.ReactNode;
+  downloadLink: string | null;
 };
 
-export default function DashboardHeader({ pageHeader }: DashboardHeaderProps) {
+export default function DashboardHeader({
+  pageHeader,
+  downloadLink,
+}: DashboardHeaderProps) {
   const { toggleSidebar } = useSidebar();
   const { totalItems: cartItemCount } = useCart();
   const { user } = useSession();
@@ -52,21 +57,25 @@ export default function DashboardHeader({ pageHeader }: DashboardHeaderProps) {
         className="md:hidden"
       />
       <section className="flex items-center gap-4">
-        <GameButton
-          variant="ghost"
-          size="icon"
-          className="relative"
-          onClick={() => setCartOpen(true)}
-        >
-          <IconShoppingCart />
-          {cartItemCount > 0 && (
-            <Badge className="absolute -top-1 -right-1 size-4 p-0 text-[10px] justify-center">
-              {cartItemCount > 99 ? "9+" : cartItemCount}
-            </Badge>
-          )}
-          <span className="sr-only">Cart</span>
-        </GameButton>
-        <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
+        {downloadLink && (
+          <GameButton
+            variant="default"
+            size="default"
+            className="ran-btn-pulse ran-btn-paper mr-2 max-sm:hidden"
+            asChild
+          >
+            <Link
+              className="flex gap-1.5"
+              href={downloadLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <IconDownload className="size-4" />
+              <span className="max-md:hidden">Download Client</span>
+            </Link>
+          </GameButton>
+        )}
+
         <div className="flex items-center gap-2 max-md:hidden">
           <Avatar size="lg">
             <AvatarFallback className="shape-hexagon bg-primary text-primary-foreground">
@@ -84,6 +93,21 @@ export default function DashboardHeader({ pageHeader }: DashboardHeaderProps) {
             />
           </div>
         </div>
+        <GameButton
+          variant="ghost"
+          size="icon"
+          className="relative"
+          onClick={() => setCartOpen(true)}
+        >
+          <IconShoppingCart />
+          {cartItemCount > 0 && (
+            <Badge className="absolute -top-1 -right-1 size-4 p-0 text-[10px] justify-center">
+              {cartItemCount > 99 ? "9+" : cartItemCount}
+            </Badge>
+          )}
+          <span className="sr-only">Cart</span>
+        </GameButton>
+        <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
       </section>
     </header>
   );

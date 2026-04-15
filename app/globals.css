@@ -365,6 +365,24 @@
 .ran-glow-pulse {
   animation: ran-glow-pulse 2s ease-in-out infinite;
 }
+
+@keyframes ran-btn-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 50%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 10px 4px color-mix(in oklch, var(--primary) 25%, transparent);
+  }
+}
+.ran-btn-pulse {
+  animation: ran-btn-pulse 2.4s ease-in-out infinite;
+}
+.ran-btn-paper {
+  background-image: url('/images/patterns/paper.png');
+  background-blend-mode: overlay;
+  background-size: 200px 200px;
+}
 .ran-flicker {
   animation: ran-flicker 4s linear infinite;
 }

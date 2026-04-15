@@ -8,6 +8,7 @@ import { getSession } from "@/lib/auth/session.auth";
 import { AUTH_CONFIG } from "@/lib/constants";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
+import { getClientDownloadLink } from "./actions";
 
 type LayoutProps = {
   children: ReactNode;
@@ -15,7 +16,10 @@ type LayoutProps = {
 };
 
 export default async function Layout({ children, header }: LayoutProps) {
-  const session = await getSession();
+  const [session, downloadLink] = await Promise.all([
+    getSession(),
+    getClientDownloadLink(),
+  ]);
 
   if (!session) {
     redirect(AUTH_CONFIG.loginPath);
@@ -34,7 +38,7 @@ export default async function Layout({ children, header }: LayoutProps) {
               />
               <div className="absolute inset-0 bg-linear-to-t from-background from-10% to-85%" />
             </div>
-            <DashboardHeader pageHeader={header} />
+            <DashboardHeader pageHeader={header} downloadLink={downloadLink} />
             <div className="flex min-w-0 min-h-0">
               <DashboardSidebar />
               <SidebarInset className="overflow-hidden bg-transparent">
