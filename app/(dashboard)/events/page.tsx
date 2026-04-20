@@ -1,21 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
 import GameButton from "@/components/common/game.button";
+import MatchScheduleEvents from "@/components/events/match-schedule.events";
 import EventRegistration from "@/components/events/registration/registration.events";
 import { Card, CardContent } from "@/components/ui/card";
 import ReadOnlyField from "@/components/ui/input/read-only";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getSession } from "@/lib/auth/session.auth";
-import { formatDate, formatShortDate, formatShortTime } from "@/lib/formatters";
-import { cn } from "@/lib/utils";
+import { formatDate } from "@/lib/formatters";
 import { IconLink } from "@tabler/icons-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { getCurrentEvent, getEventMatches } from "./actions";
 
 export default async function EventsPage() {
-  const [{ event, is_registration_available }, session] = await Promise.all([
+  const [{ event, is_registration_available }] = await Promise.all([
     getCurrentEvent(),
-    getSession(),
   ]);
 
   if (!event) {
@@ -146,83 +144,9 @@ export default async function EventsPage() {
           </Suspense> */}
           <section className="space-y-2">
             <h3 className="text-xl font-bold">Event Schedule</h3>
-            <div className="space-y-1.5">
+            <div className="space-y-4">
               {matches.map((match) => (
-                <div
-                  key={match.match_id}
-                  className={cn(
-                    "group/row relative flex flex-wrap items-center gap-3 px-3 py-2.5 rounded-sm overflow-hidden",
-                    "hover:bg-gray-900/80 transition-colors duration-200 odd:bg-gray-900/80",
-                  )}
-                >
-                  <section className="flex gap-3">
-                    <div className="min-w-16 lg:w-50 pr-4">
-                      <span>{match.match_label}</span>
-                      <p className="text-[9px] font-semibold uppercase tracking-widest text-gray-500">
-                        Match
-                      </p>
-                    </div>
-                    <section className="flex-1 min-w-0 flex gap-4 sm:divide-x divide-gray-700">
-                      <div className="pr-4">
-                        <span className="font-medium">
-                          {formatShortDate(match.match_date)}
-                        </span>
-                        <p className="text-[9px] font-semibold uppercase tracking-widest text-gray-500">
-                          Match Date
-                        </p>
-                      </div>
-                      <div>
-                        <span className="font-medium">
-                          {formatShortTime(match.start_time)}
-                        </span>
-                        <p className="text-[9px] font-semibold uppercase tracking-widest text-gray-500">
-                          Server Time
-                        </p>
-                      </div>
-                    </section>
-                  </section>
-                  <section className="flex-1 flex gap-3 items-center justify-between md:justify-end">
-                    <section className="flex gap-2 sm:gap-4 sm:divide-x divide-gray-700">
-                      <div className="pr-4 text-center">
-                        <span className="font-medium">
-                          {match.tower_points_th ?? 0}
-                        </span>
-                        <p className="text-[9px] font-semibold uppercase tracking-widest text-gray-500">
-                          TH
-                        </p>
-                      </div>
-                      <div className="pr-4 text-center">
-                        <span className="font-medium">
-                          {match.tower_points_faci ?? 0}
-                        </span>
-                        <p className="text-[9px] font-semibold uppercase tracking-widest text-gray-500">
-                          Faci
-                        </p>
-                      </div>
-                      <div className="text-center">
-                        <span className="font-medium">
-                          {match.tower_points_nuc ?? 0}
-                        </span>
-                        <p className="text-[9px] font-semibold uppercase tracking-widest text-gray-500">
-                          Nuc
-                        </p>
-                      </div>
-                    </section>
-                    <div>
-                      <span
-                        className={cn(
-                          "font-black leading-none",
-                          "data-[status=Pending]:text-gray-500",
-                          "data-[status=Processing]:text-gray-300",
-                          "data-[status=Completed]:text-accent/80",
-                        )}
-                        data-status={match.tally_status}
-                      >
-                        {match.tally_status}
-                      </span>
-                    </div>
-                  </section>
-                </div>
+                <MatchScheduleEvents key={match.match_id} match={match} />
               ))}
             </div>
           </section>

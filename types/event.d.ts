@@ -1,3 +1,24 @@
+// gimmick.rs → GimmickType
+// Wire values are PascalCase due to #[serde(rename_all = "PascalCase")]
+export type GimmickType = "DoublePoints" | "NullDeaths";
+
+// gimmick.rs → EventMatchGimmick
+export type EventMatchGimmick = {
+  gimmick_id: string; // UUID v4 (36-char hyphenated)
+  match_id: string; // UUID v4 (36-char hyphenated)
+  gimmick_type: GimmickType;
+  gimmick_start_time: string; // ISO-8601 without timezone (e.g. "2026-04-19T14:30:00")
+  gimmick_end_time: string; // ISO-8601 without timezone (e.g. "2026-04-19T16:00:00")
+  created_at: string; // ISO-8601 without timezone (e.g. "2026-04-19T14:30:00")
+};
+
+// gimmick.rs → CreateGimmickRequest
+export type CreateGimmickRequest = {
+  gimmick_type: GimmickType;
+  gimmick_start_time: string; // ISO-8601 without timezone (e.g. "2026-04-19T14:30:00")
+  gimmick_end_time: string; // ISO-8601 without timezone (e.g. "2026-04-19T16:00:00")
+};
+
 export type EventData = {
   created_at: Date;
   event_end: Date;
@@ -38,6 +59,8 @@ export type EventMatchData = {
   tower_winner_th: number | null;
   tower_winner_nuc: number | null;
   tower_winner_faci: number | null;
+
+  gimmicks: EventMatchGimmick[];
 };
 
 export type EventRegistrationData = {
