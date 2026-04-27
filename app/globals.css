@@ -389,6 +389,27 @@
   background-repeat: repeat;
 }
 
+.ran-glass::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+.ran-paper {
+  background-image: url("/images/patterns/paper.png");
+  background-blend-mode: overlay;
+  background-size: 200px 200px;
+}
+
 .ran-btn-pulse {
   animation: ran-btn-pulse 2.4s ease-in-out infinite;
 }

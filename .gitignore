@@ -11,8 +11,9 @@
 !.yarn/versions
 
 # claude
-/.claude/
+# /.claude/
 .mcp.*
+/.claude/skills/ui-ux-pro-max/
 
 # testing
 /coverage

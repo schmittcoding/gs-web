@@ -1,4 +1,4 @@
-import { GimmickType } from "@/types/event";
+import { EventCategory, GimmickType } from "@/types/event";
 
 export const RANK_STYLES: Record<
   number,
@@ -12,4 +12,12 @@ export const RANK_STYLES: Record<
 export const GIMMICK_LABELS: Record<GimmickType, string> = {
   DoublePoints: "Double Points",
   NullDeaths: "No Deaths",
+} as const;
+
+export const EVENT_CATEGORY: Record<EventCategory, string> = {
+  gvg: "Guild vs Guild",
+  koth: "King of the Hill",
+  gvg_koth: "GvG & KOTH",
+  level_cap_race: "Level Cap Race",
+  speed_run: "Speed Run",
 } as const;

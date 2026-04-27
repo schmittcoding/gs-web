@@ -20,6 +20,18 @@ export function formatDate(dateString: string | Date) {
   });
 }
 
+export function formatFullDate(dateString: string | Date) {
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+}
+
 export function formatShortDate(dateString: string | Date) {
   return new Date(dateString).toLocaleDateString("en-US", {
     year: "numeric",

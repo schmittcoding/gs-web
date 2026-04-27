@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
 const cardVariants = cva(
-  "shape-main group relative border border-gray-800 aspect-auto size-full overflow-hidden p-px before:absolute before:-inset-1 before:bg-linear-to-tr before:via-50% before:via-transparent before:shadow-[0_0_0_20px_var(--background)] before:-z-1 after:absolute after:-inset-1 after:bg-linear-to-tr after:via-50% after:via-transparent after:shadow-[0_0_0_20px_var(--background)] after:-z-1 after:blur-xl",
+  "shape-main group relative border border-gray-800 aspect-auto size-full overflow-hidden p-px before:content-[''] before:absolute before:-inset-1 before:bg-linear-to-tr before:via-50% before:via-transparent before:-z-1 after:content-[''] after:absolute after:-inset-1 after:bg-linear-to-tr after:via-50% after:via-transparent after:-z-1 after:blur-xl",
   {
     variants: {
       variant: {
@@ -41,7 +41,7 @@ function Card({
     >
       <div
         data-slot="card-wrapper"
-        className="size-full shape-main overflow-hidden bg-gray-950 flex flex-col"
+        className="size-full shape-main bg-gray-950 overflow-hidden flex flex-col"
       >
         {children}
       </div>

@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   devIndicators: false,
 
-  cacheComponents: true,
+  //   cacheComponents: true,
 
   experimental: {
     serverActions: {

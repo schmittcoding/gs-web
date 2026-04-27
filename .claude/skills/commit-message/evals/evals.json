@@ -1,0 +1,114 @@
+{
+  "skill_name": "commit-message",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "ok i think i'm done with the gvg standings dialog, can you commit my changes?",
+      "expected_output": "Run git status and diff, stage all changes, propose a conventional commit message like 'feat(events): add gvg-standings promotional dialog', show a summary of staged files, get user confirmation, and commit. Should NOT push without asking.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "a1-1",
+          "text": "Runs git status or git diff to analyze the repo before doing anything",
+          "type": "content_check"
+        },
+        {
+          "id": "a1-2",
+          "text": "Proposes a conventional commit message that matches the pattern: type(scope): description",
+          "type": "format_check"
+        },
+        {
+          "id": "a1-3",
+          "text": "The proposed commit type is 'feat' (not 'chore', 'fix', or something generic)",
+          "type": "content_check"
+        },
+        {
+          "id": "a1-4",
+          "text": "The message scope or description references events, dialog, or gvg-standings (i.e., is specific to the actual change)",
+          "type": "content_check"
+        },
+        {
+          "id": "a1-5",
+          "text": "Shows a summary of staged files before committing (not just the message)",
+          "type": "content_check"
+        },
+        {
+          "id": "a1-6",
+          "text": "Asks for user confirmation or approval before committing (doesn't just commit silently)",
+          "type": "content_check"
+        },
+        {
+          "id": "a1-7",
+          "text": "Does NOT push without asking (push is a separate optional step)",
+          "type": "content_check"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "commit and push — just the page.tsx change, not the dialog file",
+      "expected_output": "Stage only app/(dashboard)/page.tsx (selective staging), generate a commit message scoped to dashboard/page, show what's staged, confirm with user, commit, then push immediately without asking (since user said 'commit and push').",
+      "files": [],
+      "assertions": [
+        {
+          "id": "a2-1",
+          "text": "Identifies and stages only page.tsx, excluding the dialog file",
+          "type": "content_check"
+        },
+        {
+          "id": "a2-2",
+          "text": "Proposes a conventional commit message (type(scope): description format)",
+          "type": "format_check"
+        },
+        {
+          "id": "a2-3",
+          "text": "The message does NOT reference gvg-standings or dialog as the primary change (since that file is excluded)",
+          "type": "content_check"
+        },
+        {
+          "id": "a2-4",
+          "text": "Plans to push after committing without asking again (user already said 'commit and push')",
+          "type": "content_check"
+        },
+        {
+          "id": "a2-5",
+          "text": "Shows what's staged before committing (only page.tsx visible in the staged summary)",
+          "type": "content_check"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "what should my commit message be for these changes?",
+      "expected_output": "Analyze the diff, generate a meaningful conventional commit message, explain the type/scope reasoning, present clearly, and offer to commit if approved.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "a3-1",
+          "text": "Analyzes the actual repo diff (runs git status/diff to see what changed)",
+          "type": "content_check"
+        },
+        {
+          "id": "a3-2",
+          "text": "Produces a commit message in conventional format: type(scope): description",
+          "type": "format_check"
+        },
+        {
+          "id": "a3-3",
+          "text": "The message description is specific and meaningful (not generic like 'update files' or 'various changes')",
+          "type": "content_check"
+        },
+        {
+          "id": "a3-4",
+          "text": "Does NOT automatically commit — user only asked for the message suggestion",
+          "type": "content_check"
+        },
+        {
+          "id": "a3-5",
+          "text": "Explains or implies why the chosen type/scope was selected (e.g., 'feat because this adds a new component')",
+          "type": "content_check"
+        }
+      ]
+    }
+  ]
+}

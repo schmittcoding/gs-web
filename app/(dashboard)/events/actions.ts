@@ -3,22 +3,23 @@
 import { AUTH_CONFIG } from "@/lib/constants";
 import { fetcherPrivate } from "@/lib/fetcher";
 import type {
-  EventData,
+  EventCharacter,
+  EventDefinition,
   EventMatchData,
-  EventRegistrationCharacterData,
-  EventRegistrationData,
+  EventRegistration,
+  GuildMembersResponse,
   GuildRanking,
+  GvgRegisterPayload,
   KothRanking,
   MatchStatus,
   Pagination,
-  RegisterPayload,
   SchoolRanking,
   Snapshot,
 } from "@/types/event";
 import { redirect } from "next/navigation";
 
 type CurrentEventResponse = {
-  event: EventData | null;
+  event: EventDefinition | null;
   success: boolean;
   is_registration_available: boolean;
 };
@@ -62,7 +63,7 @@ export async function getEventMatches(
 
 type RegistrationStatusResponse = {
   event_id: string | null;
-  registrations: EventRegistrationData[];
+  registrations: EventRegistration[];
   success: boolean;
 };
 
@@ -90,7 +91,7 @@ export async function getRegistrationStatus(
 type EligibleCharacterResponse = {
   success: boolean;
   event_id: string | null;
-  characters: EventRegistrationCharacterData[];
+  characters: EventCharacter[];
 };
 
 export async function getEligibleCharacters(
@@ -110,7 +111,7 @@ export async function getEligibleCharacters(
 
   const data: EligibleCharacterResponse = await res.json();
   const filteredCharacters = data.characters.filter(
-    ({ eligible_gvg, eligible_koth }) => eligible_gvg || eligible_koth,
+    ({ eligible }) => eligible,
   );
 
   return {
@@ -151,45 +152,19 @@ export async function getMatchStatus(
 
 type RegisterResponse = {
   success: boolean;
-  registration?: EventRegistrationData;
+  registration?: EventRegistration;
   code?: string;
   message?: string;
 };
 
 export async function registerForEvent(
   eventId: string,
-  payload: RegisterPayload,
+  payload: { chaNum: number },
 ): Promise<RegisterResponse> {
   const res = await fetcherPrivate(`/v1/events/${eventId}/register`, {
     method: "POST",
     body: JSON.stringify({
       cha_num: payload.chaNum,
-      join_gvg: payload.joinGvG,
-      join_koth: payload.joinKOTH,
-    }),
-  });
-
-  if (!res.ok) {
-    if (res.status === 401) {
-      redirect(AUTH_CONFIG.loginPath);
-    }
-
-    return res.json();
-  }
-
-  return res.json();
-}
-
-export async function updateRegistration(
-  eventId: string,
-  chaNum: number,
-  payload: Omit<RegisterPayload, "chaNum">,
-): Promise<RegisterResponse> {
-  const res = await fetcherPrivate(`/v1/events/${eventId}/register/${chaNum}`, {
-    method: "PUT",
-    body: JSON.stringify({
-      join_gvg: payload.joinGvG,
-      join_koth: payload.joinKOTH,
     }),
   });
 
@@ -218,6 +193,50 @@ export async function withdrawRegistration(
     }
 
     return { success: false, message: "Failed to withdraw" };
+  }
+
+  return res.json();
+}
+
+export async function getGuildMembers(
+  eventSlug: string,
+): Promise<GuildMembersResponse> {
+  const res = await fetcherPrivate(
+    `/v1/events/${eventSlug}/guild-members`,
+    { cache: "no-cache" },
+  );
+
+  if (!res.ok) {
+    return {
+      success: false,
+      event_id: null,
+      guild_num: 0,
+      min_level: 0,
+      members: [],
+    };
+  }
+
+  return res.json();
+}
+
+export async function registerGuildForEvent(
+  eventSlug: string,
+  payload: GvgRegisterPayload,
+): Promise<RegisterResponse> {
+  const res = await fetcherPrivate(`/v1/events/${eventSlug}/register/guild`, {
+    method: "POST",
+    body: JSON.stringify({
+      guild_num: payload.guildNum,
+      member_cha_nums: payload.memberChaNum,
+    }),
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      redirect(AUTH_CONFIG.loginPath);
+    }
+
+    return res.json();
   }
 
   return res.json();
@@ -483,6 +502,27 @@ export async function getSnapshotKoth(
       pagination: { page: 1, page_size: 0, total_items: 0 },
       rankings: [],
     };
+  }
+
+  return res.json();
+}
+
+// --- All Events ---
+
+type AllEventsResponse = {
+  success: boolean;
+  events: EventDefinition[];
+};
+
+export async function getAllEvents(): Promise<AllEventsResponse> {
+  const res = await fetcherPrivate("/v1/events");
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      redirect(AUTH_CONFIG.loginPath);
+    }
+
+    return { success: false, events: [] };
   }
 
   return res.json();

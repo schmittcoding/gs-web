@@ -4,12 +4,14 @@ import { Slot } from "radix-ui";
 type ReadOnlyFieldProps = React.ComponentProps<"div"> & {
   label: string;
   children?: string | React.ReactNode;
+  size?: "default" | "sm";
 };
 
 export default function ReadOnlyField({
   className,
   children,
   label,
+  size = "default",
   ...props
 }: ReadOnlyFieldProps) {
   const Comp =
@@ -19,11 +21,15 @@ export default function ReadOnlyField({
 
   return (
     <div
-      className={cn("space-y-0.5", className)}
+      className={cn("space-y-0.5 group", className)}
       data-slot="read-only-field"
+      data-size={size}
       {...props}
     >
-      <p className="text-sm text-gray-400/80" data-slot="read-only-label">
+      <p
+        className="text-sm text-gray-400/80 group-data-[size=sm]:text-xs"
+        data-slot="read-only-label"
+      >
         {label}
       </p>
       <Comp data-slot="read-only-value">

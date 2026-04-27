@@ -3,12 +3,11 @@
 
 import {
   registerForEvent,
-  updateRegistration,
+  registerGuildForEvent,
 } from "@/app/(dashboard)/events/actions";
 import GameButton from "@/components/common/game.button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import {
   Tooltip,
   TooltipContent,
@@ -17,8 +16,10 @@ import {
 import { SCHOOLS } from "@/lib/events/constants";
 import { cn } from "@/lib/utils";
 import type {
-  EventRegistrationCharacterData,
-  EventRegistrationData,
+  EventCategory,
+  EventCharacter,
+  EventRegistration,
+  GuildMember,
 } from "@/types/event";
 import { IconAlertTriangle, IconCheck } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
@@ -28,8 +29,12 @@ import { sileo } from "sileo";
 type RegistrationFormProps = {
   eventId: string;
   minLevel: number;
-  characters: EventRegistrationCharacterData[];
-  existingRegistrations: EventRegistrationData[];
+  characters: EventCharacter[];
+  existingRegistrations: EventRegistration[];
+  eventCategory: EventCategory;
+  eventSlug: string;
+  guildNum?: number;
+  guildMembers?: GuildMember[];
   onClose?: () => void;
 };
 
@@ -38,67 +43,82 @@ export function RegistrationForm({
   minLevel,
   characters,
   existingRegistrations,
+  eventCategory,
+  eventSlug,
+  guildNum,
+  guildMembers,
   onClose,
 }: RegistrationFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
+  const isGvG = eventCategory === "gvg";
+
+  // GVG: track selected members; others: track selected character
   const [selectedChaNum, setSelectedChaNum] = useState<number | null>(
-    existingRegistrations[0]?.cha_num ?? null,
+    !isGvG ? (existingRegistrations[0]?.cha_num ?? null) : null,
   );
-  const [joinGvG, setJoinGvG] = useState(
-    existingRegistrations[0]?.join_gvg ?? false,
-  );
-  const [joinKOTH, setJoinKOTH] = useState(
-    existingRegistrations[0]?.join_koth ?? false,
+  const [selectedMemberNums, setSelectedMemberNums] = useState<Set<number>>(
+    new Set(),
   );
 
-  const selectedChar = characters.find((c) => c.cha_num === selectedChaNum);
-  const existingReg = existingRegistrations.find(
-    (r) => r.cha_num === selectedChaNum,
-  );
-  const isUpdate = !!existingReg;
+  const selectedChar = !isGvG
+    ? characters.find((c) => c.cha_num === selectedChaNum)
+    : null;
 
-  const levelTooLow = selectedChar ? selectedChar.cha_level < minLevel : false;
-  const noGuild = selectedChar ? !selectedChar.guild_num : false;
-  const noCategorySelected = !joinGvG && !joinKOTH;
-  const canSubmit =
-    selectedChar && !levelTooLow && !noCategorySelected && !isPending;
+  // GVG-specific validation
+  const levelTooLow =
+    selectedChar && selectedChar.cha_level < minLevel
+      ? selectedChar.cha_level < minLevel
+      : false;
 
-  function handleSelectCharacter(char: EventRegistrationCharacterData) {
+  const hasGuildMembers = guildMembers && guildMembers.length > 0;
+  const canSubmit = isPending
+    ? false
+    : isGvG
+      ? hasGuildMembers && selectedMemberNums.size > 0
+      : selectedChar !== null && !levelTooLow;
+
+  function handleSelectCharacter(char: EventCharacter) {
     setSelectedChaNum(char.cha_num);
+  }
 
-    const reg = existingRegistrations.find((r) => r.cha_num === char.cha_num);
-    if (reg) {
-      setJoinGvG(reg.join_gvg);
-      setJoinKOTH(reg.join_koth);
+  function handleToggleMember(memberNum: number) {
+    const newSet = new Set(selectedMemberNums);
+    if (newSet.has(memberNum)) {
+      newSet.delete(memberNum);
     } else {
-      setJoinGvG(char.eligible_gvg);
-      setJoinKOTH(char.eligible_koth);
+      newSet.add(memberNum);
     }
+    setSelectedMemberNums(newSet);
   }
 
   function handleSubmit() {
-    if (!selectedChar || !canSubmit) return;
-
     startTransition(async () => {
-      const res = isUpdate
-        ? await updateRegistration(eventId, selectedChar.cha_num, {
-            joinGvG,
-            joinKOTH,
-          })
-        : await registerForEvent(eventId, {
-            chaNum: selectedChar.cha_num,
-            joinGvG,
-            joinKOTH,
-          });
+      let res;
+
+      if (isGvG) {
+        if (!guildNum || selectedMemberNums.size === 0) return;
+        res = await registerGuildForEvent(eventSlug, {
+          guildNum,
+          memberChaNum: Array.from(selectedMemberNums),
+        });
+      } else {
+        if (!selectedChar) return;
+        res = await registerForEvent(eventSlug, {
+          chaNum: selectedChar.cha_num,
+        });
+      }
 
       if (!res.success) {
         const errorMessages: Record<string, string> = {
           DUPLICATE: "This character is already registered.",
           CLOSED: "Registration is closed.",
           LEVEL_REQ: `Character must be at least level ${minLevel}.`,
-          NO_GUILD: "Join a guild first to participate in GvG.",
+          NO_GUILD: "Join a guild to participate.",
+          NOT_GUILD_MASTER: "You must be a guild master to register for GVG.",
+          WRONG_CATEGORY:
+            "This registration type is not valid for this event.",
         };
 
         sileo.error({
@@ -111,9 +131,7 @@ export function RegistrationForm({
       }
 
       sileo.success({
-        description: isUpdate
-          ? "Registration updated successfully."
-          : "Successfully registered for the event!",
+        description: "Successfully registered for the event!",
       });
       router.refresh();
       router.push("/events");
@@ -121,30 +139,89 @@ export function RegistrationForm({
     });
   }
 
-  //   function handleWithdraw() {
-  //     if (!existingReg) return;
-
-  //     startTransition(async () => {
-  //       const res = await withdrawRegistration(eventId, existingReg.cha_num);
-
-  //       if (!res.success) {
-  //         sileo.error({
-  //           description: res.message ?? "Failed to withdraw.",
-  //         });
-  //         return;
-  //       }
-
-  //       sileo.success({ description: "Withdrawn from the event." });
-  //       router.refresh();
-  //       router.push("/events");
-  //       onClose?.();
-  //     });
-  //   }
-
   function getSchoolAbbr(school: number) {
     return SCHOOLS.find((s) => s.chaSchool === school)?.name ?? "Unknown";
   }
 
+  // GVG Form
+  if (isGvG) {
+    if (!hasGuildMembers) {
+      return (
+        <div className="space-y-4 p-4">
+          <p className="text-sm text-gray-400">
+            You must be a guild master to register your guild.
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-4 p-4">
+        <div className="space-y-2">
+          <p className="text-sm text-gray-400">Select members to participate</p>
+          <div className="space-y-1.5 max-h-48 overflow-y-auto">
+            {guildMembers!.map((member) => {
+              const isSelected = selectedMemberNums.has(member.cha_num);
+              const isAlreadyRegistered = member.already_registered;
+
+              return (
+                <div
+                  key={member.cha_num}
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-sm transition-colors hover:bg-gray-800/60"
+                >
+                  <Checkbox
+                    checked={isSelected || isAlreadyRegistered}
+                    onCheckedChange={() =>
+                      !isAlreadyRegistered &&
+                      handleToggleMember(member.cha_num)
+                    }
+                    disabled={isAlreadyRegistered || isPending}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold truncate">
+                        {member.cha_name}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        Lv. {member.cha_level}
+                      </span>
+                      {isAlreadyRegistered && (
+                        <Badge variant="default" className="text-[10px]">
+                          Registered
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-xs text-gray-400">
+                        {getSchoolAbbr(member.cha_school)}
+                      </span>
+                    </div>
+                  </div>
+                  {isSelected && (
+                    <IconCheck className="size-4 text-primary shrink-0" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 pt-2 justify-end">
+          <GameButton
+            onClick={handleSubmit}
+            disabled={!canSubmit}
+            loading={isPending}
+            size="default"
+            className="w-full"
+          >
+            Register Guild
+          </GameButton>
+        </div>
+      </div>
+    );
+  }
+
+  // KOTH / level_cap_race Form
   return (
     <div className="space-y-4 p-4">
       <div className="space-y-2">
@@ -231,64 +308,6 @@ export function RegistrationForm({
             </p>
           )}
 
-          <div className="space-y-3">
-            <p className="text-sm text-gray-400">Categories</p>
-
-            <div className="flex items-center gap-2 has-disabled:opacity-50">
-              {noGuild ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-2">
-                      <Checkbox id="gvg" checked={false} disabled />
-                      <Label htmlFor="gvg">Guild vs Guild (GvG)</Label>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>Must be in a guild</TooltipContent>
-                </Tooltip>
-              ) : (
-                <>
-                  <Checkbox
-                    id="gvg"
-                    checked={joinGvG}
-                    onCheckedChange={(checked) => setJoinGvG(checked === true)}
-                    disabled={levelTooLow}
-                  />
-                  <Label htmlFor="gvg">Guild vs Guild (GvG)</Label>
-                </>
-              )}
-            </div>
-
-            <div className="flex items-center gap-2 has-disabled:opacity-50">
-              {noGuild ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-2">
-                      <Checkbox id="koth" checked={false} disabled />
-                      <Label htmlFor="koth">King of the Hill (KOTH</Label>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>Must be in a guild</TooltipContent>
-                </Tooltip>
-              ) : (
-                <>
-                  <Checkbox
-                    id="koth"
-                    checked={joinKOTH}
-                    onCheckedChange={(checked) => setJoinKOTH(checked === true)}
-                    disabled={levelTooLow}
-                  />
-                  <Label htmlFor="koth">King of the Hill (KOTH)</Label>
-                </>
-              )}
-            </div>
-
-            {noCategorySelected && !levelTooLow && (
-              <p className="text-xs text-destructive">
-                Select at least one category
-              </p>
-            )}
-          </div>
-
           <div className="flex items-center gap-2 pt-2 justify-end">
             <GameButton
               onClick={handleSubmit}
@@ -297,20 +316,8 @@ export function RegistrationForm({
               size="default"
               className="w-full"
             >
-              {isUpdate ? "Update Registration" : "Register"}
+              Register
             </GameButton>
-            {/* {isUpdate && (
-              <GameButton
-                onClick={handleWithdraw}
-                disabled={isPending}
-                loading={isPending}
-                variant="destructive"
-                size="default"
-              >
-                {!isPending && <IconLogout />}
-                Withdraw
-              </GameButton>
-            )} */}
           </div>
         </>
       )}

@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import { formatShortDate, formatShortTime } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { EventMatchData } from "@/types/event";
+import { MatchWithGimmicks } from "@/types/event";
 import { getSchoolAbbr } from "../rankings/types.rankings";
 import { GIMMICK_LABELS } from "./constants.events";
 
 type MatchScheduleEventsProps = {
-  match: EventMatchData;
+  match: MatchWithGimmicks;
 };
 
 export default function MatchScheduleEvents({
@@ -77,35 +77,22 @@ export default function MatchScheduleEvents({
             {renderTowerPoints("NUC", match.tower_points_nuc ?? 0)}
           </div>
         )}
-
-        {/* {match.tally_status === "Completed" && (
-          <div className="space-y-1">
-            <div className="flex gap-2 divide-x divide-gray-700 [&>p]:not-last:pr-2">
-              {renderTowerWinners("TH", match.tower_winner_th ?? null)}
-              {renderTowerWinners("FACI", match.tower_winner_faci ?? null)}
-              {renderTowerWinners("NUC", match.tower_winner_nuc ?? null)}
-            </div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-              Tower Winners
-            </p>
-          </div>
-        )} */}
       </section>
-      <section className="flex justify-between gap-4">
+      <section className="flex flex-wrap justify-between gap-x-4 gap-y-4">
         <div className="space-y-1">
-          {match.match_label}
+          <span className="text-lg">{match.match_label}</span>
           <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
             Match
           </p>
         </div>
         <div className="space-y-1">
-          {formatShortDate(match.match_date)}
+          <span className="text-lg">{formatShortDate(match.match_date)}</span>
           <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
             Match Date
           </p>
         </div>
         <div className="space-y-1">
-          {formatShortTime(match.start_time)}
+          <span className="text-lg">{formatShortTime(match.start_time)}</span>
           <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
             Server Time
           </p>
@@ -113,7 +100,7 @@ export default function MatchScheduleEvents({
         <div className="space-y-1">
           <span
             className={cn(
-              "font-black leading-none",
+              "font-black leading-none text-lg",
               "data-[status=Pending]:text-gray-500",
               "data-[status=Processing]:text-gray-300",
               "data-[status=Completed]:text-accent/80",
@@ -136,7 +123,10 @@ export default function MatchScheduleEvents({
               gimmick_start_time,
               gimmick_end_time,
             }) => (
-              <section key={gimmick_id} className="flex justify-between gap-4">
+              <section
+                key={gimmick_id}
+                className="flex flex-wrap justify-between gap-x-4 gap-y-3"
+              >
                 <div className="space-y-1">
                   {GIMMICK_LABELS[gimmick_type]}
                   <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
