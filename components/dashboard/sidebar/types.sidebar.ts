@@ -5,5 +5,6 @@ export type MenuItem = {
   icon: Icon;
   path: string;
   label: string;
+  dateAdded?: Date;
   className?: string;
 };
