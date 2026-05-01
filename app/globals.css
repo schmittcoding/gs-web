@@ -84,6 +84,18 @@
   --color-cod-gray-900: #1a1a1a;
   --color-cod-gray-950: #0f0f0f;
 
+  --color-carnation-50: #fef2f2;
+  --color-carnation-100: #fee2e2;
+  --color-carnation-200: #fecaca;
+  --color-carnation-300: #fca5a5;
+  --color-carnation-400: #f87171;
+  --color-carnation-500: #ef4444;
+  --color-carnation-600: #dc2626;
+  --color-carnation-700: #b91c1c;
+  --color-carnation-800: #991b1b;
+  --color-carnation-900: #7f1d1d;
+  --color-carnation-950: #450a0a;
+
   --background: var(--color-cod-gray-950);
   --foreground: var(--color-cod-gray-100);
   --card: var(--color-cod-gray-900);
@@ -217,8 +229,13 @@
     transform 0.15s ease,
     box-shadow 0.25s ease;
 
-  border-radius: 0 12px;
+  border-radius: 0 14px;
   corner-shape: square bevel;
+  transition: corner-shape 0.3s ease-in-out;
+}
+
+button.shape-main:hover {
+  corner-shape: square square;
 }
 
 .item-shop {
@@ -413,11 +430,6 @@
 .ran-btn-pulse {
   animation: ran-btn-pulse 2.4s ease-in-out infinite;
 }
-.ran-btn-paper {
-  background-image: url("/images/patterns/paper.png");
-  background-blend-mode: overlay;
-  background-size: 200px 200px;
-}
 .ran-flicker {
   animation: ran-flicker 4s linear infinite;
 }
@@ -497,4 +509,20 @@
 .leaderboard-cell:last-child {
   border-radius: 0 12px 0 0;
   corner-shape: square bevel square square;
+}
+
+/* Dashboard Layout */
+.dashboard-layout {
+  /* @apply grid gap-4;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+    "promo-banner promo-banner promo-banner wallet-balance"
+    "promo-banner promo-banner promo-banner recent-transactions"
+    ". gold-rankings gold-rankings character-list"
+    ". gold-rankings gold-rankings ." */
+
+  @apply grid gap-4;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-auto-rows: minmax(120px, auto);
 }

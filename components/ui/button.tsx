@@ -10,11 +10,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground [a]:hover:bg-primary/80 hover:bg-primary/80",
+          "bg-primary text-primary-foreground [a]:hover:bg-primary/80 hover:bg-primary/80 before:absolute before:bottom-0 before:left-0 before:size-2 before:border-b-2 before:border-l-2 before:border-primary after:absolute after:top-0 after:right-0 after:size-2 after:border-t-2 after:border-r-2 after:border-primary",
         outline:
-          "border-gray-700 bg-transparent hover:bg-gray-800 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
+          "border-gray-700 bg-transparent hover:bg-gray-800 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground before:absolute before:bottom-[-1] before:left-[-1] before:size-2 before:border-b-1 before:border-l-1 before:border-gray-700 after:absolute after:top-[-1] after:right-[-1] after:size-2 after:border-t-1 after:border-r-1 after:border-gray-700",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground  before:absolute before:bottom-0 before:left-0 before:size-2 before:border-b-2 before:border-l-2 before:border-secondary after:absolute after:top-0 after:right-0 after:size-2 after:border-t-2 after:border-r-2 after:border-secondary",
         ghost:
           "hover:bg-secondary/80 hover:text-secondary-foreground aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         destructive:

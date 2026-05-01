@@ -43,7 +43,7 @@ function SidebarMenuContent() {
 
   return (
     <>
-      <SidebarContent>
+      <SidebarContent className="bg-transparent lg:bg-gray-900 max-h-max py-2 rounded-3xl m-auto w-max">
         {Object.entries(sidebarMenu).map(([group, menuItems], i, a) => (
           <Fragment key={group}>
             <SidebarGroup>
@@ -63,7 +63,7 @@ function SidebarMenuContent() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">
-              <SidebarMenuItem>
+              {/* <SidebarMenuItem>
                 <SidebarMenuButton
                   className="justify-center [&_svg]:size-8 py-5 text-[#cc181e] hover:text-[#cc181e]/80 hover:bg-transparent active:bg-transparent"
                   asChild
@@ -102,12 +102,7 @@ function SidebarMenuContent() {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              {/* <SidebarMenuItem>
-                <SidebarMenuButton className="justify-center [&_svg]:size-8 py-5 text-gray-500 not-data-active:hover:text-gray-400 hover:bg-transparent data-active:text-foreground data-active:bg-transparent fill-gray-400">
-                  <IconSettingsFilled />
-                </SidebarMenuButton>
-              </SidebarMenuItem> */}
-              <SidebarSeparator className="my-2" />
+              <SidebarSeparator className="my-2" /> */}
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={handleLogout}
@@ -158,10 +153,11 @@ export default function DashboardSidebar() {
     <>
       <MobileSidebar />
       <Sidebar
-        className="relative h-full px-2 py-4 border-r border-gray-900 w-18 hidden md:flex bg-gray-950"
+        className="relative h-svh border-none hidden w-max md:flex md:ml-5 bg-transparent py-4"
         collapsible="none"
         variant="inset"
       >
+        <img src="/logo.png" alt="Ran Online GS" className="w-30" />
         <SidebarMenuContent />
       </Sidebar>
     </>

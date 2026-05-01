@@ -6,11 +6,17 @@ import {
   getSchoolAbbr,
   getSchoolColor,
 } from "@/components/rankings/types.rankings";
-import { Card, CardAction, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { IconTrophy } from "@tabler/icons-react";
 import Link from "next/link";
+import { PropsWithChildren } from "react";
 
 const RANK_STYLES: Record<
   number,
@@ -21,15 +27,12 @@ const RANK_STYLES: Record<
   3: { badge: "bronze", color: "text-amber-600", bg: "from-amber-600/10" },
 };
 
-function TopRankingsShell({ children }: { children: React.ReactNode }) {
+export function GoldRankingsShell({ children }: PropsWithChildren) {
   return (
     <Card className="h-max">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <IconTrophy className="size-4 text-primary" />
-          <span className="text-sm font-bold uppercase tracking-wider">
-            Gold Rankings
-          </span>
+      <CardHeader className="items-center flex justify-between">
+        <CardTitle className="text-sm font-bold uppercase tracking-wider">
+          Gold Rankings
         </CardTitle>
         <CardAction>
           <Link
@@ -45,24 +48,32 @@ function TopRankingsShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-function TopRankingsSkeleton() {
+export function GoldRankingsSkeleton() {
   return (
-    <TopRankingsShell>
-      <div className="p-2 space-y-1">
+    <GoldRankingsShell>
+      <div className="p-2 grid gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-14 w-full rounded-sm" />
+          <div key={i} className="flex items-center gap-3 px-3 py-2.5">
+            <Skeleton className="w-8 shrink-0 size-7 rounded-sm" />
+            <Skeleton className="size-7 shrink-0 rounded-full" />
+            <div className="flex-1 min-w-0 space-y-1.5">
+              <Skeleton className="h-3.5 w-2/5 rounded-sm" />
+              <Skeleton className="h-2.5 w-1/3 rounded-sm" />
+            </div>
+            <Skeleton className="h-4 w-14 rounded-sm" />
+          </div>
         ))}
       </div>
-    </TopRankingsShell>
+    </GoldRankingsShell>
   );
 }
 
-async function TopRankings() {
+export default async function GoldRankingsWidget() {
   const rankings = await getGoldRankings(1, 5);
 
   return (
-    <TopRankingsShell>
-      <div className="p-2">
+    <GoldRankingsShell>
+      <CardContent className="p-2">
         {rankings.data.length === 0 ? (
           <p className="text-sm text-gray-500 py-8 text-center">
             No rankings available
@@ -133,9 +144,7 @@ async function TopRankings() {
             })}
           </div>
         )}
-      </div>
-    </TopRankingsShell>
+      </CardContent>
+    </GoldRankingsShell>
   );
 }
-
-export { TopRankings, TopRankingsSkeleton };

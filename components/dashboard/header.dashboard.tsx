@@ -1,41 +1,55 @@
 "use client";
 
-import { IconDownload, IconMenu2, IconShoppingCart } from "@tabler/icons-react";
+import {
+  IconBrandDiscordFilled,
+  IconBrandFacebookFilled,
+  IconBrandYoutubeFilled,
+  IconDownload,
+  IconMenu2,
+  IconShoppingCart,
+} from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CartSheet } from "../cart/sheet.cart";
 import Coin from "../common/coin";
 import GameButton from "../common/game.button";
 import { useCart } from "../providers/cart.provider";
 import { useSession } from "../providers/session.provider";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { useSidebar } from "../ui/sidebar";
+import { cn } from "@/lib/utils";
 
 type DashboardHeaderProps = {
-  pageHeader: React.ReactNode;
   downloadLink: string | null;
 };
 
 export default function DashboardHeader({
-  pageHeader,
   downloadLink,
 }: DashboardHeaderProps) {
   const { toggleSidebar } = useSidebar();
   const { totalItems: cartItemCount } = useCart();
   const { user } = useSession();
   const [cartOpen, setCartOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
-  const initials = user.user_name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+  useEffect(() => {
+    const container = headerRef.current?.parentElement;
+    if (!container) return;
+    const onScroll = () => setScrolled(container.scrollTop > 0);
+    container.addEventListener("scroll", onScroll, { passive: true });
+    return () => container.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="flex items-center justify-between w-full px-5 py-2 h-max border-b border-gray-900 bg-gray-950">
+    <header
+      ref={headerRef}
+      className={cn(
+        "flex items-center justify-between w-full px-5 py-5 md:pl-0 h-max sticky top-0 z-10 transition-all duration-200 md:static md:bg-transparent",
+        scrolled && "bg-gray-900 py-2 px-4",
+      )}
+    >
       <GameButton
         variant="ghost"
         size="icon-sm"
@@ -45,23 +59,56 @@ export default function DashboardHeader({
         <IconMenu2 />
         <span className="sr-only">Open menu</span>
       </GameButton>
-      <section className="flex items-center gap-3 max-md:hidden">
-        <Image src="/logo.png" alt="Ran Online GS" width={120} height={72} />
-        {pageHeader && <div>{pageHeader}</div>}
-      </section>
       <Image
         src="/logo.png"
         alt="Ran Online GS"
-        width={120}
-        height={72}
-        className="md:hidden"
+        width={scrolled ? 80 : 120}
+        height={scrolled ? 48 : 72}
+        className={cn(
+          "md:hidden transition-all duration-200",
+          scrolled && "opacity-80",
+        )}
       />
+      <section className="hidden md:flex gap-2 items-center">
+        <GameButton className="mr-4 hidden" variant="outline">
+          Game Guide
+        </GameButton>
+        <section className="flex gap-4">
+          <GameButton
+            className="justify-center p-0 min-w-0! size-max hover:bg-transparent active:bg-transparent text-[#cc181e] hover:text-[#cc181e]/90"
+            variant="ghost"
+            size="icon-lg"
+          >
+            <Link href={process.env.NEXT_PUBLIC_YOUTUBE_LINK!} target="_blank">
+              <IconBrandYoutubeFilled className="size-9" />
+            </Link>
+          </GameButton>
+          <GameButton
+            className="justify-center p-0 min-w-0! size-max hover:bg-transparent active:bg-transparent text-[#7289da] hover:text-[#7289da]/90"
+            variant="ghost"
+            size="icon-lg"
+          >
+            <Link href={process.env.NEXT_PUBLIC_DISCORD_LINK!} target="_blank">
+              <IconBrandDiscordFilled className="size-9" />
+            </Link>
+          </GameButton>
+          <GameButton
+            className="justify-center p-0 min-w-0! size-max hover:bg-transparent active:bg-transparent text-[#3b5998] hover:text-[#3b5998]/90"
+            variant="ghost"
+            size="icon-lg"
+          >
+            <Link href={process.env.NEXT_PUBLIC_FACEBOOK_LINK!} target="_blank">
+              <IconBrandFacebookFilled className="size-9" />
+            </Link>
+          </GameButton>
+        </section>
+      </section>
       <section className="flex items-center gap-4">
         {downloadLink && (
           <GameButton
             variant="default"
-            size="default"
-            className="ran-btn-pulse ran-btn-paper mr-2 max-sm:hidden"
+            size="lg"
+            className="hidden lg:inline-flex ran-btn-pulse"
             asChild
           >
             <Link
@@ -70,18 +117,27 @@ export default function DashboardHeader({
               target="_blank"
               rel="noopener noreferrer"
             >
-              <IconDownload className="size-4" />
-              <span className="max-md:hidden">Download Client</span>
+              <IconDownload className="size-5" />
+              <span>Download Client</span>
             </Link>
           </GameButton>
         )}
+        <GameButton
+          variant="secondary"
+          size="icon-lg"
+          className="relative transition-all duration-200 max-sm:bg-transparent max-sm:before:hidden max-sm:after:hidden"
+          onClick={() => setCartOpen(true)}
+        >
+          <IconShoppingCart className={cn("size-8", scrolled && "size-6! md:size-8")} />
+          {cartItemCount > 0 && (
+            <Badge className="absolute top-1 right-1 md:top-2 md:right-1.5 size-4 p-0 text-[10px] justify-center">
+              {cartItemCount > 99 ? "9+" : cartItemCount}
+            </Badge>
+          )}
+          <span className="sr-only">Cart</span>
+        </GameButton>
 
-        <div className="flex items-center gap-2 max-md:hidden">
-          <Avatar size="lg">
-            <AvatarFallback className="shape-hexagon bg-primary text-primary-foreground">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
+        <section className="flex items-center gap-2 max-md:hidden">
           <div>
             <p className="text-sm font-semibold text-gray-400 uppercase">
               {user.user_name}
@@ -92,21 +148,8 @@ export default function DashboardHeader({
               value={user.web_points}
             />
           </div>
-        </div>
-        <GameButton
-          variant="ghost"
-          size="icon"
-          className="relative"
-          onClick={() => setCartOpen(true)}
-        >
-          <IconShoppingCart />
-          {cartItemCount > 0 && (
-            <Badge className="absolute -top-1 -right-1 size-4 p-0 text-[10px] justify-center">
-              {cartItemCount > 99 ? "9+" : cartItemCount}
-            </Badge>
-          )}
-          <span className="sr-only">Cart</span>
-        </GameButton>
+        </section>
+
         <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
       </section>
     </header>

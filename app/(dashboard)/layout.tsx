@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+ 
 import DashboardHeader from "@/components/dashboard/header.dashboard";
 import DashboardSidebar from "@/components/dashboard/sidebar.dashboard";
 import { CartProvider } from "@/components/providers/cart.provider";
@@ -12,10 +12,9 @@ import { getClientDownloadLink } from "./actions";
 
 type LayoutProps = {
   children: ReactNode;
-  header: ReactNode;
 };
 
-export default async function Layout({ children, header }: LayoutProps) {
+export default async function Layout({ children }: LayoutProps) {
   const [session, downloadLink] = await Promise.all([
     getSession(),
     getClientDownloadLink(),
@@ -28,24 +27,14 @@ export default async function Layout({ children, header }: LayoutProps) {
   return (
     <SessionProvider expiresAt={session.expires_at} user={session.user}>
       <CartProvider>
-        <SidebarProvider className="bg-transparent">
-          <div className="relative grid h-svh w-full grid-rows-[var(--header-size)_1fr]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-              <img
-                src="https://images.ranonlinegs.com/assets/background/bg-main.webp"
-                alt=""
-                className="object-cover object-top opacity-5 size-full"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-background from-10% to-85%" />
-            </div>
-            <DashboardHeader pageHeader={header} downloadLink={downloadLink} />
-            <div className="flex min-w-0 min-h-0">
-              <DashboardSidebar />
-              <SidebarInset className="overflow-hidden bg-transparent">
-                {children}
-              </SidebarInset>
-            </div>
-          </div>
+        <SidebarProvider className="bg-transparent overflow-hidden h-svh relative gap-4">
+          {/* <section className="grid h-svh w-full grid-col-[max-content_1fr]"> */}
+          <DashboardSidebar />
+          <SidebarInset className="bg-transparent overflow-auto">
+            <DashboardHeader downloadLink={downloadLink} />
+            {children}
+          </SidebarInset>
+          {/* </section> */}
         </SidebarProvider>
       </CartProvider>
     </SessionProvider>

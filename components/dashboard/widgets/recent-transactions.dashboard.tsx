@@ -6,20 +6,13 @@ import { getTransactions } from "@/app/(dashboard)/profile/actions";
 import Coin from "@/components/common/coin";
 import { TRANSACTION_TYPE_MAP } from "@/components/profile/transactions/constants.transactions";
 import TransactionStatusBadge from "@/components/profile/transactions/status-badge.transactions";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/formatters";
 import { type Transaction } from "@/types/transaction";
-import { IconReceipt } from "@tabler/icons-react";
 import Link from "next/link";
 
-function RecentTransactions() {
+export default function RecentTransactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isPending, startTransition] = useTransition();
 
@@ -38,27 +31,30 @@ function RecentTransactions() {
 
   return (
     <Card className="h-max">
-      <CardHeader>
+      <CardHeader className="pt-4 items-center flex justify-between">
         <CardTitle>
-          <IconReceipt className="size-4 text-primary" />
           <span className="text-sm font-bold uppercase tracking-wider">
             Recent Transactions
           </span>
         </CardTitle>
-        <CardAction>
-          <Link
-            href="/profile"
-            className="text-xs font-semibold text-primary hover:underline uppercase tracking-wider"
-          >
-            View All
-          </Link>
-        </CardAction>
+        <Link
+          href="/profile"
+          className="text-xs font-semibold text-primary hover:underline uppercase tracking-wider"
+        >
+          View All
+        </Link>
       </CardHeader>
-      <CardContent className="p-2">
+      <CardContent className="p-2 bg-gray-900!">
         {isPending ? (
-          <div className="space-y-2 p-2">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-14 w-full rounded-sm" />
+          <div className="divide-y divide-gray-800">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3 px-3 py-2.5">
+                <div className="flex-1 min-w-0 space-y-1.5">
+                  <Skeleton className="h-4 w-24 rounded-sm" />
+                  <Skeleton className="h-2.5 w-2/5 rounded-sm" />
+                </div>
+                <Skeleton className="h-5 w-16 rounded-sm" />
+              </div>
             ))}
           </div>
         ) : transactions.length === 0 ? (
@@ -66,7 +62,7 @@ function RecentTransactions() {
             No transactions yet
           </p>
         ) : (
-          <div className="grid gap-1">
+          <div className="divide-y divide-gray-800">
             {transactions.map((tx) => {
               const typeInfo = TRANSACTION_TYPE_MAP[tx.transaction_type] ?? {
                 label: "Other",
@@ -74,7 +70,7 @@ function RecentTransactions() {
               return (
                 <div
                   key={tx.transaction_id}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-sm hover:bg-gray-900/80 transition-colors duration-200"
+                  className="flex items-center gap-3 px-3 py-2.5 hover:bg-gray-800/80 transition-colors duration-200"
                 >
                   {/* Amount */}
                   <div className="flex-1 min-w-0">
@@ -100,5 +96,3 @@ function RecentTransactions() {
     </Card>
   );
 }
-
-export { RecentTransactions };

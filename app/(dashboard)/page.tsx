@@ -1,24 +1,32 @@
-import { CharacterStats } from "@/components/dashboard/widgets/dashboard-stats.dashboard";
-import { RecentTransactions } from "@/components/dashboard/widgets/recent-transactions.dashboard";
-import { StatCard } from "@/components/dashboard/widgets/stat-card.dashboard";
-import {
-  TopRankings,
-  TopRankingsSkeleton,
-} from "@/components/dashboard/widgets/top-rankings.dashboard";
-import { WalletCard } from "@/components/dashboard/widgets/wallet-card.dashboard";
-import { WelcomeCard } from "@/components/dashboard/widgets/welcome-card.dashboard";
-import { GvgStandingsDialog } from "@/components/events/dialog.gvg-standings";
-import EventPromotion from "@/components/promotions/event.promotion";
-import { requireSession } from "@/lib/auth/session.auth";
-import {
-  IconArrowBigUpLinesFilled,
-  IconDeviceGamepad2,
-  IconWifi,
-} from "@tabler/icons-react";
+import PromoBannerWidget from "@/components/dashboard/widgets/promo-banner.dashboard";
+import RecentTransactions from "@/components/dashboard/widgets/recent-transactions.dashboard";
+import GoldRankingsWidget, {
+  GoldRankingsSkeleton,
+} from "@/components/dashboard/widgets/gold-rankings.dashboard";
+import WalletBalanceWidget from "@/components/dashboard/widgets/wallet-balance.dashboard";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { getCurrentEvent, getGuildLeaderboard } from "./events/actions";
-import { getCharacters, getProfile } from "./profile/actions";
+import CharacterListWidget, {
+  CharacterListSkeleton,
+} from "@/components/dashboard/widgets/character-list.dashboard";
+import RecentEventsWidget, {
+  RecentEventsSkeleton,
+} from "@/components/dashboard/widgets/recent-events.dashboard";
+import { requireSession } from "@/lib/auth/session.auth";
+import ComingSoonWidget from "@/components/dashboard/widgets/coming-soon.dashboard";
+
+const PROMO_SLIDES = [
+  {
+    src: "https://images.ranonlinegs.com/banners/main-banner.webp",
+    alt: "Where warriors rise",
+  },
+  {
+    src: "https://images.ranonlinegs.com/banners/wot3c-match-week4.webp",
+    alt: "War of the Three Crowns",
+    label: "WOT3C Week 4",
+    href: "/events/war-of-the-three-crown",
+  },
+];
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -28,78 +36,42 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  const [session, profile, characters, { event, is_registration_available }] =
-    await Promise.all([
-      requireSession(),
-      getProfile(),
-      getCharacters(1, 50),
-      getCurrentEvent(),
-    ]);
-
-  const gvgRankings = event?.event_id
-    ? await getGuildLeaderboard(event.event_id, 1, 5)
-    : null;
-
-  const activeCharacters = characters.data.filter((c) => c.cha_deleted === 0);
-  const highestLevel = activeCharacters.reduce(
-    (max, char) => Math.max(max, char.cha_level),
-    0,
-  );
-  const onlineCount = characters.data.filter(
-    (char) => char.cha_online === 1,
-  ).length;
+  await requireSession();
 
   return (
-    <main className="h-full p-4 overflow-auto space-y-3">
-      <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <WelcomeCard
-          user={session.user}
-          characters={characters}
-          profile={profile.data!}
-        />
-        <WalletCard user={session.user} />
-
-        <StatCard
-          icon={<IconDeviceGamepad2 className="size-6" />}
-          label="Characters"
-          value={characters.total_items}
-        />
-        <StatCard
-          icon={<IconArrowBigUpLinesFilled className="size-6" />}
-          label="Highest Level"
-          value={highestLevel > 0 ? highestLevel : "—"}
-          accentColor="text-yellow-400"
-        />
-        <StatCard
-          icon={<IconWifi className="size-6" />}
-          label="Online Now"
-          value={onlineCount}
-          accentColor="text-green-400"
-        />
-      </section>
-      <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <section className="col-span-1 md:col-span-3 lg:col-span-4 space-y-3">
-          <CharacterStats characters={characters} />
-          <RecentTransactions />
+    <main className="h-max p-4 space-y-2 md:pl-0 md:pt-4 md:pb-6 md:pr-6 md:space-y-4">
+      <section className="dashboard-layout">
+        <section className="col-span-full lg:col-span-4 grid gap-4 grid-cols-4">
+          <section className="col-span-full aspect-16/7">
+            <PromoBannerWidget slides={PROMO_SLIDES} interval={4500} />
+          </section>
+          <section className="col-span-full lg:hidden">
+            <WalletBalanceWidget />
+          </section>
+          <section className="hidden lg:block lg:col-span-1 opacity-70 pointer-events-none! select-none">
+            <ComingSoonWidget />
+          </section>
+          <section className="col-span-full lg:col-span-2">
+            <Suspense fallback={<GoldRankingsSkeleton />}>
+              <GoldRankingsWidget />
+            </Suspense>
+          </section>
+          <section className="col-span-full lg:col-span-1">
+            <Suspense fallback={<RecentEventsSkeleton />}>
+              <RecentEventsWidget />
+            </Suspense>
+          </section>
         </section>
-        <section className=" col-span-2">
-          <Suspense fallback={<TopRankingsSkeleton />}>
-            <TopRankings />
+        <section className="lg:col-span-1 space-y-4">
+          <div className="hidden lg:block">
+            <WalletBalanceWidget />
+          </div>
+          <RecentTransactions />
+          <Suspense fallback={<CharacterListSkeleton />}>
+            <CharacterListWidget />
           </Suspense>
         </section>
       </section>
-      {event?.event_id && is_registration_available && <EventPromotion />}
-      {event?.event_id &&
-        !is_registration_available &&
-        gvgRankings &&
-        gvgRankings.rankings.length > 0 && (
-          <GvgStandingsDialog
-            eventId={event.event_id}
-            eventName={event.event_name}
-            season={event.season}
-            rankings={gvgRankings.rankings}
-          />
-        )}
     </main>
   );
 }
