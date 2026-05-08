@@ -131,11 +131,7 @@ function MobileSidebar() {
           <SheetDescription>Main navigation menu</SheetDescription>
         </SheetHeader>
         <div className="flex h-full w-full flex-col px-2 py-4 space-y-10">
-          <img
-            className="mx-auto w-[150px]"
-            src="/logo.png"
-            alt="Ran Online GS"
-          />
+          <img className="mx-auto w-37.5" src="/logo.png" alt="Ran Online GS" />
           <SidebarMenuContent />
         </div>
       </SheetContent>

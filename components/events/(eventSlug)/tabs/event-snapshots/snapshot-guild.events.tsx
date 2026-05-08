@@ -7,14 +7,9 @@ import ReadOnlyField from "@/components/ui/input/read-only";
 import { cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { useSnapshot } from "./snapshot-context.events";
-import {
-  useCallback,
-  useEffect,
-  useState,
-  useTransition,
-} from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { SnapshotGuildScore } from "@/types/event";
-import { IconTrendingDown } from "@tabler/icons-react";
+import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 
 function GuildRowSkeleton() {
   return (
@@ -112,9 +107,15 @@ export default function EventGuildSnapshot() {
                   ranking.rank_change !== 0 && (
                     <div
                       data-trend={ranking.rank_change > 0 ? "up" : "down"}
-                      className="rounded-full p-0.5 bg-destructive group"
+                      className={
+                        "rounded-full p-0.5 bg-destructive/30 data-[trend=up]:bg-green-300/30 group"
+                      }
                     >
-                      <IconTrendingDown className="size-4 group-data-[trend=up]:text-green" />
+                      {ranking.rank_change > 0 ? (
+                        <IconTrendingUp className="size-4 text-green-100" />
+                      ) : (
+                        <IconTrendingDown className="size-4 text-destructive" />
+                      )}
                     </div>
                   )}
               </section>
