@@ -1,7 +1,4 @@
-import {
-  PROVIDERS_WITH_PROOF,
-  PROVIDERS_WITH_REFERENCE,
-} from "@/components/recharge/constants.recharge";
+import { PROVIDERS_WITH_REFERENCE } from "@/components/recharge/constants.recharge";
 import z from "zod";
 
 export const rechargeSchema = z

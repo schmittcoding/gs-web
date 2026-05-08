@@ -237,6 +237,66 @@ export type SpeedRunScore = {
   completion_time_seconds: number | null;
 };
 
+export type EventSnapshot = {
+  snapshot_id: string; // UUID
+  event_id: string; // UUID
+  match_id: string | null; // UUID
+  snapshot_time: string; // ISO NaiveDateTime
+  label: string | null;
+  created_at: string; // ISO NaiveDateTime
+};
+
+export type EventSnapshotMatchSummary = Pick<
+  MatchSchedule,
+  | "end_time"
+  | "event_date"
+  | "start_time"
+  | "tower_points_faci"
+  | "tower_points_nuc"
+  | "tower_points_th"
+  | "tower_winner_faci"
+  | "tower_winner_nuc"
+  | "tower_winner_th"
+> & {
+  total_kills: number;
+};
+
+export type EventSnapshotWithSchedule = EventSnapshot & {
+  match_schedule: EventSnapshotMatchSummary | null; // null when the snapshot's match_id has no corresponding MatchSchedule row
+};
+
+// snapshot.rs → SnapshotGuildScore
+type SnapshotGuildScore = {
+  snapshot_id: string;
+  guild_num: number;
+  guild_name: string;
+  cha_school: number;
+  total_kills: number;
+  total_deaths: number;
+  tower_points: number;
+  deduction: number;
+  computed_score: number;
+  rank: number;
+  rank_change: number | null;   // positive = moved up, negative = moved down, null = new entry
+  member_count: number;
+};
+
+// snapshot.rs → SnapshotKOTHScore
+type SnapshotKOTHScore = {
+  snapshot_id: string;
+  cha_num: number;
+  cha_name: string;
+  cha_class: number;
+  cha_school: number | null;
+  guild_num: number | null;
+  guild_name: string | null;
+  total_kills: number;
+  total_deaths: number;
+  deduction: number;
+  rank: number;
+  rank_change: number | null;
+};
+
 // Pagination envelope (inline — no named struct)
 export type PaginationMeta = {
   page: number;
@@ -261,6 +321,18 @@ export type GetEventLeaderboardResponse<T = unknown> = {
   pagination: PaginationMeta;
   rankings: T[];
 };
+
+export type GetEventSnapshotsResponse<
+  T = EventSnapshot | EventSnapshotWithSchedule,
+> = {
+  success: boolean;
+  snapshots: T[];
+};
+
+export type GetEventSnapshotResponse<T = SnapshotGuildScore | SnapshotKOTHScore> = {
+  rankings: T[];
+  success: boolean;
+}
 
 // @deprecated
 export type EventData = {

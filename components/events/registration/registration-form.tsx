@@ -39,7 +39,6 @@ type RegistrationFormProps = {
 };
 
 export function RegistrationForm({
-  eventId,
   minLevel,
   characters,
   existingRegistrations,
@@ -117,8 +116,7 @@ export function RegistrationForm({
           LEVEL_REQ: `Character must be at least level ${minLevel}.`,
           NO_GUILD: "Join a guild to participate.",
           NOT_GUILD_MASTER: "You must be a guild master to register for GVG.",
-          WRONG_CATEGORY:
-            "This registration type is not valid for this event.",
+          WRONG_CATEGORY: "This registration type is not valid for this event.",
         };
 
         sileo.error({
@@ -172,8 +170,7 @@ export function RegistrationForm({
                   <Checkbox
                     checked={isSelected || isAlreadyRegistered}
                     onCheckedChange={() =>
-                      !isAlreadyRegistered &&
-                      handleToggleMember(member.cha_num)
+                      !isAlreadyRegistered && handleToggleMember(member.cha_num)
                     }
                     disabled={isAlreadyRegistered || isPending}
                   />

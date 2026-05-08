@@ -3,7 +3,6 @@
 import { IconLoader2 } from "@tabler/icons-react";
 import { useEffect, useRef } from "react";
 import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
 
 type GameButtonProps = React.ComponentProps<typeof Button> & {
   loading?: boolean;

@@ -10,6 +10,7 @@ type UploaderProps = DropzoneProps & {
   className?: string;
   error?: boolean;
   name?: string;
+   
   onUploadFile?: (file: File[]) => void;
   placeholder?: string;
   value?: File[];
@@ -18,7 +19,6 @@ type UploaderProps = DropzoneProps & {
 export default function Uploader({
   className,
   error,
-  name,
   onUploadFile,
   placeholder,
   value = [],

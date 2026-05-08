@@ -1,13 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { logoutAction } from "@/app/(dashboard)/profile/actions";
-import {
-  IconBrandDiscordFilled,
-  IconBrandFacebookFilled,
-  IconBrandYoutubeFilled,
-  IconLogout2,
-} from "@tabler/icons-react";
-import Link from "next/link";
+import { IconLogout2 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Fragment, useCallback, useTransition } from "react";
 import {

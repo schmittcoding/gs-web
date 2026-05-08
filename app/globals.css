@@ -234,7 +234,7 @@
   transition: corner-shape 0.3s ease-in-out;
 }
 
-button.shape-main:hover {
+button.shape-main:not(.shape-no-hover):hover {
   corner-shape: square square;
 }
 

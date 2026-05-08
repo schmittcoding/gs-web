@@ -85,19 +85,16 @@ export default async function EventClassLeaderboard({
                       alt={`Ran Online GS | ${schoolAbrr}`}
                       src={`https://images.ranonlinegs.com/assets/campus/${schoolAbrr}.png`}
                     />
-                    <ReadOnlyField
-                      className="**:data-[slot=read-only-value]:text-lg **:data-[slot=read-only-value]:font-semibold text-left"
-                      label="Name"
-                    >
+                    <p className="text-lg font-semibold text-left">
                       {ranking.cha_name}
-                    </ReadOnlyField>
+                      {ranking.guild_name && (
+                        <span className="text-base opacity-50">
+                          {" "}
+                          ({ranking.guild_name})
+                        </span>
+                      )}
+                    </p>
                   </section>
-                  <ReadOnlyField
-                    className="**:data-[slot=read-only-value]:text-lg **:data-[slot=read-only-value]:font-semibold text-left"
-                    label="Guild"
-                  >
-                    {ranking.guild_name ?? "-"}
-                  </ReadOnlyField>
                 </section>
                 <section className="flex gap-6 sm:gap-8 lg:gap-10 flex-wrap justify-center">
                   <ReadOnlyField
