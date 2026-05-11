@@ -22,13 +22,16 @@ const cardVariants = cva(
 );
 
 type CardProps = React.ComponentProps<"div"> &
-  VariantProps<typeof cardVariants> & { size?: "default" | "sm" };
+  VariantProps<typeof cardVariants> & { size?: "default" | "sm" } & {
+    wrapperProps?: React.ComponentProps<"div">;
+  };
 
 function Card({
   children,
   className,
   size = "default",
   variant = "default",
+  wrapperProps,
   ...props
 }: CardProps) {
   return (
@@ -40,8 +43,12 @@ function Card({
       {...props}
     >
       <div
+        {...wrapperProps}
         data-slot="card-wrapper"
-        className="size-full shape-main bg-gray-950 overflow-hidden flex flex-col"
+        className={cn(
+          "size-full shape-main bg-gray-950 overflow-hidden flex flex-col",
+          wrapperProps?.className,
+        )}
       >
         {children}
       </div>

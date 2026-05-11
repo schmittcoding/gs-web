@@ -17,6 +17,11 @@ import ComingSoonWidget from "@/components/dashboard/widgets/coming-soon.dashboa
 
 const PROMO_SLIDES = [
   {
+    src: "https://images.ranonlinegs.com/banners/refer-and-earn.webp",
+    alt: "Refer and Earn",
+    href: "/referrals",
+  },
+  {
     src: "https://images.ranonlinegs.com/banners/main-banner.webp",
     alt: "Where warriors rise",
   },
