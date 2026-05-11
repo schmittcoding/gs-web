@@ -5,6 +5,7 @@ import {
   EPurchaseLimitType,
   ShopItem,
 } from "@/components/item-shop/types.item-shop";
+import { requireCsrf } from "@/lib/csrf";
 import { AUTH_CONFIG } from "@/lib/constants";
 import { fetcherPrivate } from "@/lib/fetcher";
 import { redirect } from "next/navigation";
@@ -38,6 +39,8 @@ export type PurchaseResult = {
 export async function purchaseItems(
   items: PurchasePayload[],
 ): Promise<PurchaseResult> {
+  await requireCsrf();
+
   const res = await fetcherPrivate("/v1/item-shop/purchase", {
     method: "POST",
     body: JSON.stringify(items),

@@ -1,5 +1,6 @@
 "use server";
 
+import { requireCsrf } from "@/lib/csrf";
 import { RECHARGE_CURRENCY } from "@/components/recharge/constants.recharge";
 import {
   ERechargeProvider,
@@ -88,6 +89,8 @@ export async function confirmTransaction(
   _prev: ConfirmTransactionResult,
   formData: FormData,
 ): Promise<ConfirmTransactionResult> {
+  await requireCsrf();
+
   const validated = rechargeSchema.safeParse({
     id: String(formData.get("id")),
     gateway: String(formData.get("gateway")),

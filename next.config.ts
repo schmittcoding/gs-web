@@ -8,7 +8,13 @@ const nextConfig: NextConfig = {
 
   experimental: {
     serverActions: {
-      allowedOrigins: ["dashboard.ranonlinegs.com"],
+      allowedOrigins: [
+        "dashboard.ranonlinegs.com",
+        // Allow localhost in development only
+        ...(process.env.NODE_ENV !== "production"
+          ? ["localhost:3000", "ranonlinegs.local:3000"]
+          : []),
+      ],
       bodySizeLimit: "5mb",
     },
   },

@@ -1,5 +1,13 @@
 // Centralized auth configuration — change once, applied everywhere.
 
+export const CSRF_CONFIG = {
+  /** Cookie name for the double-submit CSRF token (non-httpOnly, readable by JS) */
+  cookieName: "csrf_token",
+
+  /** Secret used to HMAC-sign CSRF tokens — must be set in production */
+  secret: process.env.CSRF_SECRET!,
+} as const;
+
 export const AUTH_CONFIG = {
   /** Base URL of your Rust authentication API */
   apiUrl: process.env.API_URL!,

@@ -1,5 +1,6 @@
 "use server";
 
+import { requireCsrf } from "@/lib/csrf";
 import { type CharactersResponse } from "@/components/profile/overview/types.characters";
 import {
   changeEmailSchema,
@@ -60,6 +61,8 @@ export async function changePassword(
   _prevState: ChangePasswordState,
   formData: FormData,
 ) {
+  await requireCsrf();
+
   const raw = {
     oldPassword: formData.get("old_password"),
     newPassword: formData.get("new_password"),
@@ -100,6 +103,8 @@ export async function changePincode(
   _prevState: ChangePincodeState,
   formData: FormData,
 ) {
+  await requireCsrf();
+
   const raw = {
     oldPincode: formData.get("old_pincode"),
     newPincode: formData.get("new_pincode"),
@@ -139,6 +144,8 @@ export async function changeEmail(
   _prevState: ChangeEmailState,
   formData: FormData,
 ) {
+  await requireCsrf();
+
   const raw = {
     accountPin: formData.get("account_pin"),
     emailAddress: formData.get("email_address"),
@@ -174,6 +181,8 @@ export async function changeEmail(
 }
 
 export async function logoutAction() {
+  await requireCsrf();
+
   const cookieStore = await cookies();
   const token = cookieStore.get(AUTH_CONFIG.cookieName)?.value;
   cookieStore.delete(AUTH_CONFIG.cookieName);
@@ -216,6 +225,8 @@ export async function getCharacters(
 }
 
 export async function resetPin() {
+  await requireCsrf();
+
   const res = await fetcherPrivate("/v1/auth/reset-pincode", {
     method: "POST",
   });
