@@ -690,3 +690,5 @@ export const IconGameCoins = createIcon(
   "0 0 126 117",
   "IconGameCoins",
 );
+
+export { default as IconStreamer } from "./streamer.icon";

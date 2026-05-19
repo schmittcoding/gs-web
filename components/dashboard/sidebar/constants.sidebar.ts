@@ -1,4 +1,4 @@
-import { IconRankings, IconUser } from "@/components/icons";
+import { IconRankings, IconStreamer, IconUser } from "@/components/icons";
 import {
   IconBasketFilled,
   IconCrown,
@@ -29,19 +29,18 @@ export const sidebarMenu: Record<string, MenuItem[]> = {
     },
   ],
   game: [
-    // {
-    //   id: "referral",
-    //   icon: IconAffiliateFilled,
-    //   path: "/referral",
-    //   label: "Referral",
-    // },
     {
       id: "events",
       icon: IconCrown,
       path: "/events",
       label: "Events",
-      className:
-        "before:absolute before:top-2 before:right-0 before:size-2.5 before:rounded-full before:bg-primary before:z-1 before:animate-pulse",
+    },
+    {
+      id: "support-a-streamer",
+      icon: IconStreamer,
+      path: "/sas",
+      label: "Support a Streamer",
+      isAdminOnly: true,
     },
   ],
   account: [

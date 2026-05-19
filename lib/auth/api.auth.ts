@@ -11,6 +11,8 @@ export type User = {
   user_role: "admin" | "player";
   web_points: number;
   mileage_points: number;
+  creator_code: string | null;
+  supported_code: string | null;
 };
 
 export type SessionPayload = {
@@ -107,6 +109,8 @@ export async function login(
     }
 
     const data: User = await response.json();
+
+    console.log({ data });
 
     return {
       success: true,

@@ -511,6 +511,51 @@ button.shape-main:not(.shape-no-hover):hover {
   corner-shape: square bevel square square;
 }
 
+/* Streamer FAB */
+.ran-fab-main {
+  @apply relative flex items-center justify-center size-14 cursor-pointer;
+  @apply bg-[var(--primary)] text-black;
+  @apply shadow-lg shadow-[color-mix(in_oklch,var(--primary)_30%,transparent)];
+  @apply transition-all duration-200;
+  border-radius: 0 12px;
+  corner-shape: bevel;
+
+  &::before {
+    content: "";
+    @apply absolute inset-0 opacity-0 transition-opacity duration-200;
+    @apply bg-white/10;
+    border-radius: inherit;
+    corner-shape: inherit;
+  }
+
+  &:hover::before {
+    @apply opacity-100;
+  }
+
+  &[data-open="true"] {
+    @apply bg-gray-800 text-gray-100;
+    box-shadow: 0 4px 24px color-mix(in oklch, var(--primary) 15%, transparent);
+  }
+}
+
+.ran-fab-sub {
+  @apply flex items-center justify-center size-11 cursor-pointer;
+  @apply bg-gray-900 border border-gray-700 text-gray-300;
+  @apply transition-all duration-200;
+  @apply hover:border-[var(--primary)] hover:text-[var(--primary)];
+  @apply hover:shadow-md hover:shadow-[color-mix(in_oklch,var(--primary)_20%,transparent)];
+  border-radius: 0 10px;
+  corner-shape: bevel;
+}
+
+.ran-fab-label {
+  @apply px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest;
+  @apply bg-gray-900/95 border border-gray-800 text-gray-400;
+  @apply select-none whitespace-nowrap;
+  border-radius: 0 6px;
+  corner-shape: bevel;
+}
+
 /* Dashboard Layout */
 .dashboard-layout {
   /* @apply grid gap-4;

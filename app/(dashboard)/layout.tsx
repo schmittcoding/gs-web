@@ -1,8 +1,8 @@
- 
 import DashboardHeader from "@/components/dashboard/header.dashboard";
 import DashboardSidebar from "@/components/dashboard/sidebar.dashboard";
 import { CartProvider } from "@/components/providers/cart.provider";
 import { SessionProvider } from "@/components/providers/session.provider";
+import { StreamerFab } from "@/components/streamer/fab.streamer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { getSession } from "@/lib/auth/session.auth";
 import { AUTH_CONFIG } from "@/lib/constants";
@@ -33,6 +33,7 @@ export default async function Layout({ children }: LayoutProps) {
           <SidebarInset className="bg-transparent overflow-auto">
             <DashboardHeader downloadLink={downloadLink} />
             {children}
+            {session.user.user_role === "admin" && <StreamerFab />}
           </SidebarInset>
           {/* </section> */}
         </SidebarProvider>

@@ -128,7 +128,9 @@ export default function DashboardHeader({
           className="relative transition-all duration-200 max-sm:bg-transparent max-sm:before:hidden max-sm:after:hidden"
           onClick={() => setCartOpen(true)}
         >
-          <IconShoppingCart className={cn("size-8", scrolled && "size-6! md:size-8")} />
+          <IconShoppingCart
+            className={cn("size-8", scrolled && "size-6! md:size-8")}
+          />
           {cartItemCount > 0 && (
             <Badge className="absolute top-1 right-1 md:top-2 md:right-1.5 size-4 p-0 text-[10px] justify-center">
               {cartItemCount > 99 ? "9+" : cartItemCount}

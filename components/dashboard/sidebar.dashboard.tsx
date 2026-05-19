@@ -26,9 +26,11 @@ import {
 } from "../ui/sidebar";
 import { sidebarMenu } from "./sidebar/constants.sidebar";
 import SidebarItem from "./sidebar/item.sidebar";
+import { useSession } from "../providers/session.provider";
 
 function SidebarMenuContent() {
   const router = useRouter();
+  const { user } = useSession();
   const [isPending, startTransition] = useTransition();
 
   const handleLogout = useCallback(() => {
@@ -44,9 +46,13 @@ function SidebarMenuContent() {
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-2">
-                  {menuItems.map((item) => (
-                    <SidebarItem key={item.id} {...item} />
-                  ))}
+                  {menuItems
+                    .filter(
+                      (item) => !item.isAdminOnly || user.user_role === "admin",
+                    )
+                    .map((item) => (
+                      <SidebarItem key={item.id} {...item} />
+                    ))}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
@@ -58,46 +64,6 @@ function SidebarMenuContent() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">
-              {/* <SidebarMenuItem>
-                <SidebarMenuButton
-                  className="justify-center [&_svg]:size-8 py-5 text-[#cc181e] hover:text-[#cc181e]/80 hover:bg-transparent active:bg-transparent"
-                  asChild
-                >
-                  <Link
-                    href={process.env.NEXT_PUBLIC_YOUTUBE_LINK!}
-                    target="_blank"
-                  >
-                    <IconBrandYoutubeFilled />
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  className="justify-center [&_svg]:size-8 py-5 text-[#7289da] hover:text-[#7289da]/80 hover:bg-transparent active:bg-transparent"
-                  asChild
-                >
-                  <Link
-                    href={process.env.NEXT_PUBLIC_DISCORD_LINK!}
-                    target="_blank"
-                  >
-                    <IconBrandDiscordFilled />
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  className="justify-center [&_svg]:size-8 py-5 text-[#3b5998] hover:text-[#3b5998]/80 hover:bg-transparent active:bg-transparent"
-                  asChild
-                >
-                  <Link
-                    href={process.env.NEXT_PUBLIC_FACEBOOK_LINK!}
-                    target="_blank"
-                  >
-                    <IconBrandFacebookFilled />
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarSeparator className="my-2" /> */}
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={handleLogout}
@@ -130,14 +96,11 @@ function MobileSidebar() {
           <SheetTitle>Navigation</SheetTitle>
           <SheetDescription>Main navigation menu</SheetDescription>
         </SheetHeader>
-        <div className="flex h-full w-full flex-col px-2 py-4 space-y-10">
-          <img className="mx-auto w-37.5" src="/logo.png" alt="Ran Online GS" />
-          <SidebarMenuContent />
-        </div>
       </SheetContent>
     </Sheet>
   );
 }
+
 
 export default function DashboardSidebar() {
   return (

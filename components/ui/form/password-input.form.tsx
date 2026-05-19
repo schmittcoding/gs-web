@@ -78,7 +78,7 @@ export function FormPasswordInput({
           name={name}
           type={visible ? "text" : "password"}
           className={cn(
-            "h-10 pl-9 pr-10 bg-gray-800 border-gray-700 shape-main text-gray-100 placeholder:text-gray-600 focus-visible:border-primary",
+            "h-12 px-10 bg-gray-800 border-gray-700 shape-main text-gray-100 placeholder:text-gray-600 focus-visible:border-primary",
             !!error && "border-destructive",
           )}
           aria-invalid={!!error}
@@ -89,13 +89,13 @@ export function FormPasswordInput({
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
           aria-label={visible ? "Hide password" : "Show password"}
         >
           {visible ? (
-            <IconEye className="size-4" />
+            <IconEye className="size-4.5" />
           ) : (
-            <IconEyeOff className="size-4" />
+            <IconEyeOff className="size-4.5" />
           )}
         </button>
       </div>
