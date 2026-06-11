@@ -80,24 +80,6 @@ export async function loginAction(
   redirect(AUTH_CONFIG.defaultRedirect);
 }
 
-/* ── Registration availability checks ─────────────── */
-
-export async function checkUsernameAvailability(
-  username: string,
-): Promise<{ available: boolean; error?: string }> {
-  try {
-    const res = await fetch(`${AUTH_CONFIG.apiUrl}/v1/auth/validate-username`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username }),
-    });
-    const data = await res.json();
-    return { available: data, error: data.error };
-  } catch {
-    return { available: false, error: "Unable to verify username" };
-  }
-}
-
 /* ── Register action ──────────────────────────────── */
 
 export type RegisterState = {
@@ -170,18 +152,3 @@ export async function forgotPasswordAction(
   return { success: true };
 }
 
-export async function checkEmailAvailability(
-  email: string,
-): Promise<{ available: boolean; error?: string }> {
-  try {
-    const res = await fetch(`${AUTH_CONFIG.apiUrl}/v1/auth/validate-email`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-    const data = await res.json();
-    return { available: data, error: data.error };
-  } catch {
-    return { available: false, error: "Unable to verify email" };
-  }
-}

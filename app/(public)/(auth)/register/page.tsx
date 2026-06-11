@@ -18,6 +18,7 @@ import {
   startTransition,
   useActionState,
   useCallback,
+  useEffect,
   useState,
 } from "react";
 import { AccountStep } from "./_components/account-step";
@@ -46,8 +47,22 @@ export default function Page() {
   });
 
   const [state, submitAction, isPending] = useActionState(registerAction, {});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const isComplete = state.success === true;
+
+  useEffect(() => {
+    if (!state.error) return;
+    const err = state.error.toLowerCase();
+    if (err.includes("username")) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setStep(0);
+      setFieldErrors({ username: state.error });
+    } else if (err.includes("email")) {
+      setStep(0);
+      setFieldErrors({ email: state.error });
+    }
+  }, [state.error]);
 
   const handleValidChange = useCallback((valid: boolean) => {
     setStepValid(valid);
@@ -170,8 +185,12 @@ export default function Page() {
               <Activity mode={step === 0 ? "visible" : "hidden"}>
                 <AccountStep
                   data={accountData}
-                  onChange={setAccountData}
+                  onChange={(data) => {
+                    setAccountData(data);
+                    setFieldErrors({});
+                  }}
                   onValidChange={handleValidChange}
+                  errors={fieldErrors}
                 />
               </Activity>
               <Activity mode={step === 1 ? "visible" : "hidden"}>
